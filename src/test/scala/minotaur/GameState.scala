@@ -26,14 +26,14 @@ class BoardSpec extends Specification {
       val bt = BoardType(size = 3)
 
       bt.possibleWalls === Set(
-        Wall(Location(0, bt), Horizontal, bt),
-        Wall(Location(1, bt), Horizontal, bt),
-        Wall(Location(3, bt), Horizontal, bt),
-        Wall(Location(4, bt), Horizontal, bt),
-        Wall(Location(0, bt), Vertical, bt),
-        Wall(Location(1, bt), Vertical, bt),
-        Wall(Location(3, bt), Vertical, bt),
-        Wall(Location(4, bt), Vertical, bt)
+        Wall(Location(0, bt), Horizontal),
+        Wall(Location(1, bt), Horizontal),
+        Wall(Location(3, bt), Horizontal),
+        Wall(Location(4, bt), Horizontal),
+        Wall(Location(0, bt), Vertical),
+        Wall(Location(1, bt), Vertical),
+        Wall(Location(3, bt), Vertical),
+        Wall(Location(4, bt), Vertical)
       )
     }
   }

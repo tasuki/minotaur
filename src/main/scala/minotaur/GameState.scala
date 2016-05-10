@@ -14,17 +14,21 @@ case class Location(location: Int, boardType: BoardType) {
   val isWestBorder = location % boardSize == 0
 }
 
-sealed trait WallOrientation
+sealed trait WallOrientation {
+  val opposite = this match {
+    case Horizontal => Vertical
+    case Vertical => Horizontal
+  }
+}
 case object Horizontal extends WallOrientation
 case object Vertical extends WallOrientation
 
 case class Wall(
   topLeft: Location,
-  orientation: WallOrientation,
-  boardType: BoardType
+  orientation: WallOrientation
 ) {
   require(
-    boardType.wallLocations contains topLeft,
+    topLeft.boardType.wallLocations contains topLeft,
     "This wall is not permissible"
   )
 }
@@ -50,7 +54,7 @@ case class BoardType(size: Int = 9) {
   val possibleWalls: Set[Wall] = for {
     location <- wallLocations
     orientation <- List(Horizontal, Vertical)
-  } yield Wall(location, orientation, this)
+  } yield Wall(location, orientation)
 }
 
 case class Board(
