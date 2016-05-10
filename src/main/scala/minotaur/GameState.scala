@@ -18,12 +18,15 @@ case class Wall(topLeft: Location, orientation: WallOrientation)
 
 
 case class BoardType(size: Int = 9) {
-  val fields: Seq[Location] = for(item <- 0 to size*size-1) yield (Location(item, this))
+  val fields: Set[Location] = (
+    for(item <- 0 to size * size - 1)
+    yield (Location(item, this))
+  )(collection.breakOut)
 
-  val possibleWalls: Set[Wall] = (for {
+  val possibleWalls: Set[Wall] = for {
     field <- fields if (! field.isSouthBorder) && (! field.isEastBorder)
     orientation <- List(Horizontal, Vertical)
-  } yield Wall(field, orientation))(collection.breakOut)
+  } yield Wall(field, orientation)
 }
 
 

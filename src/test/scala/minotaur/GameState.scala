@@ -7,7 +7,7 @@ class BoardSpec extends Specification {
     "be 0 to 8 for a 3x3 board" in {
       val boardType = BoardType(size = 3)
 
-      boardType.fields === Vector(
+      boardType.fields === Set(
         Location(0, boardType),
         Location(1, boardType),
         Location(2, boardType),
