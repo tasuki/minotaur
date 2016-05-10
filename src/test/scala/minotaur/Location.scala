@@ -3,6 +3,16 @@ package minotaur
 import org.specs2.mutable.Specification
 
 class LocationSpec extends Specification {
+  "Out of bounds location" should {
+    "throw an exception when location is before the board" in {
+      Location(location = -1, BoardType(3)) must throwA[IllegalArgumentException]
+    }
+
+    "throw an exception when location is after the board" in {
+      Location(location = 9, BoardType(3)) must throwA[IllegalArgumentException]
+    }
+  }
+
   "Top left corner" should {
     val location = Location(location=0, BoardType(3))
 
