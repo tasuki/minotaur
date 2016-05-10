@@ -1,19 +1,12 @@
 package minotaur
 
 case class Location(location: Int, boardType: BoardType) {
-  val size = boardType.size
+  private val boardSize = boardType.size
 
-  def isNorthBorder() =
-    location < size
-
-  def isSouthBorder() =
-    location >= size * (size - 1)
-
-  def isEastBorder() =
-    location % size == size - 1
-
-  def isWestBorder() =
-    location % size == 0
+  val isNorthBorder = location < boardSize
+  val isSouthBorder = location >= boardSize * (boardSize - 1)
+  val isEastBorder = location % boardSize == boardSize - 1
+  val isWestBorder = location % boardSize == 0
 }
 
 
