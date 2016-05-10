@@ -1,7 +1,10 @@
 package minotaur
 
 case class Location(location: Int, boardType: BoardType) {
-  require(boardType.possibleFields contains location, "Location not on board...")
+  require(
+    boardType.possibleLocations contains location,
+    "Location not on board"
+  )
 
   private val boardSize = boardType.size
 
@@ -11,29 +14,44 @@ case class Location(location: Int, boardType: BoardType) {
   val isWestBorder = location % boardSize == 0
 }
 
-
 sealed trait WallOrientation
 case object Horizontal extends WallOrientation
 case object Vertical extends WallOrientation
 
-case class Wall(topLeft: Location, orientation: WallOrientation)
-
-
-case class BoardType(size: Int = 9) {
-  val possibleFields: Set[Int] = (
-    for(field <- 0 to size * size - 1) yield field
-  )(collection.breakOut)
-
-  val fields: Set[Location] =
-    for(field <- possibleFields)
-    yield Location(field, this)
-
-  val possibleWalls: Set[Wall] = for {
-    field <- fields if (! field.isSouthBorder) && (! field.isEastBorder)
-    orientation <- List(Horizontal, Vertical)
-  } yield Wall(field, orientation)
+case class Wall(
+  topLeft: Location,
+  orientation: WallOrientation,
+  boardType: BoardType
+) {
+  require(
+    boardType.wallLocations contains topLeft,
+    "This wall is not permissible"
+  )
 }
 
+case class BoardType(size: Int = 9) {
+  // used to verify location validity
+  val possibleLocations: Set[Int] = (
+    for (field <- 0 to size * size - 1) yield field
+  )(collection.breakOut)
+
+  // all locations on the board
+  val locations: Set[Location] =
+    for (field <- possibleLocations)
+      yield Location(field, this)
+
+  // used to verify wall validity
+  val wallLocations: Set[Location] = for {
+    location <- locations
+    if (!location.isSouthBorder) && (!location.isEastBorder)
+  } yield location
+
+  // possible walls on the board
+  val possibleWalls: Set[Wall] = for {
+    location <- wallLocations
+    orientation <- List(Horizontal, Vertical)
+  } yield Wall(location, orientation, this)
+}
 
 case class Board(
   boardType: BoardType,
@@ -43,7 +61,6 @@ case class Board(
   size: Int = 9
 ) {
 }
-
 
 case class GameState(
   board: Board,
