@@ -26,4 +26,38 @@ class WallSpec extends Specification {
       Wall(Location(7, BoardType(3)), Horizontal) must throwA[IllegalArgumentException]
     }
   }
+
+  "Top left wall" should {
+    val wall = Wall(Location(0, BoardType(3)), Horizontal)
+
+    "be northmost" in {
+      wall.isNorthmost must beTrue
+    }
+    "not be southmost" in {
+      wall.isSouthmost must beFalse
+    }
+    "not be eastmost" in {
+      wall.isEastmost must beFalse
+    }
+    "be westmost" in {
+      wall.isWestmost must beTrue
+    }
+  }
+
+  "Bottom right wall" should {
+    val wall = Wall(Location(4, BoardType(3)), Horizontal)
+
+    "not be northmost" in {
+      wall.isNorthmost must beFalse
+    }
+    "be southmost" in {
+      wall.isSouthmost must beTrue
+    }
+    "be eastmost" in {
+      wall.isEastmost must beTrue
+    }
+    "not be westmost" in {
+      wall.isWestmost must beFalse
+    }
+  }
 }

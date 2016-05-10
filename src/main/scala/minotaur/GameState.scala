@@ -12,6 +12,22 @@ case class Location(location: Int, boardType: BoardType) {
   val isSouthBorder = location >= boardSize * (boardSize - 1)
   val isEastBorder = location % boardSize == boardSize - 1
   val isWestBorder = location % boardSize == 0
+
+  def northernNeighbor: Option[Location] =
+    if (isNorthBorder) None
+    else Some(Location(location - boardSize, boardType))
+
+  def southernNeighbor: Option[Location] =
+    if (isSouthBorder) None
+    else Some(Location(location + boardSize, boardType))
+
+  def easternNeighbor: Option[Location] =
+    if (isEastBorder) None
+    else Some(Location(location + 1, boardType))
+
+  def westernNeighbor: Option[Location] =
+    if (isWestBorder) None
+    else Some(Location(location - 1, boardType))
 }
 
 sealed trait WallOrientation {
@@ -31,6 +47,11 @@ case class Wall(
     topLeft.boardType.wallLocations contains topLeft,
     "This wall is not permissible"
   )
+
+  val isNorthmost = topLeft.isNorthBorder
+  val isSouthmost = topLeft.southernNeighbor.map(_.isSouthBorder).getOrElse(true)
+  val isEastmost = topLeft.easternNeighbor.map(_.isEastBorder).getOrElse(true)
+  val isWestmost = topLeft.isWestBorder
 }
 
 case class BoardType(size: Int = 9) {
