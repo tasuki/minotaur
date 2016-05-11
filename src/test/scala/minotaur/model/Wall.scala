@@ -1,4 +1,4 @@
-package minotaur
+package minotaur.model
 
 import org.specs2.mutable.Specification
 
