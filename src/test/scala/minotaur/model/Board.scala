@@ -19,6 +19,12 @@ class BoardSpec extends Specification {
         Location(8, boardType)
       )
     }
+
+    "be 81 for a 9x9 board" in {
+      val boardType = BoardType(size = 9)
+
+      boardType.locations.length === 81
+    }
   }
 
   "Possible walls" should {
@@ -35,6 +41,12 @@ class BoardSpec extends Specification {
         Wall(Location(4, bt), Horizontal),
         Wall(Location(4, bt), Vertical)
       )
+    }
+
+    "be 128 for a 9x9 board" in {
+      val boardType = BoardType(size = 9)
+
+      boardType.possibleWalls.length === 128
     }
   }
 }
