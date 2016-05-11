@@ -23,7 +23,7 @@ case class Wall(
   val isEastmost = location.easternNeighbor.map(_.isEastBorder).getOrElse(true)
   val isWestmost = location.isWestBorder
 
-  def wallExtensions: List[Wall] = {
+  private def wallOverlaps: List[Wall] = {
     var mutableList = collection.mutable.MutableList[Wall]()
     if (orientation == Vertical) {
       if (!isNorthmost) {
@@ -43,5 +43,5 @@ case class Wall(
     mutableList.toList
   }
 
-  def blocks: List[Wall] = Wall(location, orientation.opposite) :: wallExtensions
+  def blocks: List[Wall] = Wall(location, orientation.opposite) :: wallOverlaps
 }
