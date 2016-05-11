@@ -15,19 +15,19 @@ case class Location(location: Int, boardType: BoardType) {
 
   def northernNeighbor: Option[Location] =
     if (isNorthBorder) None
-    else Some(Location(location - boardSize, boardType))
+    else Some(boardType.locations(location - boardSize))
 
   def southernNeighbor: Option[Location] =
     if (isSouthBorder) None
-    else Some(Location(location + boardSize, boardType))
+    else Some(boardType.locations(location + boardSize))
 
   def easternNeighbor: Option[Location] =
     if (isEastBorder) None
-    else Some(Location(location + 1, boardType))
+    else Some(boardType.locations(location + 1))
 
   def westernNeighbor: Option[Location] =
     if (isWestBorder) None
-    else Some(Location(location - 1, boardType))
+    else Some(boardType.locations(location - 1))
 }
 
 sealed trait WallOrientation {
@@ -56,23 +56,23 @@ case class Wall(
 
 case class BoardType(size: Int = 9) {
   // used to verify location validity
-  val possibleLocations: Set[Int] = (
+  val possibleLocations: Vector[Int] = (
     for (field <- 0 to size * size - 1) yield field
   )(collection.breakOut)
 
-  // all locations on the board
-  val locations: Set[Location] =
+  // all locations on the board for jumping around
+  val locations: Vector[Location] =
     for (field <- possibleLocations)
       yield Location(field, this)
 
   // used to verify wall validity
-  val wallLocations: Set[Location] = for {
+  val wallLocations: Vector[Location] = for {
     location <- locations
     if (!location.isSouthBorder) && (!location.isEastBorder)
   } yield location
 
   // possible walls on the board
-  val possibleWalls: Set[Wall] = for {
+  val possibleWalls: Vector[Wall] = for {
     location <- wallLocations
     orientation <- List(Horizontal, Vertical)
   } yield Wall(location, orientation)
