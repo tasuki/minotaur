@@ -8,24 +8,19 @@ case class Location(location: Int, boardType: BoardType) {
 
   private val boardSize = boardType.size
 
-  val isNorthBorder = location < boardSize
-  val isSouthBorder = location >= boardSize * (boardSize - 1)
-  val isEastBorder = location % boardSize == boardSize - 1
-  val isWestBorder = location % boardSize == 0
+  def isBorder(direction: Direction): Boolean = direction match {
+    case North => location < boardSize
+    case South => location >= boardSize * (boardSize - 1)
+    case East => location % boardSize == boardSize - 1
+    case West => location % boardSize == 0
+  }
 
-  def northernNeighbor: Option[Location] =
-    if (isNorthBorder) None
-    else Some(boardType.locations(location - boardSize))
-
-  def southernNeighbor: Option[Location] =
-    if (isSouthBorder) None
-    else Some(boardType.locations(location + boardSize))
-
-  def easternNeighbor: Option[Location] =
-    if (isEastBorder) None
-    else Some(boardType.locations(location + 1))
-
-  def westernNeighbor: Option[Location] =
-    if (isWestBorder) None
-    else Some(boardType.locations(location - 1))
+  def neighbor(direction: Direction): Option[Location] =
+    if (isBorder(direction)) None
+    else direction match {
+      case North => Some(boardType.locations(location - boardSize))
+      case South => Some(boardType.locations(location + boardSize))
+      case East => Some(boardType.locations(location + 1))
+      case West => Some(boardType.locations(location - 1))
+    }
 }

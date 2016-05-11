@@ -14,7 +14,7 @@ case class BoardType(size: Int = 9) {
   // used to verify wall validity
   val possibleWallLocations: Vector[Location] = for {
     location <- locations
-    if (!location.isSouthBorder) && (!location.isEastBorder)
+    if (!location.isBorder(South)) && (!location.isBorder(East))
   } yield location
 
   // possible walls on the board

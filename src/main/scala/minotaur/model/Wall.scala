@@ -18,26 +18,26 @@ case class Wall(
     "This wall is not permissible"
   )
 
-  val isNorthmost = location.isNorthBorder
-  val isSouthmost = location.southernNeighbor.map(_.isSouthBorder).getOrElse(true)
-  val isEastmost = location.easternNeighbor.map(_.isEastBorder).getOrElse(true)
-  val isWestmost = location.isWestBorder
+  val isNorthmost = location.isBorder(North)
+  val isSouthmost = location.neighbor(South).map(_.isBorder(South)).getOrElse(true)
+  val isEastmost = location.neighbor(East).map(_.isBorder(East)).getOrElse(true)
+  val isWestmost = location.isBorder(West)
 
   private def wallOverlaps: List[Wall] = {
     var mutableList = collection.mutable.MutableList[Wall]()
     if (orientation == Vertical) {
       if (!isNorthmost) {
-        mutableList += Wall(location.northernNeighbor.get, orientation)
+        mutableList += Wall(location.neighbor(North).get, orientation)
       }
       if (!isSouthmost) {
-        mutableList += Wall(location.southernNeighbor.get, orientation)
+        mutableList += Wall(location.neighbor(South).get, orientation)
       }
     } else {
       if (!isEastmost) {
-        mutableList += Wall(location.easternNeighbor.get, orientation)
+        mutableList += Wall(location.neighbor(East).get, orientation)
       }
       if (!isWestmost) {
-        mutableList += Wall(location.westernNeighbor.get, orientation)
+        mutableList += Wall(location.neighbor(West).get, orientation)
       }
     }
     mutableList.toList
