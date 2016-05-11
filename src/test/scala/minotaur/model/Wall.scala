@@ -31,16 +31,16 @@ class WallSpec extends Specification {
     val wall = Wall(Location(0, BoardType(3)), Horizontal)
 
     "be northmost" in {
-      wall.isNorthmost must beTrue
+      wall.borders(North) must beTrue
     }
     "not be southmost" in {
-      wall.isSouthmost must beFalse
+      wall.borders(South) must beFalse
     }
     "not be eastmost" in {
-      wall.isEastmost must beFalse
+      wall.borders(East) must beFalse
     }
     "be westmost" in {
-      wall.isWestmost must beTrue
+      wall.borders(West) must beTrue
     }
   }
 
@@ -48,16 +48,16 @@ class WallSpec extends Specification {
     val wall = Wall(Location(4, BoardType(3)), Horizontal)
 
     "not be northmost" in {
-      wall.isNorthmost must beFalse
+      wall.borders(North) must beFalse
     }
     "be southmost" in {
-      wall.isSouthmost must beTrue
+      wall.borders(South) must beTrue
     }
     "be eastmost" in {
-      wall.isEastmost must beTrue
+      wall.borders(East) must beTrue
     }
     "not be westmost" in {
-      wall.isWestmost must beFalse
+      wall.borders(West) must beFalse
     }
   }
 
