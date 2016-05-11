@@ -44,7 +44,7 @@ case class Wall(
   orientation: WallOrientation
 ) {
   require(
-    topLeft.boardType.wallLocations contains topLeft,
+    topLeft.boardType.possibleWallLocations contains topLeft,
     "This wall is not permissible"
   )
 
@@ -66,14 +66,14 @@ case class BoardType(size: Int = 9) {
       yield Location(field, this)
 
   // used to verify wall validity
-  val wallLocations: Vector[Location] = for {
+  val possibleWallLocations: Vector[Location] = for {
     location <- locations
     if (!location.isSouthBorder) && (!location.isEastBorder)
   } yield location
 
   // possible walls on the board
   val possibleWalls: Vector[Wall] = for {
-    location <- wallLocations
+    location <- possibleWallLocations
     orientation <- List(Horizontal, Vertical)
   } yield Wall(location, orientation)
 }
