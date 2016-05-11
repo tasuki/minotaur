@@ -23,25 +23,18 @@ case class Wall(
     case d @ (South | East) => location.neighbor(d).map(_.isBorder(d)).get
   }
 
-  private def wallOverlaps: List[Wall] = {
-    var mutableList = collection.mutable.MutableList[Wall]()
-    if (orientation == Vertical) {
-      if (!borders(North)) {
-        mutableList += Wall(location.neighbor(North).get, orientation)
-      }
-      if (!borders(South)) {
-        mutableList += Wall(location.neighbor(South).get, orientation)
-      }
-    } else {
-      if (!borders(East)) {
-        mutableList += Wall(location.neighbor(East).get, orientation)
-      }
-      if (!borders(West)) {
-        mutableList += Wall(location.neighbor(West).get, orientation)
-      }
-    }
-    mutableList.toList
+  private def wallOverlaps: Seq[Wall] = {
+    if (orientation == Vertical)
+      for {
+        direction <- Seq(North, South)
+        loc <- location.neighbor(direction) if !borders(direction)
+      } yield Wall(loc, orientation)
+    else
+      for {
+        direction <- Seq(East, West)
+        loc <- location.neighbor(direction) if !borders(direction)
+      } yield Wall(loc, orientation)
   }
 
-  def blocks: List[Wall] = Wall(location, orientation.opposite) :: wallOverlaps
+  def blocks: Seq[Wall] = wallOverlaps :+ Wall(location, orientation.opposite)
 }
