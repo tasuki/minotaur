@@ -10,16 +10,38 @@ case object Horizontal extends WallOrientation
 case object Vertical extends WallOrientation
 
 case class Wall(
-  topLeft: Location,
+  location: Location,
   orientation: WallOrientation
 ) {
   require(
-    topLeft.boardType.possibleWallLocations contains topLeft,
+    location.boardType.possibleWallLocations contains location,
     "This wall is not permissible"
   )
 
-  val isNorthmost = topLeft.isNorthBorder
-  val isSouthmost = topLeft.southernNeighbor.map(_.isSouthBorder).getOrElse(true)
-  val isEastmost = topLeft.easternNeighbor.map(_.isEastBorder).getOrElse(true)
-  val isWestmost = topLeft.isWestBorder
+  val isNorthmost = location.isNorthBorder
+  val isSouthmost = location.southernNeighbor.map(_.isSouthBorder).getOrElse(true)
+  val isEastmost = location.easternNeighbor.map(_.isEastBorder).getOrElse(true)
+  val isWestmost = location.isWestBorder
+
+  def wallExtensions: List[Wall] = {
+    var mutableList = collection.mutable.MutableList[Wall]()
+    if (orientation == Vertical) {
+      if (!isNorthmost) {
+        mutableList += Wall(location.northernNeighbor.get, orientation)
+      }
+      if (!isSouthmost) {
+        mutableList += Wall(location.southernNeighbor.get, orientation)
+      }
+    } else {
+      if (!isEastmost) {
+        mutableList += Wall(location.easternNeighbor.get, orientation)
+      }
+      if (!isWestmost) {
+        mutableList += Wall(location.westernNeighbor.get, orientation)
+      }
+    }
+    mutableList.toList
+  }
+
+  def blocks: List[Wall] = Wall(location, orientation.opposite) :: wallExtensions
 }

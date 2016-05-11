@@ -60,4 +60,38 @@ class WallSpec extends Specification {
       wall.isWestmost must beFalse
     }
   }
+
+  "Upper left vertical wall" should {
+    val wall = Wall(Location(0, BoardType(3)), Vertical)
+
+    "block crossing and neighbor" in {
+      wall.blocks === List(
+        Wall(Location(0, BoardType(3)), Horizontal),
+        Wall(Location(3, BoardType(3)), Vertical)
+      )
+    }
+  }
+
+  "Bottom right horizontal wall" should {
+    val wall = Wall(Location(4, BoardType(3)), Horizontal)
+
+    "block crossing and neighbor" in {
+      wall.blocks === List(
+        Wall(Location(4, BoardType(3)), Vertical),
+        Wall(Location(3, BoardType(3)), Horizontal)
+      )
+    }
+  }
+
+  "Somewhere in the middle wall" should {
+    val wall = Wall(Location(21, BoardType(9)), Horizontal)
+
+    "block crossing and its neighbors" in {
+      wall.blocks === List(
+        Wall(Location(21, BoardType(9)), Vertical),
+        Wall(Location(22, BoardType(9)), Horizontal),
+        Wall(Location(20, BoardType(9)), Horizontal)
+      )
+    }
+  }
 }
