@@ -7,6 +7,7 @@ case class Location(location: Int, boardType: BoardType) {
   )
 
   private val boardSize = boardType.size
+  private val locations = boardType.locations
 
   def isBorder(direction: Direction): Boolean = direction match {
     case North => location < boardSize
@@ -18,9 +19,9 @@ case class Location(location: Int, boardType: BoardType) {
   def neighbor(direction: Direction): Option[Location] =
     if (isBorder(direction)) None
     else direction match {
-      case North => Some(boardType.locations(location - boardSize))
-      case South => Some(boardType.locations(location + boardSize))
-      case East => Some(boardType.locations(location + 1))
-      case West => Some(boardType.locations(location - 1))
+      case North => Some(locations(location - boardSize))
+      case South => Some(locations(location + boardSize))
+      case East => Some(locations(location + 1))
+      case West => Some(locations(location - 1))
     }
 }
