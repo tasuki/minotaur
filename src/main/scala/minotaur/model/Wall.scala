@@ -27,10 +27,10 @@ case class Wall(
     case d @ (South | East) => location.neighbor(d).map(_.isBorder(d)).get
   }
 
-  private def wallOverlaps: Seq[Wall] = for {
+  private def extensionOverlaps: Seq[Wall] = for {
     direction <- orientation.directions
     loc <- location.neighbor(direction) if !borders(direction)
   } yield Wall(loc, orientation)
 
-  def blocks: Seq[Wall] = wallOverlaps :+ Wall(location, orientation.opposite)
+  def overlaps: Seq[Wall] = extensionOverlaps :+ Wall(location, orientation.opposite)
 }

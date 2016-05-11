@@ -64,8 +64,8 @@ class WallSpec extends Specification {
   "Upper left vertical wall" should {
     val wall = Wall(Location(0, BoardType(3)), Vertical)
 
-    "block crossing and neighbor" in {
-      wall.blocks === List(
+    "overlap with crossing and neighbor" in {
+      wall.overlaps === List(
         Wall(Location(3, BoardType(3)), Vertical),
         Wall(Location(0, BoardType(3)), Horizontal)
       )
@@ -75,8 +75,8 @@ class WallSpec extends Specification {
   "Bottom right horizontal wall" should {
     val wall = Wall(Location(4, BoardType(3)), Horizontal)
 
-    "block crossing and neighbor" in {
-      wall.blocks === List(
+    "overlap with crossing and neighbor" in {
+      wall.overlaps === List(
         Wall(Location(3, BoardType(3)), Horizontal),
         Wall(Location(4, BoardType(3)), Vertical)
       )
@@ -86,8 +86,8 @@ class WallSpec extends Specification {
   "Somewhere in the middle wall" should {
     val wall = Wall(Location(21, BoardType(9)), Horizontal)
 
-    "block crossing and its neighbors" in {
-      wall.blocks === List(
+    "overlap with crossing and its neighbors" in {
+      wall.overlaps === List(
         Wall(Location(22, BoardType(9)), Horizontal),
         Wall(Location(20, BoardType(9)), Horizontal),
         Wall(Location(21, BoardType(9)), Vertical)
