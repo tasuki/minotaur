@@ -65,7 +65,7 @@ class WallSpec extends Specification {
     val wall = Wall(Location(0, BoardType(3)), Vertical)
 
     "overlap with crossing and neighbor" in {
-      wall.overlaps === List(
+      wall.overlaps === Seq(
         Wall(Location(3, BoardType(3)), Vertical),
         Wall(Location(0, BoardType(3)), Horizontal)
       )
@@ -76,7 +76,7 @@ class WallSpec extends Specification {
     val wall = Wall(Location(4, BoardType(3)), Horizontal)
 
     "overlap with crossing and neighbor" in {
-      wall.overlaps === List(
+      wall.overlaps === Seq(
         Wall(Location(3, BoardType(3)), Horizontal),
         Wall(Location(4, BoardType(3)), Vertical)
       )
@@ -87,10 +87,42 @@ class WallSpec extends Specification {
     val wall = Wall(Location(21, BoardType(9)), Horizontal)
 
     "overlap with crossing and its neighbors" in {
-      wall.overlaps === List(
+      wall.overlaps === Seq(
         Wall(Location(22, BoardType(9)), Horizontal),
         Wall(Location(20, BoardType(9)), Horizontal),
         Wall(Location(21, BoardType(9)), Vertical)
+      )
+    }
+  }
+
+  "A wall in the middle" should {
+    "touch 10 other walls" in {
+      val wall = Wall(Location(54, BoardType(10)), Horizontal)
+      wall.touches === Seq(
+        Wall(Location(56, BoardType(10)), Horizontal),
+        Wall(Location(52, BoardType(10)), Horizontal),
+
+        Wall(Location(45, BoardType(10)), Vertical),
+        Wall(Location(65, BoardType(10)), Vertical),
+        Wall(Location(43, BoardType(10)), Vertical),
+        Wall(Location(63, BoardType(10)), Vertical),
+
+        Wall(Location(44, BoardType(10)), Vertical),
+        Wall(Location(64, BoardType(10)), Vertical),
+        Wall(Location(55, BoardType(10)), Vertical),
+        Wall(Location(53, BoardType(10)), Vertical)
+      )
+    }
+  }
+
+  "A wall on a small board" should {
+    "touch 3 other walls" in {
+      val wall = Wall(Location(0, BoardType(3)), Vertical)
+
+      wall.touches === Seq(
+        Wall(Location(4, BoardType(3)), Horizontal),
+        Wall(Location(3, BoardType(3)), Horizontal),
+        Wall(Location(1, BoardType(3)), Horizontal)
       )
     }
   }

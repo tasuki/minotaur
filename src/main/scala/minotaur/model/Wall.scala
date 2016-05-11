@@ -9,6 +9,7 @@ sealed trait WallOrientation {
     case Vertical => Seq(North, South)
     case Horizontal => Seq(East, West)
   }
+  val allDirections = Seq(North, South, East, West)
 }
 case object Vertical extends WallOrientation
 case object Horizontal extends WallOrientation
@@ -33,4 +34,25 @@ case class Wall(
   } yield Wall(loc, orientation)
 
   def overlaps: Seq[Wall] = extensionOverlaps :+ Wall(location, orientation.opposite)
+
+  private def touchesI = for {
+    direction <- orientation.directions
+    extension <- location.neighbor(direction).flatMap(l => l.neighbor(direction))
+      if extension.boardType.possibleWallLocations contains extension
+  } yield Wall(extension, orientation)
+
+  private def touchesL = for {
+    dir1 <- orientation.directions
+    dir2 <- orientation.opposite.directions
+    extension <- location.neighbor(dir1).flatMap(l => l.neighbor(dir2))
+      if extension.boardType.possibleWallLocations contains extension
+  } yield Wall(extension, orientation.opposite)
+
+  private def touchesT = for {
+    dir <- orientation.allDirections
+    extension <- location.neighbor(dir)
+      if extension.boardType.possibleWallLocations contains extension
+  } yield Wall(extension, orientation.opposite)
+
+  def touches: Seq[Wall] = touchesI ++ touchesL ++ touchesT
 }
