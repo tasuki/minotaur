@@ -19,7 +19,7 @@ case class Wall(
   orientation: WallOrientation
 ) {
   require(
-    location.boardType.possibleWallLocations contains location,
+    location.allowsWallPlacement,
     "This wall is not permissible"
   )
 
@@ -38,20 +38,20 @@ case class Wall(
   private def touchesI = for {
     direction <- orientation.directions
     extension <- location.neighbor(direction).flatMap(l => l.neighbor(direction))
-      if extension.boardType.possibleWallLocations contains extension
+      if extension.allowsWallPlacement
   } yield Wall(extension, orientation)
 
   private def touchesL = for {
     dir1 <- orientation.directions
     dir2 <- orientation.opposite.directions
     extension <- location.neighbor(dir1).flatMap(l => l.neighbor(dir2))
-      if extension.boardType.possibleWallLocations contains extension
+      if extension.allowsWallPlacement
   } yield Wall(extension, orientation.opposite)
 
   private def touchesT = for {
     dir <- orientation.allDirections
     extension <- location.neighbor(dir)
-      if extension.boardType.possibleWallLocations contains extension
+      if extension.allowsWallPlacement
   } yield Wall(extension, orientation.opposite)
 
   def touches: Seq[Wall] = touchesI ++ touchesL ++ touchesT
