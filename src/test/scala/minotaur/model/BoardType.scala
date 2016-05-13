@@ -2,7 +2,7 @@ package minotaur.model
 
 import org.specs2.mutable.Specification
 
-class BoardSpec extends Specification {
+class BoardTypeSpec extends Specification {
   "Board type locations" should {
     "be 0 to 8 for a 3x3 board" in {
       val boardType = BoardType(size = 3)
