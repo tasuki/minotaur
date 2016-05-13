@@ -16,7 +16,9 @@ class BoardReaderSpec extends Specification {
         |.   .   .
         |      x
         |.   .   .   .
-      """.stripMargin.trim) must throwA[IllegalArgumentException]
+      """.stripMargin.trim) must throwA(new IllegalArgumentException(
+        "requirement failed: The board should be square"
+      ))
     }
 
     "throw an exception on non-square board" in {
@@ -26,7 +28,9 @@ class BoardReaderSpec extends Specification {
         |.   .   .   .
         |      x
         |.   .   .   .
-      """.stripMargin.trim) must throwA[IllegalArgumentException]
+      """.stripMargin.trim) must throwA(new IllegalArgumentException(
+        "requirement failed: The board should be square"
+      ))
     }
   }
 
@@ -41,7 +45,9 @@ class BoardReaderSpec extends Specification {
         |.   .   .   .
         |      x
         |.   .   .   .
-      """.stripMargin.trim) must throwA[IllegalArgumentException]
+      """.stripMargin.trim) must throwA(new IllegalArgumentException(
+        "requirement failed: Horizontal walls do not form proper pairs"
+      ))
     }
 
     "throw an exception on walls not in the same row" in {
@@ -53,7 +59,9 @@ class BoardReaderSpec extends Specification {
         |.   .   .___.
         |      x
         |.   .   .   .
-      """.stripMargin.trim) must throwA[IllegalArgumentException]
+      """.stripMargin.trim) must throwA(new IllegalArgumentException(
+        "requirement failed: Horizontal walls do not form proper pairs"
+      ))
     }
 
     "throw an exception on disconnected walls" in {
@@ -65,7 +73,9 @@ class BoardReaderSpec extends Specification {
         |.   .   .   .
         |      x
         |.   .   .   .
-      """.stripMargin.trim) must throwA[IllegalArgumentException]
+      """.stripMargin.trim) must throwA(new IllegalArgumentException(
+        "requirement failed: Horizontal walls do not form proper pairs"
+      ))
     }
   }
 
@@ -80,8 +90,9 @@ class BoardReaderSpec extends Specification {
         |.   .   .   .
         |      x
         |.   .   .   .
-      """.stripMargin.trim) must throwA[IllegalArgumentException]
-
+      """.stripMargin.trim) must throwA(new IllegalArgumentException(
+        "requirement failed: Vertical walls do not form proper pairs"
+      ))
     }
 
     "throw an exception on walls not in the same column" in {
@@ -93,7 +104,9 @@ class BoardReaderSpec extends Specification {
         |.   .   .   .
         |      x
         |.   .   .   .
-      """.stripMargin.trim) must throwA[IllegalArgumentException]
+      """.stripMargin.trim) must throwA(new IllegalArgumentException(
+        "requirement failed: Vertical walls do not form proper pairs"
+      ))
     }
 
     "throw an exception on disconnected walls" in {
@@ -105,7 +118,9 @@ class BoardReaderSpec extends Specification {
         |.   .   .   .
         |      x |
         |.   .   .   .
-      """.stripMargin.trim) must throwA[IllegalArgumentException]
+      """.stripMargin.trim) must throwA(new IllegalArgumentException(
+        "requirement failed: Vertical walls do not form proper pairs"
+      ))
     }
   }
 
@@ -117,7 +132,9 @@ class BoardReaderSpec extends Specification {
         |.   .   .
         |
         |.   .   .
-      """.stripMargin.trim) must throwA[IllegalArgumentException]
+      """.stripMargin.trim) must throwA(new IllegalArgumentException(
+        "requirement failed: There needs to be exactly one pawn x"
+      ))
     }
 
     "throw an exception on missing white pawn" in {
@@ -127,7 +144,9 @@ class BoardReaderSpec extends Specification {
         |.   .   .
         |
         |.   .   .
-      """.stripMargin.trim) must throwA[IllegalArgumentException]
+      """.stripMargin.trim) must throwA(new IllegalArgumentException(
+        "requirement failed: There needs to be exactly one pawn o"
+      ))
     }
 
     "throw an exception on double black pawn" in {
@@ -137,7 +156,9 @@ class BoardReaderSpec extends Specification {
         |.   .   .
         |  x   x
         |.   .   .
-      """.stripMargin.trim) must throwA[IllegalArgumentException]
+      """.stripMargin.trim) must throwA(new IllegalArgumentException(
+        "requirement failed: There needs to be exactly one pawn x"
+      ))
     }
   }
 

@@ -50,7 +50,10 @@ object BoardReader {
     orientation: Orientation
   ): Set[Wall] = {
     val pairs = wallLocations.grouped(2).toList
-    for (pair <- pairs) require(pair.length == 2)
+    for (pair <- pairs) require(
+      pair.length == 2,
+      s"$orientation walls do not form proper pairs"
+    )
 
     for (List(first, second) <- pairs) {
       require(
@@ -70,7 +73,7 @@ object BoardReader {
     for (line <- oddRows) {
       require(
         line.length == boardType.size + 1,
-        "Odd row board line length does not match board size"
+        "The board should be square"
       )
     }
 
