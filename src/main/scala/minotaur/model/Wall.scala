@@ -1,6 +1,6 @@
 package minotaur.model
 
-sealed trait WallOrientation {
+sealed trait Orientation {
   val opposite = this match {
     case Vertical => Horizontal
     case Horizontal => Vertical
@@ -11,12 +11,12 @@ sealed trait WallOrientation {
   }
   val allDirections = Seq(North, South, East, West)
 }
-case object Vertical extends WallOrientation
-case object Horizontal extends WallOrientation
+case object Vertical extends Orientation
+case object Horizontal extends Orientation
 
 case class Wall(
   location: Location,
-  orientation: WallOrientation
+  orientation: Orientation
 ) {
   require(
     location.allowsWallPlacement,

@@ -28,8 +28,5 @@ case class Board(
   boardType: BoardType,
   black: Location,
   white: Location,
-  walls: Set[Wall] = Set(),
-  size: Int = 9
-) {
-}
-
+  walls: Set[Wall] = Set()
+)
