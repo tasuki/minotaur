@@ -22,13 +22,10 @@ object BoardReader {
     val horizontalWalls = getHorizontalWalls(oddRows, boardType)
     val verticalWalls = getVerticalWalls(evenRows, boardType)
 
-    val blackLocation = Location(0, boardType)
-    val whiteLocation = Location(0, boardType)
-
     Board(
       boardType,
-      blackLocation,
-      whiteLocation,
+      getPawnLocation('x', evenRows, boardType),
+      getPawnLocation('o', evenRows, boardType),
       horizontalWalls ++ verticalWalls
     )
   }
@@ -58,7 +55,7 @@ object BoardReader {
     for (List(first, second) <- pairs) {
       require(
         first.neighbor(direction) == Some(second),
-        "$orientation walls do not form proper pairs"
+        s"$orientation walls do not form proper pairs"
       )
     }
 
@@ -111,5 +108,21 @@ object BoardReader {
     })
 
     getWalls(wallLocations, South, Vertical)
+  }
+
+  private def getPawnLocation(
+    sign: Char,
+    evenRows: List[List[String]],
+    boardType: BoardType
+  ): Location = {
+    val pawnLocations = getLocations(
+      evenRows,
+      f => f.length > 2 && f.charAt(2) == sign,
+      boardType
+    )
+
+    require(pawnLocations.length == 1, s"There needs to be exactly one pawn $sign")
+
+    pawnLocations(0)
   }
 }

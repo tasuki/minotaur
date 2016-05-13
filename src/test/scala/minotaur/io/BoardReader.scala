@@ -109,6 +109,38 @@ class BoardReaderSpec extends Specification {
     }
   }
 
+  "A board with incorrect pawns" should {
+    "throw an exception on missing black pawn" in {
+      BoardReader.fromString("""
+        |.   .   .
+        |      o
+        |.   .   .
+        |
+        |.   .   .
+      """.stripMargin.trim) must throwA[IllegalArgumentException]
+    }
+
+    "throw an exception on missing white pawn" in {
+      BoardReader.fromString("""
+        |.   .   .
+        |      x
+        |.   .   .
+        |
+        |.   .   .
+      """.stripMargin.trim) must throwA[IllegalArgumentException]
+    }
+
+    "throw an exception on double black pawn" in {
+      BoardReader.fromString("""
+        |.   .   .
+        |      o
+        |.   .   .
+        |  x   x
+        |.   .   .
+      """.stripMargin.trim) must throwA[IllegalArgumentException]
+    }
+  }
+
 
   "Valid sample board" should {
     val board = BoardReader.fromFile("src/test/resources/board.txt")
@@ -125,6 +157,11 @@ class BoardReaderSpec extends Specification {
         Wall(Location(55, boardType), Vertical),
         Wall(Location(58, boardType), Vertical)
       )
+    }
+
+    "have correctly positioned pawns" in {
+      board.black === Location(58, boardType)
+      board.white === Location(4, boardType)
     }
   }
 }
