@@ -124,6 +124,22 @@ class BoardReaderSpec extends Specification {
     }
   }
 
+  "Crossing walls" should {
+    "throw an exception" in {
+      BoardReader.fromString("""
+        |.   .   .   .
+        |      o
+        |.   .   .   .
+        |        |
+        |.   .___.___.
+        |      x |
+        |.   .   .   .
+      """.stripMargin.trim) must throwA(new IllegalArgumentException(
+        "requirement failed: Walls cross each other"
+      ))
+    }
+  }
+
   "A board with incorrect pawns" should {
     "throw an exception on missing black pawn" in {
       BoardReader.fromString("""

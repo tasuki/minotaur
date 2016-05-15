@@ -22,6 +22,12 @@ object BoardReader {
     val horizontalWalls = getHorizontalWalls(oddRows, boardType)
     val verticalWalls = getVerticalWalls(evenRows, boardType)
 
+    require((
+      horizontalWalls.map(w => w.location) intersect
+      verticalWalls.map(w => w.location)
+    ).size == 0,
+    "Walls cross each other")
+
     Board(
       boardType,
       getPawnLocation('x', evenRows, boardType),
