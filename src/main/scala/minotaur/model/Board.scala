@@ -53,42 +53,4 @@ case class Board(
       .filter(l => walls contains Wall(l, direction.orientation.opposite))
       .length == 0
   }
-
-  override def toString = {
-    def getOptionalLocation(position: Int): Option[Location] = {
-      Option(position)
-        .filter(pos => boardType.containsLocation(pos))
-        .map(pos => Location(pos, boardType))
-    }
-
-    def canGo(location: Option[Location], direction: Direction): Boolean = {
-      location
-        .filter(l => !l.isBorder(direction) && !canMove(l, direction))
-        .map(l => false).getOrElse(true)
-    }
-
-    val oddLines = (-1 to boardType.size - 1)
-      .map(row => (0 to boardType.size - 1).map(column => {
-        val optLoc = getOptionalLocation(row*boardType.size + column)
-        if (canGo(optLoc, South)) "+   "
-        else "+---"
-      }).mkString + "+")
-
-    val evenLines = (0 to boardType.size - 1)
-      .map(row => (0 to boardType.size - 1).map(column => {
-        val optLoc = getOptionalLocation(row*boardType.size + column)
-        val side =
-          if (canGo(optLoc, West)) " "
-          else "|"
-
-        val pawn = if (optLoc == Some(black)) "x"
-          else if (optLoc == Some(white)) "o"
-          else " "
-
-        side + " " + pawn + " "
-      }).mkString.replaceAll("""\s+$""",""))
-
-    List(oddLines, evenLines).flatMap(_.zipWithIndex)
-      .sortBy(_._2).map(_._1).mkString("\n") + "\n"
-  }
 }
