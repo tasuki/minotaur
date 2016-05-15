@@ -1,11 +1,13 @@
 package minotaur.model
 
+import scala.io.Source
 import org.specs2.mutable.Specification
 import minotaur.io.BoardReader
 
 class BoardSpec extends Specification {
   "Sample board" should {
-    val board = BoardReader.fromFile("src/test/resources/board.txt")
+    val file = "src/test/resources/board.txt"
+    val board = BoardReader.fromFile(file)
 
     "not allow white moving north off the board" in {
       board.canMove(board.white, North) === false
@@ -31,6 +33,10 @@ class BoardSpec extends Specification {
     }
     "allow black moving west to a free space" in {
       board.canMove(board.black, West) === true
+    }
+
+    "output itself" in {
+      board.toString === Source.fromFile(file).mkString
     }
   }
 }
