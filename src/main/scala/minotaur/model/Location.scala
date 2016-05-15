@@ -2,7 +2,7 @@ package minotaur.model
 
 case class Location(location: Int, boardType: BoardType) {
   require(
-    boardType.possibleLocations contains location,
+    boardType.containsLocation(location),
     "Location not on board"
   )
 

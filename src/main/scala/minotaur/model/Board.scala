@@ -22,6 +22,9 @@ case class BoardType(size: Int = 9) {
     location <- possibleWallLocations
     orientation <- List(Horizontal, Vertical)
   } yield Wall(location, orientation)
+
+  def containsLocation(location: Int): Boolean =
+    possibleLocations contains location
 }
 
 case class Board(
