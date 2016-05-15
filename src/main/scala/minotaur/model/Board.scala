@@ -70,9 +70,9 @@ case class Board(
     val oddLines = (-1 to boardType.size - 1)
       .map(row => (0 to boardType.size - 1).map(column => {
         val optLoc = getOptionalLocation(row*boardType.size + column)
-        if (canGo(optLoc, South)) ".   "
-        else ".___"
-      }).mkString + ".")
+        if (canGo(optLoc, South)) "+   "
+        else "+---"
+      }).mkString + "+")
 
     val evenLines = (0 to boardType.size - 1)
       .map(row => (0 to boardType.size - 1).map(column => {

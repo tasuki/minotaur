@@ -85,7 +85,7 @@ object BoardReader {
 
     val wallLocations = getLocations(
       oddRows.drop(1),
-      _ == ".___",
+      _ == "+---",
       boardType
     )
 
