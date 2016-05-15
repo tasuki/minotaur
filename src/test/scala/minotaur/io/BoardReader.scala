@@ -187,12 +187,21 @@ class BoardReaderSpec extends Specification {
       board.boardType === boardType
     }
 
-    "have correct walls" in {
-      board.walls == Set(
+    "contain correct walls" in {
+      board.walls === Set(
+        Wall(Location(0, boardType), Vertical),
+        Wall(Location(16, boardType), Vertical),
+        Wall(Location(55, boardType), Vertical),
+        Wall(Location(58, boardType), Vertical),
+        Wall(Location(70, boardType), Vertical),
+
+        Wall(Location(7, boardType), Horizontal),
+        Wall(Location(9, boardType), Horizontal),
         Wall(Location(19, boardType), Horizontal),
         Wall(Location(48, boardType), Horizontal),
-        Wall(Location(55, boardType), Vertical),
-        Wall(Location(58, boardType), Vertical)
+        Wall(Location(54, boardType), Horizontal),
+        Wall(Location(61, boardType), Horizontal),
+        Wall(Location(63, boardType), Horizontal)
       )
     }
 
