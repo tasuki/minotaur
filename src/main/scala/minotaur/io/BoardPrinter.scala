@@ -40,9 +40,6 @@ object BoardPrinter {
         side + " " + pawn + " "
       }).mkString.replaceAll("""\s+$""",""))
 
-    println(oddLines)
-    println(evenLines)
-
     List(oddLines, evenLines).flatMap(_.zipWithIndex)
       .sortBy(_._2).map(_._1).mkString("\n") + "\n"
   }
