@@ -19,16 +19,16 @@ object BoardPrinter {
         .map(l => false).getOrElse(true)
     }
 
-    val oddLines = (-1 to boardType.size - 1)
-      .map(row => (0 to boardType.size - 1).map(column => {
-        val optLoc = getOptionalLocation(row*boardType.size + column)
+    val oddLines = (-1 to board.size - 1)
+      .map(row => (0 to board.size - 1).map(column => {
+        val optLoc = getOptionalLocation(row*board.size + column)
         if (canGo(optLoc, South)) "+   "
         else "+---"
       }).mkString + "+")
 
-    val evenLines = (0 to boardType.size - 1)
-      .map(row => (0 to boardType.size - 1).map(column => {
-        val optLoc = getOptionalLocation(row*boardType.size + column)
+    val evenLines = (0 to board.size - 1)
+      .map(row => (0 to board.size - 1).map(column => {
+        val optLoc = getOptionalLocation(row*board.size + column)
         val side =
           if (canGo(optLoc, West)) " "
           else "|"

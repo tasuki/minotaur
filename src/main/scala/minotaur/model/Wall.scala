@@ -9,7 +9,6 @@ sealed trait Orientation {
     case Vertical => Seq(North, South)
     case Horizontal => Seq(East, West)
   }
-  val allDirections = Seq(North, South, East, West)
 }
 case object Vertical extends Orientation
 case object Horizontal extends Orientation
@@ -49,7 +48,7 @@ case class Wall(
   } yield Wall(extension, orientation.opposite)
 
   private def touchesT = for {
-    dir <- orientation.allDirections
+    dir <- Direction.all
     extension <- location.neighbor(dir)
       if extension.allowsWallPlacement
   } yield Wall(extension, orientation.opposite)

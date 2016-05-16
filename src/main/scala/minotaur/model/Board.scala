@@ -6,6 +6,8 @@ case class Board(
   white: Location,
   walls: Set[Wall] = Set()
 ) {
+  val size = boardType.size
+
   def canMove(location: Location, direction: Direction): Boolean = {
     if (! location.neighbor(direction).isDefined)
       return false

@@ -8,6 +8,9 @@ sealed trait Direction {
     case West => Horizontal
   }
 }
+object Direction {
+  def all = Seq(North, South, East, West)
+}
 case object North extends Direction
 case object South extends Direction
 case object East extends Direction
