@@ -28,4 +28,9 @@ case class Board(
       .filter(l => walls contains Wall(l, direction.orientation.opposite))
       .length == 0
   }
+
+  def neighbors(location: Location): Seq[Location] = {
+    Direction.all.filter(dir => canMove(location, dir))
+      .map(dir => location.neighbor(dir).get)
+  }
 }

@@ -1,7 +1,9 @@
 package minotaur.io
 
+import scala.collection.Set
 import minotaur.model.{Board,Location}
 import minotaur.model.{Direction,South,West}
+import minotaur.search.Node
 
 object BoardPrinter {
   private def printWithCellContent(board: Board, cellContent: Option[Location] => String) = {
@@ -47,6 +49,19 @@ object BoardPrinter {
         else " "
 
       " " + pawn + " "
+    })
+  }
+
+  def printSearchNodes(board: Board, nodes: Set[Node]): String = {
+    printWithCellContent(board, (optLoc: Option[Location]) => {
+      val optNode = optLoc.flatMap(loc => nodes.find(n => n.location == loc))
+
+      if (optNode.isDefined) {
+        val cost = optNode.get.costSoFar
+        f"$cost%2d "
+      } else {
+        "   "
+      }
     })
   }
 }
