@@ -31,9 +31,7 @@ object BoardPrinter {
     val evenLines = (0 to board.size - 1)
       .map(row => (0 to board.size - 1).map(column => {
         val optLoc = getOptionalLocation(row*board.size + column)
-        val side =
-          if (canGo(optLoc, West)) " "
-          else "|"
+        val side = if (canGo(optLoc, West)) " " else "|"
 
         side + cellContent(optLoc)
       }).mkString.replaceAll("""\s+$""",""))
@@ -44,24 +42,17 @@ object BoardPrinter {
 
   def print(board: Board): String = {
     printWithCellContent(board, (optLoc: Option[Location]) => {
-      val pawn = if (optLoc == Some(board.black)) "x"
-        else if (optLoc == Some(board.white)) "o"
-        else " "
-
-      " " + pawn + " "
+      if (optLoc == Some(board.black)) " x "
+      else if (optLoc == Some(board.white)) " o "
+      else "   "
     })
   }
 
   def printSearchNodes(board: Board, nodes: Set[Node]): String = {
     printWithCellContent(board, (optLoc: Option[Location]) => {
-      val optNode = optLoc.flatMap(loc => nodes.find(n => n.location == loc))
-
-      if (optNode.isDefined) {
-        val cost = optNode.get.costSoFar
-        f"$cost%2d "
-      } else {
-        "   "
-      }
+      optLoc.flatMap(loc => nodes.find(n => n.location == loc))
+        .map(n => f"${n.costSoFar}%2d ")
+        .getOrElse("   ")
     })
   }
 }
