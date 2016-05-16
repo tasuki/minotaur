@@ -4,7 +4,7 @@ import minotaur.model.{Board,Location}
 import minotaur.model.{Direction,South,West}
 
 object BoardPrinter {
-  def print(board: Board): String = {
+  private def printWithCellContent(board: Board, cellContent: Option[Location] => String) = {
     val boardType = board.boardType
 
     def getOptionalLocation(position: Int): Option[Location] = {
@@ -33,14 +33,20 @@ object BoardPrinter {
           if (canGo(optLoc, West)) " "
           else "|"
 
-        val pawn = if (optLoc == Some(board.black)) "x"
-          else if (optLoc == Some(board.white)) "o"
-          else " "
-
-        side + " " + pawn + " "
+        side + cellContent(optLoc)
       }).mkString.replaceAll("""\s+$""",""))
 
     List(oddLines, evenLines).flatMap(_.zipWithIndex)
       .sortBy(_._2).map(_._1).mkString("\n") + "\n"
+  }
+
+  def print(board: Board): String = {
+    printWithCellContent(board, (optLoc: Option[Location]) => {
+      val pawn = if (optLoc == Some(board.black)) "x"
+        else if (optLoc == Some(board.white)) "o"
+        else " "
+
+      " " + pawn + " "
+    })
   }
 }
