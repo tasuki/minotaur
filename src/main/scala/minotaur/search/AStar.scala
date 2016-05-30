@@ -64,26 +64,26 @@ object AStar {
         if (closed.find(_.location == neighbor).isEmpty) {
           val potentialCost = current.costSoFar + 1
 
-          val node: Option[Node] = open.find(_.location == neighbor)
-          if (node.isDefined) {
-            // node is open, see if we can reach it in a better way
-            if (potentialCost < node.get.costSoFar) {
-              open -= node.get
+          open.find(_.location == neighbor) match {
+            case Some(node) =>
+              if (potentialCost < node.costSoFar) {
+                // node is open and we can reach it in a better way
+                open -= node
+                open += Node(
+                  neighbor,
+                  Some(current),
+                  potentialCost,
+                  node.estimatedDistance
+                )
+              }
+            case None =>
+              // node isn't open yet, add it
               open += Node(
                 neighbor,
                 Some(current),
                 potentialCost,
-                node.get.estimatedDistance
+                estimateDistance(board, neighbor, direction)
               )
-            }
-          } else {
-            // node isn't open yet, add it
-            open += Node(
-              neighbor,
-              Some(current),
-              potentialCost,
-              estimateDistance(board, neighbor, direction)
-            )
           }
         }
       }
