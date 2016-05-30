@@ -15,7 +15,7 @@ case class Location(location: Int, boardType: BoardType) {
     case West => location % boardSize == 0
   }
 
-  def neighbor(direction: Direction): Option[Location] = {
+  def neighbor(direction: Direction): Option[Location] =
     if (isBorder(direction)) None
     else direction match {
       case North => Some(boardType.locations(location - boardSize))
@@ -23,7 +23,6 @@ case class Location(location: Int, boardType: BoardType) {
       case East => Some(boardType.locations(location + 1))
       case West => Some(boardType.locations(location - 1))
     }
-  }
 
   def allowsWallPlacement: Boolean =
     boardType.possibleWallLocations contains this

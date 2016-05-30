@@ -29,8 +29,7 @@ case class Board(
       .length == 0
   }
 
-  def neighbors(location: Location): Seq[Location] = {
+  def neighbors(location: Location): Seq[Location] =
     Direction.all.filter(canMove(location, _))
       .map(location.neighbor(_).get)
-  }
 }

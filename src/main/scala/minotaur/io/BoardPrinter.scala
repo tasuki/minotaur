@@ -12,29 +12,30 @@ object BoardPrinter {
   ) = {
     val boardType = board.boardType
 
-    def getOptionalLocation(position: Int): Option[Location] = {
+    def getOptionalLocation(position: Int): Option[Location] =
       Option(position)
         .filter(boardType.containsLocation(_))
         .map(Location(_, boardType))
-    }
 
-    def canGo(location: Option[Location], direction: Direction): Boolean = {
+    def shouldPrintWall(
+      location: Option[Location],
+      direction: Direction
+    ): Boolean =
       location
         .filter(l => !l.isBorder(direction) && !board.canMove(l, direction))
         .map(l => false).getOrElse(true)
-    }
 
     val oddLines = (-1 to board.size - 1)
       .map(row => (0 to board.size - 1).map(column => {
         val optLoc = getOptionalLocation(row*board.size + column)
-        if (canGo(optLoc, South)) "+   "
+        if (shouldPrintWall(optLoc, South)) "+   "
         else "+---"
       }).mkString + "+")
 
     val evenLines = (0 to board.size - 1)
       .map(row => (0 to board.size - 1).map(column => {
         val optLoc = getOptionalLocation(row*board.size + column)
-        val side = if (canGo(optLoc, West)) " " else "|"
+        val side = if (shouldPrintWall(optLoc, West)) " " else "|"
 
         side + cellContent(optLoc)
       }).mkString.replaceAll("""\s+$""",""))
@@ -43,19 +44,17 @@ object BoardPrinter {
       .sortBy(_._2).map(_._1).mkString("\n") + "\n"
   }
 
-  def print(board: Board): String = {
-    printWithCellContent(board, (optLoc: Option[Location]) => {
+  def print(board: Board): String =
+    printWithCellContent(board, (optLoc: Option[Location]) =>
       if (optLoc == Some(board.black)) " x "
       else if (optLoc == Some(board.white)) " o "
       else "   "
-    })
-  }
+    )
 
-  def printSearchNodes(board: Board, nodes: Set[Node]): String = {
-    printWithCellContent(board, (optLoc: Option[Location]) => {
+  def printSearchNodes(board: Board, nodes: Set[Node]): String =
+    printWithCellContent(board, (optLoc: Option[Location]) =>
       optLoc.flatMap(loc => nodes.find(_.location == loc))
         .map(n => f"${n.costSoFar}%2d ")
         .getOrElse("   ")
-    })
-  }
+    )
 }

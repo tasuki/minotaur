@@ -38,10 +38,10 @@ object AStar {
 
   def findPath(board: Board, from: Location, direction: Direction): Option[Seq[Location]] = {
     var closed = Set[Node]()
-    var open = SortedSet.empty(Ordering.by((n: Node) => {
+    var open = SortedSet.empty(Ordering.by((n: Node) =>
       // adding a small fraction to make these unique by location
       n.estimatedDistance + n.costSoFar + (n.location.location / 1000.0)
-    }))
+    ))
     open += Node(from, None, 0, estimateDistance(board, from, direction))
 
     while (open.nonEmpty) {
