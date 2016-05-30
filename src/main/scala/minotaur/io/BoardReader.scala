@@ -12,7 +12,7 @@ object BoardReader {
 
   def fromString(str: String) = {
     val fields: List[List[String]] = str.split("\\n").toList
-      .map(line => line.grouped(4).toList)
+      .map(_.grouped(4).toList)
 
     val boardType = BoardType((fields.length - 1) / 2)
 
@@ -23,8 +23,8 @@ object BoardReader {
     val verticalWalls = getVerticalWalls(evenRows, boardType)
 
     require((
-      horizontalWalls.map(w => w.location) intersect
-      verticalWalls.map(w => w.location)
+      horizontalWalls.map(_.location) intersect
+      verticalWalls.map(_.location)
     ).size == 0,
     "Walls cross each other")
 
@@ -41,7 +41,7 @@ object BoardReader {
     condition: String => Boolean,
     boardType: BoardType
   ): Seq[Location] = {
-    val indexed = rows.map(line => line.zipWithIndex).zipWithIndex
+    val indexed = rows.map(_.zipWithIndex).zipWithIndex
 
     for {
       (line, row) <- indexed
@@ -68,8 +68,8 @@ object BoardReader {
       )
     }
 
-    pairs.map(pair => pair(0))
-      .map(l => Wall(l, orientation)).toSet
+    pairs.map(_(0))
+      .map(Wall(_, orientation)).toSet
   }
 
   private def getHorizontalWalls(
@@ -104,7 +104,7 @@ object BoardReader {
     }
 
     val wallLocations = getLocations(
-      evenRows.map(row => row.drop(1)),
+      evenRows.map(_.drop(1)),
       _.head == '|',
       boardType
     ).sortWith((a, b) => {

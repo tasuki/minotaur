@@ -6,13 +6,16 @@ import minotaur.model.{Direction,South,West}
 import minotaur.search.Node
 
 object BoardPrinter {
-  private def printWithCellContent(board: Board, cellContent: Option[Location] => String) = {
+  private def printWithCellContent(
+    board: Board,
+    cellContent: Option[Location] => String
+  ) = {
     val boardType = board.boardType
 
     def getOptionalLocation(position: Int): Option[Location] = {
       Option(position)
-        .filter(pos => boardType.containsLocation(pos))
-        .map(pos => Location(pos, boardType))
+        .filter(boardType.containsLocation(_))
+        .map(Location(_, boardType))
     }
 
     def canGo(location: Option[Location], direction: Direction): Boolean = {
@@ -50,7 +53,7 @@ object BoardPrinter {
 
   def printSearchNodes(board: Board, nodes: Set[Node]): String = {
     printWithCellContent(board, (optLoc: Option[Location]) => {
-      optLoc.flatMap(loc => nodes.find(n => n.location == loc))
+      optLoc.flatMap(loc => nodes.find(_.location == loc))
         .map(n => f"${n.costSoFar}%2d ")
         .getOrElse("   ")
     })

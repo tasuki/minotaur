@@ -30,7 +30,7 @@ case class Board(
   }
 
   def neighbors(location: Location): Seq[Location] = {
-    Direction.all.filter(dir => canMove(location, dir))
-      .map(dir => location.neighbor(dir).get)
+    Direction.all.filter(canMove(location, _))
+      .map(location.neighbor(_).get)
   }
 }

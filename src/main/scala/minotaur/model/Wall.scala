@@ -36,14 +36,14 @@ case class Wall(
 
   private def touchesI = for {
     direction <- orientation.directions
-    extension <- location.neighbor(direction).flatMap(l => l.neighbor(direction))
+    extension <- location.neighbor(direction).flatMap(_.neighbor(direction))
       if extension.allowsWallPlacement
   } yield Wall(extension, orientation)
 
   private def touchesL = for {
     dir1 <- orientation.directions
     dir2 <- orientation.opposite.directions
-    extension <- location.neighbor(dir1).flatMap(l => l.neighbor(dir2))
+    extension <- location.neighbor(dir1).flatMap(_.neighbor(dir2))
       if extension.allowsWallPlacement
   } yield Wall(extension, orientation.opposite)
 

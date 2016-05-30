@@ -61,10 +61,10 @@ object AStar {
       // loop through current neighbors
       for (neighbor <- board.neighbors(current.location)) {
         // only non-closed nodes
-        if (closed.find(n => n.location == neighbor).isEmpty) {
+        if (closed.find(_.location == neighbor).isEmpty) {
           val potentialCost = current.costSoFar + 1
 
-          val node: Option[Node] = open.find(n => n.location == neighbor)
+          val node: Option[Node] = open.find(_.location == neighbor)
           if (node.isDefined) {
             // node is open, see if we can reach it in a better way
             if (potentialCost < node.get.costSoFar) {
