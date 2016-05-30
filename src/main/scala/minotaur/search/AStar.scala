@@ -1,6 +1,6 @@
 package minotaur.search
 
-import scala.collection.mutable.{PriorityQueue,SortedSet,Set,ListBuffer}
+import scala.collection.mutable.{SortedSet,Set,ListBuffer}
 import minotaur.model.{Board,Location}
 import minotaur.model.{Direction,North,South}
 
