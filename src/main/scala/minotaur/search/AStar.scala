@@ -7,7 +7,7 @@ import minotaur.model.{Direction,North,South}
 case class Node(
   location: Location,
   parent: Option[Node],
-  costSoFar: Int,
+  cost: Int,
   estimatedDistance: Int
 )
 
@@ -36,11 +36,18 @@ object AStar {
     Some(lb.toList.reverse)
   }
 
-  def findPath(board: Board, from: Location, direction: Direction): Option[Seq[Location]] = {
+  def findPath(
+    board: Board,
+    from: Location,
+    direction: Direction
+  ): Option[Seq[Location]] = {
+
     var closed = Set[Node]()
+    // SortedSet has log head lookup, but also log find/add/remove
+    // TODO Investigate Set: linear head lookup, but constant find/add/remove
     var open = SortedSet.empty(Ordering.by((n: Node) =>
       // adding a small fraction to make these unique by location
-      n.estimatedDistance + n.costSoFar + (n.location.location / 1000.0)
+      n.estimatedDistance + n.cost + (n.location.location / 1000.0)
     ))
     open += Node(from, None, 0, estimateDistance(board, from, direction))
 
@@ -62,28 +69,23 @@ object AStar {
       for (neighbor <- board.neighbors(current.location)) {
         // only non-closed nodes
         if (closed.find(_.location == neighbor).isEmpty) {
-          val potentialCost = current.costSoFar + 1
+          val newNode = Node(
+            neighbor,
+            Some(current),
+            current.cost + 1,
+            estimateDistance(board, neighbor, direction)
+          )
 
           open.find(_.location == neighbor) match {
             case Some(node) =>
-              if (potentialCost < node.costSoFar) {
+              if (newNode.cost < node.cost) {
                 // node is open and we can reach it in a better way
                 open -= node
-                open += Node(
-                  neighbor,
-                  Some(current),
-                  potentialCost,
-                  node.estimatedDistance
-                )
+                open += newNode
               }
             case None =>
               // node isn't open yet, add it
-              open += Node(
-                neighbor,
-                Some(current),
-                potentialCost,
-                estimateDistance(board, neighbor, direction)
-              )
+              open += newNode
           }
         }
       }

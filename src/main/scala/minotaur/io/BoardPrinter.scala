@@ -54,7 +54,7 @@ object BoardPrinter {
   def printSearchNodes(board: Board, nodes: Set[Node]): String =
     printWithCellContent(board, (optLoc: Option[Location]) =>
       optLoc.flatMap(loc => nodes.find(_.location == loc))
-        .map(n => f"${n.costSoFar}%2d ")
+        .map(n => f"${n.cost}%2d ")
         .getOrElse("   ")
     )
 }
