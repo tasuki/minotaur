@@ -1,7 +1,8 @@
 package minotaur.model
 
 sealed trait Player {
-  def pawn: Char
+  val pawn: Char
+  val destination: Direction
   val next: Player = this match {
     case Black => White
     case White => Black
@@ -12,8 +13,10 @@ object Player {
 }
 
 case object Black extends Player {
-  def pawn = 'x'
+  val pawn = 'x'
+  val destination = North
 }
 case object White extends Player {
-  def pawn = 'o'
+  val pawn = 'o'
+  val destination = South
 }
