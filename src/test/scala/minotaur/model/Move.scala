@@ -21,8 +21,7 @@ class MoveSpec extends Specification {
     )
 
     "list the possible moves" in {
-      gs.getPossibleMoves.map(_.apply(gs))
-        .map(_.board) === Set(
+      gs.getChildren.map(_.board) === Set(
           BoardReader.fromString("""
             |+   +   +   +   +
             |

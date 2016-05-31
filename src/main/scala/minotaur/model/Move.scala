@@ -1,14 +1,15 @@
 package minotaur.model
 
 trait Move {
-  def apply(gameState: GameState): GameState
+  val apply: GameState
 }
 
 case class WallPlacement(
   player: Player,
-  wall: Wall
+  wall: Wall,
+  gs: GameState
 ) extends Move {
-  def apply(gs: GameState) =
+  val apply =
     GameState(
       gs.board.copy(walls = gs.board.walls + wall),
       gs.walls + (player -> (gs.walls(player) - 1)),
@@ -18,9 +19,10 @@ case class WallPlacement(
 
 case class PawnMovement(
   player: Player,
-  location: Location
+  location: Location,
+  gs: GameState
 ) extends Move {
-  def apply(gs: GameState) =
+  val apply =
     GameState(
       gs.board.copy(
         pawns = gs.board.pawns
