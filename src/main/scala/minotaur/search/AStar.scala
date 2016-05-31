@@ -12,18 +12,6 @@ case class Node(
 )
 
 object AStar {
-  private def estimateDistance(
-    board: Board,
-    from: Location,
-    direction: Direction
-  ): Int = {
-    direction match {
-      case North => from.location / board.size
-      case South => board.size - from.location / board.size
-      case _ => throw new IllegalArgumentException
-    }
-  }
-
   private def reconstructPath(current: Node) = {
     var lb = ListBuffer.empty[Location]
     var pathItem = current
@@ -49,7 +37,7 @@ object AStar {
       // adding a small fraction to make these unique by location
       n.estimatedDistance + n.cost + (n.location.location / 1000.0)
     ))
-    open += Node(from, None, 0, estimateDistance(board, from, direction))
+    open += Node(from, None, 0, from.estimateDistance(direction))
 
     while (open.nonEmpty) {
       // best score from the open nodes
@@ -73,7 +61,7 @@ object AStar {
             neighbor,
             Some(current),
             current.cost + 1,
-            estimateDistance(board, neighbor, direction)
+            neighbor.estimateDistance(direction)
           )
 
           open.find(_.location == neighbor) match {

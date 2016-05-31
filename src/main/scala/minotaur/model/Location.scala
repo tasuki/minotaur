@@ -26,4 +26,11 @@ case class Location(location: Int, boardType: BoardType) {
 
   def allowsWallPlacement: Boolean =
     boardType.possibleWallLocations contains this
+
+  def estimateDistance(direction: Direction): Int =
+    direction match {
+      case North => location / boardType.size
+      case South => boardType.size - 1 - location / boardType.size
+      case _ => throw new IllegalArgumentException
+    }
 }

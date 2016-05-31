@@ -111,4 +111,16 @@ class LocationSpec extends Specification {
       location.isBorder(West) must beFalse
     }
   }
+
+  "A location near the top of the board" should {
+    val location = Location(21, BoardType(9))
+
+    "be 2 steps from the north border" in {
+      location.estimateDistance(North) === 2
+    }
+
+    "be 6 steps from the south border" in {
+      location.estimateDistance(South) === 6
+    }
+  }
 }
