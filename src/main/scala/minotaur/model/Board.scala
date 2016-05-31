@@ -40,11 +40,17 @@ case class Board(
     Direction.all.filter(canMove(location, _))
       .map(dir => (dir, location.neighbor(dir).get))
       .map(_ match {
+        // loc is neighbor location
         case (dir, loc) if pawns.isDefinedAt(loc) => {
           if (canMove(loc, dir))
             // jump straight over piece
             Seq(loc.neighbor(dir).get)
-          else Seq() // TODO jump sideways
+          else {
+            // jump sideways
+            dir.orientation.opposite.directions
+              .filter(canMove(loc, _))
+              .map(loc.neighbor(_).get)
+          }
         }
         case (_, loc) => Seq(loc)
       })

@@ -75,5 +75,26 @@ class BoardSpec extends Specification {
         Location( 8, board.boardType)
       )
     }
+
+    "jump sideways if straight jump is impossible" in {
+      val board = BoardReader.fromString("""
+        |+   +   +   +   +
+        |
+        |+   +---+---+   +
+        |      o
+        |+   +   +   +   +
+        |      x |
+        |+   +   +   +   +
+        |        |
+        |+   +   +   +   +
+      """.stripMargin.trim)
+
+      board.availableMoves(Black) === Seq(
+        Location( 6, board.boardType),
+        Location( 4, board.boardType),
+        Location(13, board.boardType),
+        Location( 8, board.boardType)
+      )
+    }
   }
 }
