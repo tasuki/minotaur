@@ -1,7 +1,7 @@
 package minotaur.io
 
 import scala.io.Source
-import minotaur.model.{BoardType,Location,Wall,Board}
+import minotaur.model.{BoardType,Board,Location,Player,Wall}
 import minotaur.model.{Orientation,Horizontal,Vertical}
 import minotaur.model.{Direction,North,South,East,West}
 
@@ -30,8 +30,9 @@ object BoardReader {
 
     Board(
       boardType,
-      getPawnLocation('x', evenRows, boardType),
-      getPawnLocation('o', evenRows, boardType),
+      Player.all.map(
+        player => getPawnLocation(player.pawn, evenRows, boardType) -> player
+      ).toMap,
       horizontalWalls ++ verticalWalls
     )
   }
@@ -120,17 +121,17 @@ object BoardReader {
   }
 
   private def getPawnLocation(
-    sign: Char,
+    pawn: Char,
     evenRows: List[List[String]],
     boardType: BoardType
   ): Location = {
     val pawnLocations = getLocations(
       evenRows,
-      f => f.length > 2 && f.charAt(2) == sign,
+      f => f.length > 2 && f.charAt(2) == pawn,
       boardType
     )
 
-    require(pawnLocations.length == 1, s"There needs to be exactly one pawn $sign")
+    require(pawnLocations.length == 1, s"There needs to be exactly one pawn $pawn")
 
     pawnLocations(0)
   }

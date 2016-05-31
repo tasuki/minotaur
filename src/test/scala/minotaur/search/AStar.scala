@@ -3,6 +3,7 @@ package minotaur.search
 import org.specs2.mutable.Specification
 import minotaur.io.{BoardReader,BoardPrinter}
 import minotaur.model.{Location,North,South}
+import minotaur.model.{Black,White}
 
 class AStarSpec extends Specification {
   "Sample board" should {
@@ -10,7 +11,7 @@ class AStarSpec extends Specification {
     val board = BoardReader.fromFile(file)
 
     "find shortest path north for black" in {
-      AStar.findPath(board, board.black, North) === Some(Seq(
+      AStar.findPath(board, board.pawnLocation(Black), North) === Some(Seq(
         Location(57, board.boardType),
         Location(56, board.boardType),
         Location(47, board.boardType),
@@ -24,7 +25,7 @@ class AStarSpec extends Specification {
     }
 
     "find shortest path south for white" in {
-      AStar.findPath(board, board.white, South) === Some(Seq(
+      AStar.findPath(board, board.pawnLocation(White), South) === Some(Seq(
         Location(13, board.boardType),
         Location(22, board.boardType),
         Location(31, board.boardType),

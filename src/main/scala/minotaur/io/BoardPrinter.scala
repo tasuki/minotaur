@@ -46,9 +46,10 @@ object BoardPrinter {
 
   def print(board: Board): String =
     printWithCellContent(board, (optLoc: Option[Location]) =>
-      if (optLoc == Some(board.black)) " x "
-      else if (optLoc == Some(board.white)) " o "
-      else "   "
+      board.pawns
+        .find({ case(location, _) => optLoc == Some(location)})
+        .map({ case(_, player) => s" ${player.pawn} "})
+        .getOrElse("   ")
     )
 
   def printSearchNodes(board: Board, nodes: Set[Node]): String =

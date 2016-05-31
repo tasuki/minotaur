@@ -9,29 +9,29 @@ class BoardSpec extends Specification {
     val board = BoardReader.fromFile(file)
 
     "not allow white moving north off the board" in {
-      board.canMove(board.white, North) === false
+      board.canMove(board.pawnLocation(White), North) === false
     }
     "allow white moving south to a free space" in {
-      board.canMove(board.white, South) === true
+      board.canMove(board.pawnLocation(White), South) === true
     }
     "allow white moving east to a free space" in {
-      board.canMove(board.white, East) === true
+      board.canMove(board.pawnLocation(White), East) === true
     }
     "allow white moving west to a free space" in {
-      board.canMove(board.white, West) === true
+      board.canMove(board.pawnLocation(White), West) === true
     }
 
     "not allow black moving north through a wall" in {
-      board.canMove(board.black, North) === false
+      board.canMove(board.pawnLocation(Black), North) === false
     }
     "allow black moving south to a free space" in {
-      board.canMove(board.black, South) === true
+      board.canMove(board.pawnLocation(Black), South) === true
     }
     "not allow black moving east through a wall" in {
-      board.canMove(board.black, East) === false
+      board.canMove(board.pawnLocation(Black), East) === false
     }
     "allow black moving west to a free space" in {
-      board.canMove(board.black, West) === true
+      board.canMove(board.pawnLocation(Black), West) === true
     }
   }
 }

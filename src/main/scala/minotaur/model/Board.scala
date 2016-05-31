@@ -2,8 +2,7 @@ package minotaur.model
 
 case class Board(
   boardType: BoardType,
-  black: Location,
-  white: Location,
+  pawns: Map[Location, Player],
   walls: Set[Wall] = Set()
 ) {
   val size = boardType.size
@@ -32,4 +31,7 @@ case class Board(
   def neighbors(location: Location): Seq[Location] =
     Direction.all.filter(canMove(location, _))
       .map(location.neighbor(_).get)
+
+  def pawnLocation(player: Player): Location =
+    pawns.find(_._2 == player).map(_._1).get
 }

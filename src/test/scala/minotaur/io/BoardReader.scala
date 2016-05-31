@@ -4,6 +4,7 @@ import org.specs2.mutable.Specification
 
 import minotaur.model.{BoardType,Location,Wall,Board}
 import minotaur.model.{Horizontal,Vertical}
+import minotaur.model.{Black,White}
 
 class BoardReaderSpec extends Specification {
   "An invalid board" should {
@@ -206,8 +207,8 @@ class BoardReaderSpec extends Specification {
     }
 
     "have correctly positioned pawns" in {
-      board.black === Location(58, boardType)
-      board.white === Location(4, boardType)
+      board.pawnLocation(Black) === Location(58, boardType)
+      board.pawnLocation(White) === Location(4, boardType)
     }
   }
 }

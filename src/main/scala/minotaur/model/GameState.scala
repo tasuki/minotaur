@@ -2,7 +2,6 @@ package minotaur.model
 
 case class GameState(
   board: Board,
-  blackWalls: Int,
-  whiteWalls: Int,
-  whiteOnTurn: Boolean
+  walls: Map[Player, Int],
+  onTurn: Player
 )
