@@ -12,13 +12,13 @@ case class BoardType(size: Int = 9) {
       yield Location(field, this)
 
   // used to verify wall validity
-  val possibleWallLocations: Vector[Location] = for {
+  val possibleWallLocations: Set[Location] = (for {
     location <- locations
     if (!location.isBorder(South)) && (!location.isBorder(East))
-  } yield location
+  } yield location)(collection.breakOut)
 
   // possible walls on the board
-  val possibleWalls: Vector[Wall] = for {
+  val possibleWalls: Set[Wall] = for {
     location <- possibleWallLocations
     orientation <- List(Horizontal, Vertical)
   } yield Wall(location, orientation)

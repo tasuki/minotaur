@@ -31,7 +31,7 @@ class BoardTypeSpec extends Specification {
     "be on 0, 1, 3, 4 for a 3x3 board" in {
       val bt = BoardType(size = 3)
 
-      bt.possibleWalls === Vector(
+      bt.possibleWalls === Set(
         Wall(Location(0, bt), Horizontal),
         Wall(Location(0, bt), Vertical),
         Wall(Location(1, bt), Horizontal),
@@ -46,7 +46,7 @@ class BoardTypeSpec extends Specification {
     "be 128 for a 9x9 board" in {
       val boardType = BoardType(size = 9)
 
-      boardType.possibleWalls.length === 128
+      boardType.possibleWalls.size === 128
     }
   }
 }
