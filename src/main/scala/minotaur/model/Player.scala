@@ -2,9 +2,13 @@ package minotaur.model
 
 sealed trait Player {
   def pawn: Char
+  val next: Player = this match {
+    case Black => White
+    case White => Black
+  }
 }
 object Player {
-  def all = Seq(Black, White)
+  val all: Seq[Player] = Seq(Black, White)
 }
 
 case object Black extends Player {
