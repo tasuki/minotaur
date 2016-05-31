@@ -47,8 +47,8 @@ object BoardPrinter {
   def print(board: Board): String =
     printWithCellContent(board, (optLoc: Option[Location]) =>
       board.pawns
-        .find({ case(location, _) => optLoc == Some(location)})
-        .map({ case(_, player) => s" ${player.pawn} "})
+        .find { case(location, _) => optLoc == Some(location) }
+        .map { case(_, player) => s" ${player.pawn} " }
         .getOrElse("   ")
     )
 
