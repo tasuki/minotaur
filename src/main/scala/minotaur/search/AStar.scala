@@ -13,7 +13,7 @@ case class Node(
 
 object AStar {
   private def reconstructPath(current: Node) = {
-    var lb = ListBuffer.empty[Location]
+    val lb = ListBuffer.empty[Location]
     var pathItem = current
 
     do {
@@ -30,10 +30,10 @@ object AStar {
     direction: Direction
   ): Option[Seq[Location]] = {
 
-    var closed = Set[Node]()
+    val closed = Set[Node]()
     // SortedSet has log head lookup, but also log find/add/remove
     // TODO Investigate Set: linear head lookup, but constant find/add/remove
-    var open = SortedSet.empty(Ordering.by((n: Node) =>
+    val open = SortedSet.empty(Ordering.by((n: Node) =>
       // adding a small fraction to make these unique by location
       n.estimatedDistance + n.cost + (n.location.location / 1000.0)
     ))
