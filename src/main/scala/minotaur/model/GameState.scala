@@ -16,9 +16,9 @@ case class GameState(
       .filter(wallPlacement => {
         // filter path-blocking walls
         val gs = wallPlacement.apply
-        AStar.findPath(
-          gs.board, gs.board.pawnLocation(onTurn), onTurn.destination
-        ).isDefined
+        Player.all.map(player => AStar.findPath(
+          gs.board, gs.board.pawnLocation(player), player.destination
+        )).filter(_.isEmpty).length == 0
       })
 
   def getChildren: Set[GameState] =
