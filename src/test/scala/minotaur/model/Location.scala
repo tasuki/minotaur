@@ -122,5 +122,13 @@ class LocationSpec extends Specification {
     "be 6 steps from the south border" in {
       location.estimateDistance(South) === 6
     }
+
+    "be 5 steps from the east border" in {
+      location.estimateDistance(East) === 5
+    }
+
+    "be 3 steps from the west border" in {
+      location.estimateDistance(West) === 3
+    }
   }
 }

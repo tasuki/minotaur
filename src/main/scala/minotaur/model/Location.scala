@@ -29,8 +29,9 @@ case class Location(location: Int, boardType: BoardType) {
 
   def estimateDistance(direction: Direction): Int =
     direction match {
-      case North => location / boardType.size
-      case South => boardType.size - 1 - location / boardType.size
-      case _ => throw new IllegalArgumentException
+      case North => location / boardSize
+      case South => boardSize - 1 - location / boardSize
+      case East => boardSize - 1 - location % boardSize
+      case West => location % boardSize
     }
 }
