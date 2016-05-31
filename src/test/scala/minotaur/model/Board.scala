@@ -49,7 +49,7 @@ class BoardSpec extends Specification {
         |+   +   +   +   +
       """.stripMargin.trim)
 
-      board.availableMoves(Black) === Seq(
+      board.possibleMoves(Black) === Seq(
         Location( 5, board.boardType),
         Location(13, board.boardType),
         Location( 8, board.boardType)
@@ -69,7 +69,7 @@ class BoardSpec extends Specification {
         |+   +   +   +   +
       """.stripMargin.trim)
 
-      board.availableMoves(Black) === Seq(
+      board.possibleMoves(Black) === Seq(
         Location( 1, board.boardType),
         Location(13, board.boardType),
         Location( 8, board.boardType)
@@ -89,7 +89,7 @@ class BoardSpec extends Specification {
         |+   +   +   +   +
       """.stripMargin.trim)
 
-      board.availableMoves(Black) === Seq(
+      board.possibleMoves(Black) === Seq(
         Location( 6, board.boardType),
         Location( 4, board.boardType),
         Location(13, board.boardType),
@@ -110,7 +110,7 @@ class BoardSpec extends Specification {
         |+   +   +   +   +
       """.stripMargin.trim)
 
-      board.availableMoves(Black) === Seq(
+      board.possibleMoves(Black) === Seq(
         Location( 6, board.boardType),
         Location(13, board.boardType)
       )
@@ -132,7 +132,7 @@ class BoardSpec extends Specification {
       """.stripMargin.trim)
       val bt = board.boardType
 
-      board.availableWalls === Set(
+      board.possibleWalls === Set(
         Wall(Location(2, bt), Vertical),
         Wall(Location(5, bt), Horizontal),
         Wall(Location(6, bt), Vertical),
