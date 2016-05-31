@@ -53,4 +53,8 @@ case class Board(
       })
       .flatten
   }
+
+  def availableWalls: Set[Wall] = {
+    boardType.possibleWalls -- walls -- walls.map(_.overlaps).flatten
+  }
 }

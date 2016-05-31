@@ -116,4 +116,31 @@ class BoardSpec extends Specification {
       )
     }
   }
+
+  "Available walls" should {
+    "be listed" in {
+      val board = BoardReader.fromString("""
+        |+   +   +   +   +
+        |
+        |+   +---+---+   +
+        |    | o
+        |+   +   +   +   +
+        |    | x |
+        |+   +   +   +   +
+        |        |
+        |+   +   +   +   +
+      """.stripMargin.trim)
+      val bt = board.boardType
+
+      board.availableWalls === Set(
+        Wall(Location(2, bt), Vertical),
+        Wall(Location(5, bt), Horizontal),
+        Wall(Location(6, bt), Vertical),
+        Wall(Location(6, bt), Horizontal),
+        Wall(Location(8, bt), Horizontal),
+        Wall(Location(10, bt), Horizontal),
+        Wall(Location(10, bt), Vertical)
+      )
+    }
+  }
 }
