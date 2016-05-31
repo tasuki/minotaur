@@ -34,4 +34,20 @@ case class Board(
 
   def pawnLocation(player: Player): Location =
     pawns.find(_._2 == player).map(_._1).get
+
+  def availableMoves(player: Player): Seq[Location] = {
+    val location = pawnLocation(player)
+    Direction.all.filter(canMove(location, _))
+      .map(dir => (dir, location.neighbor(dir).get))
+      .map(_ match {
+        case (dir, loc) if pawns.isDefinedAt(loc) => {
+          if (canMove(loc, dir))
+            // jump straight over piece
+            Seq(loc.neighbor(dir).get)
+          else Seq() // TODO jump sideways
+        }
+        case (_, loc) => Seq(loc)
+      })
+      .flatten
+  }
 }

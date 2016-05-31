@@ -34,4 +34,46 @@ class BoardSpec extends Specification {
       board.canMove(board.pawnLocation(Black), West) === true
     }
   }
+
+  "A pawn" should {
+    "be able to move to neighboring places unless blocked by a wall" in {
+      val board = BoardReader.fromString("""
+        |+   +   +   +   +
+        |      o
+        |+   +   +   +   +
+        |
+        |+   +   +   +   +
+        |      x |
+        |+   +   +   +   +
+        |        |
+        |+   +   +   +   +
+      """.stripMargin.trim)
+
+      board.availableMoves(Black) === Seq(
+        Location( 5, board.boardType),
+        Location(13, board.boardType),
+        Location( 8, board.boardType)
+      )
+    }
+
+    "jump over the opponent" in {
+      val board = BoardReader.fromString("""
+        |+   +   +   +   +
+        |
+        |+   +   +   +   +
+        |      o
+        |+   +   +   +   +
+        |      x |
+        |+   +   +   +   +
+        |        |
+        |+   +   +   +   +
+      """.stripMargin.trim)
+
+      board.availableMoves(Black) === Seq(
+        Location( 1, board.boardType),
+        Location(13, board.boardType),
+        Location( 8, board.boardType)
+      )
+    }
+  }
 }
