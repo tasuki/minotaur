@@ -5,20 +5,18 @@ trait Move {
 }
 
 case class WallPlacement(
-  player: Player,
   wall: Wall,
   gs: GameState
 ) extends Move {
   val apply =
     GameState(
       gs.board.copy(walls = gs.board.walls + wall),
-      gs.walls + (player -> (gs.walls(player) - 1)),
-      player.next
+      gs.walls + (gs.onTurn -> (gs.walls(gs.onTurn) - 1)),
+      gs.onTurn.next
     )
 }
 
 case class PawnMovement(
-  player: Player,
   location: Location,
   gs: GameState
 ) extends Move {
@@ -26,10 +24,10 @@ case class PawnMovement(
     GameState(
       gs.board.copy(
         pawns = gs.board.pawns
-          - gs.board.pawnLocation(player)
-          + (location -> player)
+          - gs.board.pawnLocation(gs.onTurn)
+          + (location -> gs.onTurn)
       ),
       gs.walls,
-      player.next
+      gs.onTurn.next
     )
 }
