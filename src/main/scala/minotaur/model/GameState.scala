@@ -1,7 +1,6 @@
 package minotaur.model
 
 import util.Random
-import minotaur.search.AStar
 
 case class GameState(
   board: Board,
@@ -22,14 +21,7 @@ case class GameState(
   private def getPossibleWallPlacements: Set[WallPlacement] =
     if (walls(onTurn) == 0) Set()
     else board.possibleWalls.map(WallPlacement(_, this))
-      .filter(isWallPlacementValid)
-
-  private def isWallPlacementValid(wp: WallPlacement): Boolean = {
-    val gs = wp.apply
-    Player.all.map(player => AStar.findPath(
-      gs.board, gs.board.pawnLocation(player), player.destination
-    )).filter(_.isEmpty).length == 0
-  }
+      .filter(_.isValid)
 
   def getChildren: Set[GameState] =
     (getPossiblePawnMovements ++ getPossibleWallPlacements)
@@ -43,8 +35,8 @@ case class GameState(
       randomPawnMovement
     else
       for (wall <- Random.shuffle(board.possibleWalls.toList)) {
-        var wp = WallPlacement(wall, this)
-        if (isWallPlacementValid(wp))
+        val wp = WallPlacement(wall, this)
+        if (wp.isValid)
           return wp.apply
       }
 
