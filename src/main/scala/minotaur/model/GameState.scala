@@ -25,10 +25,10 @@ case class GameState(
 
   def getChildren: Set[GameState] =
     (getPossiblePawnMovements ++ getPossibleWallPlacements)
-      .map(_.apply)
+      .map(_.play)
 
   private def randomPawnMovement: GameState =
-    PawnMovement(random(board.possibleMoves(onTurn)), this).apply
+    PawnMovement(random(board.possibleMoves(onTurn)), this).play
 
   def getRandomChild: GameState = {
     if (Random.nextInt < pawnMovementProbability || walls(onTurn) == 0)
@@ -37,7 +37,7 @@ case class GameState(
       for (wall <- Random.shuffle(board.possibleWalls.toList)) {
         val wp = WallPlacement(wall, this)
         if (wp.isValid)
-          return wp.apply
+          return wp.play
       }
 
       randomPawnMovement
