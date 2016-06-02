@@ -3,13 +3,16 @@ package minotaur.model
 import minotaur.search.AStar
 
 trait Move {
+  val gameState: GameState
   val play: GameState
 }
 
 case class WallPlacement(
   wall: Wall,
-  gs: GameState
+  gameState: GameState
 ) extends Move {
+  private val gs = gameState
+
   val play =
     gs.copy(
       board = gs.board.copy(walls = gs.board.walls + wall),
@@ -27,8 +30,10 @@ case class WallPlacement(
 
 case class PawnMovement(
   location: Location,
-  gs: GameState
+  gameState: GameState
 ) extends Move {
+  private val gs = gameState
+
   val play =
     gs.copy(
       board = gs.board.copy(
