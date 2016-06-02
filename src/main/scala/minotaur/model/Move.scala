@@ -5,6 +5,7 @@ import minotaur.search.AStar
 trait Move {
   val gameState: GameState
   val play: GameState
+  val wins: Boolean
 }
 
 case class WallPlacement(
@@ -26,6 +27,8 @@ case class WallPlacement(
       gs.board, gs.board.pawnLocation(player), player.destination
     )).filter(_.isEmpty).length == 0
   }
+
+  val wins = false
 }
 
 case class PawnMovement(
@@ -43,4 +46,10 @@ case class PawnMovement(
       ),
       onTurn = gs.onTurn.next
     )
+
+  val wins = {
+    val player = gs.onTurn
+
+    play.board.pawnLocation(player).isBorder(player.destination)
+  }
 }
