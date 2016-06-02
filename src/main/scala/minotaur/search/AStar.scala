@@ -9,7 +9,21 @@ case class Node(
   parent: Option[Node],
   cost: Int,
   estimatedDistance: Int
-)
+) {
+  val heuristic = cost + estimatedDistance
+
+  override def toString =
+    s"(${location.location}: $cost, $estimatedDistance)"
+}
+
+object NodeOrdering extends Ordering[Node] {
+  def compare(a: Node, b: Node): Int =
+    if (a.location == b.location) 0
+    else if (a.heuristic < b.heuristic) -1
+    else if (a.heuristic > b.heuristic) 1
+    else if (a.location.location < b.location.location) -1
+    else 1
+}
 
 object AStar {
   private def reconstructPath(current: Node) = {
@@ -33,10 +47,7 @@ object AStar {
     val closed = Set[Node]()
     // SortedSet has log head lookup, but also log find/add/remove
     // TODO Investigate Set: linear head lookup, but constant find/add/remove
-    val open = SortedSet.empty(Ordering.by((n: Node) =>
-      // adding a small fraction to make these unique by location
-      n.estimatedDistance + n.cost + (n.location.location / 1000.0)
-    ))
+    val open = SortedSet.empty(NodeOrdering)
     open += Node(from, None, 0, from.estimateDistance(direction))
 
     while (open.nonEmpty) {
