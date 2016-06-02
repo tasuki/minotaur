@@ -28,19 +28,19 @@ case class GameState(
       .map(_.play)
   }
 
-  def getRandomChild: GameState = {
-    def randomPawnMovement =
-      PawnMovement(random(board.possibleMoves(onTurn)), this).play
+  def randomMove: Move = {
+    def randomPawnMove =
+      PawnMovement(random(board.possibleMoves(onTurn)), this)
 
     if (Random.nextInt < pawnMovementProbability || walls(onTurn) == 0)
-      randomPawnMovement
+      randomPawnMove
     else
       for (wall <- Random.shuffle(board.possibleWalls.toList)) {
         val wp = WallPlacement(wall, this)
         if (wp.isValid)
-          return wp.play
+          return wp
       }
 
-    randomPawnMovement
+    randomPawnMove
   }
 }
