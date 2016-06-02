@@ -53,7 +53,7 @@ case class Board(
       }).flatten.toSet
   }
 
-  def possibleWalls: Set[Wall] = {
+  val possibleWalls: Set[Wall] = {
     boardType.possibleWalls -- walls -- walls.map(_.overlaps).flatten
   }
 }

@@ -20,7 +20,7 @@ case class Location(location: Int, boardType: BoardType) {
       case West => Some(boardType.locations(location - 1))
     }
 
-  def allowsWallPlacement: Boolean =
+  lazy val allowsWallPlacement: Boolean =
     boardType.possibleWallLocations contains this
 
   def estimateDistance(direction: Direction): Int =

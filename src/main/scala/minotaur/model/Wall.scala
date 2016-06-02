@@ -32,7 +32,7 @@ case class Wall(
     loc <- location.neighbor(direction) if !borders(direction)
   } yield Wall(loc, orientation)
 
-  def overlaps: Seq[Wall] = extensionOverlaps :+ Wall(location, orientation.opposite)
+  lazy val overlaps: Seq[Wall] = extensionOverlaps :+ Wall(location, orientation.opposite)
 
   private def touchesI = for {
     direction <- orientation.directions
@@ -53,5 +53,5 @@ case class Wall(
       if extension.allowsWallPlacement
   } yield Wall(extension, orientation.opposite)
 
-  def touches: Seq[Wall] = touchesI ++ touchesL ++ touchesT
+  lazy val touches: Seq[Wall] = touchesI ++ touchesL ++ touchesT
 }

@@ -9,7 +9,7 @@ case class GameState(
 ) {
   val pawnMovementProbability = 50
 
-  def random[T](s: Set[T]) = {
+  private def random[T](s: Set[T]) = {
     val n = Random.nextInt(s.size)
     val it = s.iterator.drop(n)
     it.next
@@ -23,7 +23,7 @@ case class GameState(
     else board.possibleWalls.map(WallPlacement(_, this))
       .filter(_.isValid)
 
-  def getChildren: Set[GameState] =
+  lazy val getChildren: Set[GameState] =
     (getPossiblePawnMovements ++ getPossibleWallPlacements)
       .map(_.play)
 
