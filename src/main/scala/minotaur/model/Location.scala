@@ -23,11 +23,12 @@ case class Location(location: Int, boardType: BoardType) {
   lazy val allowsWallPlacement: Boolean =
     boardType.possibleWallLocations contains this
 
-  def estimateDistance(direction: Direction): Int =
-    direction match {
-      case North => location / boardSize
-      case South => boardSize - 1 - location / boardSize
-      case East => boardSize - 1 - location % boardSize
-      case West => location % boardSize
-    }
+  private val distances: Map[Direction, Int] = Map(
+    North -> (location / boardSize),
+    South -> (boardSize - 1 - location / boardSize),
+    East -> (boardSize - 1 - location % boardSize),
+    West -> (location % boardSize)
+  )
+
+  def estimateDistance(direction: Direction): Int = distances(direction)
 }
