@@ -15,22 +15,23 @@ case class GameState(
     it.next
   }
 
-  private def getPossiblePawnMovements: Set[PawnMovement] =
-    board.possibleMoves(onTurn).map(PawnMovement(_, this))
+  lazy val getChildren: Set[GameState] = {
+    def getPossiblePawnMovements: Set[PawnMovement] =
+      board.possibleMoves(onTurn).map(PawnMovement(_, this))
 
-  private def getPossibleWallPlacements: Set[WallPlacement] =
-    if (walls(onTurn) == 0) Set()
-    else board.possibleWalls.map(WallPlacement(_, this))
-      .filter(_.isValid)
+    def getPossibleWallPlacements: Set[WallPlacement] =
+      if (walls(onTurn) == 0) Set()
+      else board.possibleWalls.map(WallPlacement(_, this))
+        .filter(_.isValid)
 
-  lazy val getChildren: Set[GameState] =
     (getPossiblePawnMovements ++ getPossibleWallPlacements)
       .map(_.play)
-
-  private def randomPawnMovement: GameState =
-    PawnMovement(random(board.possibleMoves(onTurn)), this).play
+  }
 
   def getRandomChild: GameState = {
+    def randomPawnMovement =
+      PawnMovement(random(board.possibleMoves(onTurn)), this).play
+
     if (Random.nextInt < pawnMovementProbability || walls(onTurn) == 0)
       randomPawnMovement
     else
@@ -40,6 +41,6 @@ case class GameState(
           return wp.play
       }
 
-      randomPawnMovement
+    randomPawnMovement
   }
 }
