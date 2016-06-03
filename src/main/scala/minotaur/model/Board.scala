@@ -49,7 +49,8 @@ case class Board(
 
   def possibleMoves(player: Player): Set[Location] = {
     val location = pawnLocation(player)
-    Direction.all.filter(canMove(location, _))
+
+    allowedMovements(location)
       .map(dir => (dir, location.neighbor(dir).get))
       .map(_ match {
         case (dir, neighbor) if pawns.isDefinedAt(neighbor) =>
