@@ -1,48 +1,49 @@
 package minotaur.model
 
+object Board {
+  def apply(
+    boardType: BoardType,
+    pawns: Map[Location, Player],
+    walls: Set[Wall]
+  ): Board = {
+    def getAllowedMovements(
+      boardType: BoardType,
+      walls: Set[Wall]
+    ): Map[Location, Seq[Direction]] = {
+      val blocked = walls.toList.flatMap(_.blocksMovement)
+
+      boardType.locations.map(location => location -> {
+        Direction.all
+          .filterNot(location.isBorder(_))
+          .filterNot(dir => blocked.contains((location, dir)))
+      }).toMap
+    }
+
+    Board(
+      boardType,
+      pawns,
+      walls,
+      boardType.possibleWalls -- walls -- walls.map(_.overlaps).flatten,
+      getAllowedMovements(boardType, walls)
+    )
+  }
+}
+
 case class Board(
   boardType: BoardType,
   pawns: Map[Location, Player],
   walls: Set[Wall],
-  placeableWalls: Set[Wall]
+  placeableWalls: Set[Wall],
+  allowedMovements: Map[Location, Seq[Direction]]
 ) {
-  def this(
-    boardType: BoardType,
-    pawns: Map[Location, Player],
-    walls: Set[Wall]
-  ) = this(
-    boardType,
-    pawns,
-    walls,
-    boardType.possibleWalls -- walls -- walls.map(_.overlaps).flatten
-  )
-
   val size = boardType.size
 
   def canMove(location: Location, direction: Direction): Boolean = {
-    if (location.isBorder(direction))
-      return false
-
-    val locationsToCheck: Seq[Option[Location]] = direction match {
-      case North => Seq(
-        location.neighbor(North),
-        location.neighbor(North).flatMap(_.neighbor(West)))
-      case South => Seq(Some(location), location.neighbor(West))
-      case East => Seq(Some(location), location.neighbor(North))
-      case West => Seq(
-        location.neighbor(West),
-        location.neighbor(West).flatMap(_.neighbor(North)))
-    }
-
-    locationsToCheck.flatten
-      .filter(_.allowsWallPlacement)
-      .filter(walls contains _.walls(direction.orientation.opposite))
-      .length == 0
+    allowedMovements(location).contains(direction)
   }
 
   def neighbors(location: Location): Seq[Location] =
-    Direction.all.filter(canMove(location, _))
-      .map(location.neighbor(_).get)
+    allowedMovements(location).map(location.neighbor(_).get)
 
   def pawnLocation(player: Player): Location =
     pawns.find(_._2 == player).map(_._1).get

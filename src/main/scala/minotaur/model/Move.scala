@@ -14,15 +14,25 @@ case class WallPlacement(
 ) extends Move {
   private val gs = gameState
 
-  val play =
+  val play = {
+    val movementUpdates: Seq[(Location, Seq[Direction])] =
+      wall.blocksMovement.map {
+        case (location, direction) => (
+          location,
+          gs.board.allowedMovements(location).filterNot(_ == direction)
+        )
+      }
+
     gs.copy(
       board = gs.board.copy(
         walls = gs.board.walls + wall,
-        placeableWalls = gs.board.placeableWalls - wall -- wall.overlaps
+        placeableWalls = gs.board.placeableWalls - wall -- wall.overlaps,
+        allowedMovements = gs.board.allowedMovements ++ movementUpdates
       ),
       walls = gs.walls + (gs.onTurn -> (gs.walls(gs.onTurn) - 1)),
       onTurn = gs.onTurn.next
     )
+  }
 
   def isValid: Boolean = {
     val gs = this.play

@@ -39,6 +39,24 @@ case class Wall(
     extensionOverlaps :+ location.walls(orientation.opposite)
   }
 
+  lazy val blocksMovement: Seq[(Location, Direction)] = {
+    // the neighbors exist, otherwise the wall would be illegal
+    // NW, NE, SW, SE
+    val locations = Seq(
+      location,
+      location.neighbor(East).get,
+      location.neighbor(South).get,
+      location.neighbor(South).flatMap(_.neighbor(East)).get
+    )
+
+    val directions = orientation match {
+      case Horizontal => Seq(South, South, North, North)
+      case Vertical => Seq(East, West, East, West)
+    }
+
+    (locations zip directions)
+  }
+
   lazy val touches: Seq[Wall] = {
     def touchesI = for {
       direction <- orientation.directions

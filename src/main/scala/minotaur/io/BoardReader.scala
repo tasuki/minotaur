@@ -28,7 +28,7 @@ object BoardReader {
     ).size == 0,
     "Walls cross each other")
 
-    new Board(
+    Board(
       boardType,
       Player.all.map(
         player => getPawnLocation(player.pawn, evenRows, boardType) -> player
