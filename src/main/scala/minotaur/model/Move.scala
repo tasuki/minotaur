@@ -14,7 +14,8 @@ case class WallPlacement(
 ) extends Move {
   private val gs = gameState
 
-  val play = {
+  // use wall, add it to board, block movement, switch whose turn it is
+  lazy val play = {
     val movementUpdates: Seq[(Location, Seq[Direction])] =
       wall.blocksMovement.map {
         case (location, direction) => (
@@ -34,6 +35,7 @@ case class WallPlacement(
     )
   }
 
+  // make sure each player can reach their goal
   def isValid: Boolean = {
     val gs = this.play
     Player.all.map(player => AStar.findPath(
@@ -50,7 +52,8 @@ case class PawnMovement(
 ) extends Move {
   private val gs = gameState
 
-  val play =
+  // change the pawn position and whose turn it is
+  lazy val play =
     gs.copy(
       board = gs.board.copy(
         pawns = gs.board.pawns
@@ -60,7 +63,7 @@ case class PawnMovement(
       onTurn = gs.onTurn.next
     )
 
-  val wins = {
+  lazy val wins = {
     val player = gs.onTurn
 
     play.board.pawnLocation(player).isBorder(player.destination)
