@@ -3,8 +3,20 @@ package minotaur.model
 case class Board(
   boardType: BoardType,
   pawns: Map[Location, Player],
-  walls: Set[Wall] = Set()
+  walls: Set[Wall],
+  possibleWalls: Set[Wall]
 ) {
+  def this(
+    boardType: BoardType,
+    pawns: Map[Location, Player],
+    walls: Set[Wall]
+  ) = this(
+    boardType,
+    pawns,
+    walls,
+    boardType.possibleWalls -- walls -- walls.map(_.overlaps).flatten
+  )
+
   val size = boardType.size
 
   def canMove(location: Location, direction: Direction): Boolean = {
@@ -52,7 +64,4 @@ case class Board(
         case (_, neighbor) => Seq(neighbor)
       }).flatten.toSet
   }
-
-  lazy val possibleWalls: Set[Wall] =
-    boardType.possibleWalls -- walls -- walls.map(_.overlaps).flatten
 }

@@ -16,7 +16,10 @@ case class WallPlacement(
 
   val play =
     gs.copy(
-      board = gs.board.copy(walls = gs.board.walls + wall),
+      board = gs.board.copy(
+        walls = gs.board.walls + wall,
+        possibleWalls = gs.board.possibleWalls -- wall.overlaps
+      ),
       walls = gs.walls + (gs.onTurn -> (gs.walls(gs.onTurn) - 1)),
       onTurn = gs.onTurn.next
     )
