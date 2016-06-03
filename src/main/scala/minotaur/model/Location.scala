@@ -6,6 +6,8 @@ case class Location(location: Int, boardType: BoardType) {
     "Location not on board"
   )
 
+  override def toString = f"(Loc: $location%2d)"
+
   private val boardSize = boardType.size
 
   lazy val allowsWallPlacement: Boolean =

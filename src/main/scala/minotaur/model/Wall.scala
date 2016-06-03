@@ -22,6 +22,8 @@ case class Wall(
     "This wall is not permissible"
   )
 
+  override def toString = f"(Wall: ${location.location}%2d $orientation)"
+
   def borders(direction: Direction): Boolean = direction match {
     case d @ (North | West) => location.isBorder(d)
     case d @ (South | East) => location.neighbor(d).map(_.isBorder(d)).get
