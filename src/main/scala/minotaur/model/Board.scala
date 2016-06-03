@@ -36,7 +36,7 @@ case class Board(
 
     locationsToCheck.flatten
       .filter(_.allowsWallPlacement)
-      .filter(walls contains Wall(_, direction.orientation.opposite))
+      .filter(walls contains _.walls(direction.orientation.opposite))
       .length == 0
   }
 

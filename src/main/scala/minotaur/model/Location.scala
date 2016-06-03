@@ -13,6 +13,14 @@ case class Location(location: Int, boardType: BoardType) {
   lazy val allowsWallPlacement: Boolean =
     boardType.possibleWallLocations contains this
 
+  lazy val walls: Map[Orientation, Wall] =
+    if (allowsWallPlacement)
+      Map(
+        Horizontal -> Wall(this, Horizontal),
+        Vertical -> Wall(this, Vertical)
+      )
+    else Map()
+
   val estimateDistance: Map[Direction, Int] = Map(
     North -> (location / boardSize),
     South -> (boardSize - 1 - location / boardSize),
