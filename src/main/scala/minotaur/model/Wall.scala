@@ -24,36 +24,41 @@ case class Wall(
 
   override def toString = f"(Wall: ${location.location}%2d $orientation)"
 
-  def borders(direction: Direction): Boolean = direction match {
-    case d @ (North | West) => location.isBorder(d)
-    case d @ (South | East) => location.neighbor(d).map(_.isBorder(d)).get
+  lazy val borders: Map[Direction, Boolean] =
+    Direction.all.map(dir => dir -> (dir match {
+      case d @ (North | West) => location.isBorder(d)
+      case d @ (South | East) => location.neighbor(d).map(_.isBorder(d)).get
+    })).toMap
+
+  lazy val overlaps: Seq[Wall] = {
+    def extensionOverlaps: Seq[Wall] = for {
+      direction <- orientation.directions
+      loc <- location.neighbor(direction) if !borders(direction)
+    } yield Wall(loc, orientation)
+
+    extensionOverlaps :+ Wall(location, orientation.opposite)
   }
 
-  private def extensionOverlaps: Seq[Wall] = for {
-    direction <- orientation.directions
-    loc <- location.neighbor(direction) if !borders(direction)
-  } yield Wall(loc, orientation)
+  lazy val touches: Seq[Wall] = {
+    def touchesI = for {
+      direction <- orientation.directions
+      extension <- location.neighbor(direction).flatMap(_.neighbor(direction))
+        if extension.allowsWallPlacement
+    } yield Wall(extension, orientation)
 
-  lazy val overlaps: Seq[Wall] = extensionOverlaps :+ Wall(location, orientation.opposite)
+    def touchesL = for {
+      dir1 <- orientation.directions
+      dir2 <- orientation.opposite.directions
+      extension <- location.neighbor(dir1).flatMap(_.neighbor(dir2))
+        if extension.allowsWallPlacement
+    } yield Wall(extension, orientation.opposite)
 
-  private def touchesI = for {
-    direction <- orientation.directions
-    extension <- location.neighbor(direction).flatMap(_.neighbor(direction))
-      if extension.allowsWallPlacement
-  } yield Wall(extension, orientation)
+    def touchesT = for {
+      dir <- Direction.all
+      extension <- location.neighbor(dir)
+        if extension.allowsWallPlacement
+    } yield Wall(extension, orientation.opposite)
 
-  private def touchesL = for {
-    dir1 <- orientation.directions
-    dir2 <- orientation.opposite.directions
-    extension <- location.neighbor(dir1).flatMap(_.neighbor(dir2))
-      if extension.allowsWallPlacement
-  } yield Wall(extension, orientation.opposite)
-
-  private def touchesT = for {
-    dir <- Direction.all
-    extension <- location.neighbor(dir)
-      if extension.allowsWallPlacement
-  } yield Wall(extension, orientation.opposite)
-
-  lazy val touches: Seq[Wall] = touchesI ++ touchesL ++ touchesT
+    touchesI ++ touchesL ++ touchesT
+  }
 }
