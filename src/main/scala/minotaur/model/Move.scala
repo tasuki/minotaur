@@ -18,7 +18,7 @@ case class WallPlacement(
     gs.copy(
       board = gs.board.copy(
         walls = gs.board.walls + wall,
-        possibleWalls = gs.board.possibleWalls -- wall.overlaps
+        possibleWalls = gs.board.possibleWalls - wall -- wall.overlaps
       ),
       walls = gs.walls + (gs.onTurn -> (gs.walls(gs.onTurn) - 1)),
       onTurn = gs.onTurn.next
