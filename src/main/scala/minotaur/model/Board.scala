@@ -8,7 +8,7 @@ case class Board(
   val size = boardType.size
 
   def canMove(location: Location, direction: Direction): Boolean = {
-    if (! location.neighbor(direction).isDefined)
+    if (location.isBorder(direction))
       return false
 
     val locationsToCheck: Seq[Option[Location]] = direction match {
