@@ -38,9 +38,8 @@ case class Board(
 ) {
   val size = boardType.size
 
-  def canMove(location: Location, direction: Direction): Boolean = {
+  def canMove(location: Location, direction: Direction): Boolean =
     allowedMovements(location).contains(direction)
-  }
 
   def neighbors(location: Location): Seq[Location] =
     allowedMovements(location).map(location.neighbor(_).get)
