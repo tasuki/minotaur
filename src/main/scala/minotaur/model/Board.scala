@@ -4,7 +4,7 @@ case class Board(
   boardType: BoardType,
   pawns: Map[Location, Player],
   walls: Set[Wall],
-  possibleWalls: Set[Wall]
+  placeableWalls: Set[Wall]
 ) {
   def this(
     boardType: BoardType,

@@ -21,7 +21,7 @@ case class GameState(
 
     def getPossibleWallPlacements: Set[WallPlacement] =
       if (walls(onTurn) == 0) Set()
-      else board.possibleWalls.map(WallPlacement(_, this))
+      else board.placeableWalls.map(WallPlacement(_, this))
         .filter(_.isValid)
 
     (getPossiblePawnMovements ++ getPossibleWallPlacements)
@@ -35,7 +35,7 @@ case class GameState(
     if (Random.nextInt < pawnMovementProbability || walls(onTurn) == 0)
       randomPawnMove
     else
-      for (wall <- Random.shuffle(board.possibleWalls.toList)) {
+      for (wall <- Random.shuffle(board.placeableWalls.toList)) {
         val wp = WallPlacement(wall, this)
         if (wp.isValid)
           return wp

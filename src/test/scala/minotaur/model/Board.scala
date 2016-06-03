@@ -132,7 +132,7 @@ class BoardSpec extends Specification {
       """.stripMargin.trim)
       val bt = board.boardType
 
-      board.possibleWalls === Set(
+      board.placeableWalls === Set(
         Wall(Location(2, bt), Vertical),
         Wall(Location(5, bt), Horizontal),
         Wall(Location(6, bt), Vertical),
