@@ -2,7 +2,7 @@ package minotaur.model
 
 import minotaur.search.AStar
 
-trait Move {
+sealed trait Move {
   val gameState: GameState
   val play: GameState
   val wins: Boolean
