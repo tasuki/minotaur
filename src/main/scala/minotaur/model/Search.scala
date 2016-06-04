@@ -1,6 +1,20 @@
 package minotaur.model
 
+import scala.collection.mutable.ListBuffer
+
 trait Search {
+  def reconstructPath(current: SearchNode): Option[Seq[Location]] = {
+    val lb = ListBuffer.empty[Location]
+    var pathItem = current
+
+    do {
+      lb += pathItem.location
+      pathItem = pathItem.parent.get
+    } while (pathItem.parent.isDefined)
+
+    Some(lb.toList.reverse)
+  }
+
   def findPath(
     board: Board,
     from: Location,

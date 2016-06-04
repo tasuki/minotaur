@@ -1,6 +1,6 @@
 package minotaur.search
 
-import scala.collection.mutable.{SortedSet,Set,ListBuffer}
+import scala.collection.mutable.{SortedSet,Set}
 import minotaur.model.{Search,SearchNode,Board,Location,Direction}
 
 object AStar extends Search {
@@ -10,18 +10,6 @@ object AStar extends Search {
     cost: Int,
     estimatedDistance: Int
   ) extends SearchNode
-
-  private def reconstructPath(current: Node) = {
-    val lb = ListBuffer.empty[Location]
-    var pathItem = current
-
-    do {
-      lb += pathItem.location
-      pathItem = pathItem.parent.get
-    } while (pathItem.parent.isDefined)
-
-    Some(lb.toList.reverse)
-  }
 
   def findPath(
     board: Board,

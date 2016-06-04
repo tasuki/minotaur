@@ -1,6 +1,6 @@
 package minotaur.search
 
-import scala.collection.mutable.{ArraySeq,Queue,ListBuffer}
+import scala.collection.mutable.{ArraySeq,Queue}
 import minotaur.model.{Search,SearchNode,Board,Location,Direction}
 
 object BFS extends Search {
@@ -9,18 +9,6 @@ object BFS extends Search {
     parent: Option[Node],
     cost: Int
   ) extends SearchNode
-
-  private def reconstructPath(current: Node) = {
-    val lb = ListBuffer.empty[Location]
-    var pathItem = current
-
-    do {
-      lb += pathItem.location
-      pathItem = pathItem.parent.get
-    } while (pathItem.parent.isDefined)
-
-    Some(lb.toList.reverse)
-  }
 
   def findPath(
     board: Board,
