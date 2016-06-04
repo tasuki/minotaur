@@ -1,8 +1,7 @@
 package minotaur.search
 
 import scala.collection.mutable.{SortedSet,Set,ListBuffer}
-import minotaur.model.{Search,Board,Location}
-import minotaur.model.{Direction,North,South}
+import minotaur.model.{Search,Board,Location,Direction}
 
 case class Node(
   location: Location,
