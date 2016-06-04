@@ -25,7 +25,7 @@ object Board {
       walls,
       boardType.possibleWalls -- walls -- walls.map(_.overlaps).flatten,
       getAllowedMovements(boardType, walls)
-    )
+    )(Player.all.map(player => player -> None).toMap)
   }
 }
 
@@ -35,7 +35,7 @@ case class Board(
   walls: Set[Wall],
   placeableWalls: Set[Wall],
   allowedMovements: Map[Location, Seq[Direction]]
-) {
+)(cachedPaths: Map[Player, Option[Path]]) {
   val size = boardType.size
 
   def canMove(location: Location, direction: Direction): Boolean =
@@ -66,10 +66,14 @@ case class Board(
       }).flatten.toSet
   }
 
-  lazy val shortestPath: Map[Player, Option[Seq[Location]]] =
-    Player.all.map(player => player -> Search.findPath(
-      this, pawnLocation(player), player.destination
-    )).toMap
+  lazy val shortestPath: Map[Player, Option[Path]] =
+    Player.all.map(player => player -> (cachedPaths(player) match {
+      case Some(ShortestPath(_)) => cachedPaths(player)
+      case Some(PotentialShortestPath(_)) =>
+        Search.findPath(this, pawnLocation(player), player.destination)
+      case None =>
+        Search.findPath(this, pawnLocation(player), player.destination)
+    })).toMap
 
   lazy val isValid: Boolean =
     Player.all.map(shortestPath(_)).filter(_.isEmpty).length == 0
