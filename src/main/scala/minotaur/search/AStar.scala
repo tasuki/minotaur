@@ -1,7 +1,7 @@
 package minotaur.search
 
 import scala.collection.mutable.{SortedSet,Set,ListBuffer}
-import minotaur.model.{Board,Location}
+import minotaur.model.{Search,Board,Location}
 import minotaur.model.{Direction,North,South}
 
 case class Node(
@@ -11,7 +11,7 @@ case class Node(
   estimatedDistance: Int
 )
 
-object AStar {
+object AStar extends Search {
   private def reconstructPath(current: Node) = {
     val lb = ListBuffer.empty[Location]
     var pathItem = current

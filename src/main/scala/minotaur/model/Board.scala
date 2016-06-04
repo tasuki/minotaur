@@ -65,4 +65,12 @@ case class Board(
         case (_, neighbor) => Seq(neighbor)
       }).flatten.toSet
   }
+
+  lazy val shortestPath: Map[Player, Option[Seq[Location]]] =
+    Player.all.map(player => player -> Search.findPath(
+      this, pawnLocation(player), player.destination
+    )).toMap
+
+  lazy val isValid: Boolean =
+    Player.all.map(shortestPath(_)).filter(_.isEmpty).length == 0
 }

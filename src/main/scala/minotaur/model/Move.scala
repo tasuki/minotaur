@@ -1,7 +1,5 @@
 package minotaur.model
 
-import minotaur.search.AStar
-
 sealed trait Move {
   val gameState: GameState
   val play: GameState
@@ -36,12 +34,7 @@ case class WallPlacement(
   }
 
   // make sure each player can reach their goal
-  def isValid: Boolean = {
-    val gs = this.play
-    Player.all.map(player => AStar.findPath(
-      gs.board, gs.board.pawnLocation(player), player.destination
-    )).filter(_.isEmpty).length == 0
-  }
+  def isValid: Boolean = play.board.isValid
 
   val wins = false
 }
