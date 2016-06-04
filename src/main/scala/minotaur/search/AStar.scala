@@ -1,6 +1,6 @@
 package minotaur.search
 
-import scala.collection.mutable.{ArraySeq,SortedSet}
+import scala.collection.mutable.{ArraySeq,ListBuffer}
 import minotaur.model.{Search,SearchNode,Board,Location,Direction}
 
 object AStar extends Search {
@@ -9,7 +9,11 @@ object AStar extends Search {
     parent: Option[Node],
     cost: Int,
     estimatedDistance: Int
-  ) extends SearchNode
+  ) extends SearchNode {
+    val priority =
+      // adding a small fraction to make these unique by location
+      estimatedDistance + cost + location.location / 1000.0
+  }
 
   def findPath(
     board: Board,
@@ -19,18 +23,14 @@ object AStar extends Search {
     val closed: ArraySeq[Boolean] =
       ArraySeq.fill(board.boardType.size * board.boardType.size){false}
 
-    // SortedSet has log head lookup, but also log find/add/remove
-    // TODO Investigate Set: linear head lookup, but constant find/add/remove
-    val open = SortedSet.empty(Ordering.by((n: Node) =>
-      // adding a small fraction to make these unique by location
-      n.estimatedDistance + n.cost + (n.location.location / 1000.0)
-    ))
+    var open = ListBuffer[Node]()
     open += Node(from, None, 0, from.estimateDistance(direction))
 
     while (open.nonEmpty) {
       // best score from the open nodes
-      val current = open.head
-      open.remove(current)
+      open = open.sortBy(n => n.priority)
+      val current = open.remove(0)
+
       closed(current.location.location) = true
 
       if (current.location.isBorder(direction))
