@@ -20,9 +20,13 @@ object Profiler {
   }
 
   def profileMany[R](name: String, block: => R): Unit = {
+    profileMany(name, 1000000, block)
+  }
+
+  def profileMany[R](name: String, limit: Int, block: => R): Unit = {
     val tBegin = System.nanoTime()
     var i = 0
-    while (i < 1000000) {
+    while (i < limit) {
       block // call-by-name
       i += 1
     }
