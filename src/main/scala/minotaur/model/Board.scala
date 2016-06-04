@@ -41,6 +41,9 @@ case class Board(
   def canMove(location: Location, direction: Direction): Boolean =
     allowedMovements(location).contains(direction)
 
+  def canMove(loc1: Location, loc2: Location): Boolean =
+    neighbors(loc1) contains loc2
+
   def neighbors(location: Location): Seq[Location] =
     allowedMovements(location).map(location.neighbor(_).get)
 
@@ -66,13 +69,16 @@ case class Board(
       }).flatten.toSet
   }
 
+  def findPath(player: Player) =
+    Search.findPath(this, pawnLocation(player), player.destination)
+
   lazy val shortestPath: Map[Player, Option[Path]] =
     Player.all.map(player => player -> (cachedPaths(player) match {
-      case Some(ShortestPath(_)) => cachedPaths(player)
-      case Some(PotentialShortestPath(_)) =>
-        Search.findPath(this, pawnLocation(player), player.destination)
-      case None =>
-        Search.findPath(this, pawnLocation(player), player.destination)
+      case Some(_: ShortestPath) => cachedPaths(player)
+      case Some(path: PotentialShortestPath) =>
+        if (path.isValid(player, this)) cachedPaths(player)
+        else findPath(player)
+      case None => findPath(player)
     })).toMap
 
   lazy val isValid: Boolean =

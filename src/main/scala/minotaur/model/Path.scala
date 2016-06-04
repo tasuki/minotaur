@@ -7,6 +7,9 @@ sealed trait Path {
 
   def startsWith(location: Location): Boolean =
     path.head == location
+
+  def isValid(player: Player, board: Board): Boolean =
+    false
 }
 
 case class ShortestPath(path: Seq[Location]) extends Path
