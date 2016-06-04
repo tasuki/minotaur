@@ -3,7 +3,7 @@ package minotaur.io
 import scala.collection.Set
 import minotaur.model.{Board,Location}
 import minotaur.model.{Direction,South,West}
-import minotaur.search.Node
+import minotaur.model.SearchNode
 
 object BoardPrinter {
   private def printWithCellContent(
@@ -52,7 +52,7 @@ object BoardPrinter {
         .getOrElse("   ")
     )
 
-  def printSearchNodes(board: Board, nodes: Set[Node]): String =
+  def printSearchNodes(board: Board, nodes: Set[SearchNode]): String =
     printWithCellContent(board, (optLoc: Option[Location]) =>
       optLoc.flatMap(loc => nodes.find(_.location == loc))
         .map(n => f"${n.cost}%2d ")

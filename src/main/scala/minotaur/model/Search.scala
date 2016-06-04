@@ -8,7 +8,13 @@ trait Search {
   ): Option[Seq[Location]]
 }
 
-import minotaur.search.AStar
+trait SearchNode {
+  def location: Location
+  def parent: Option[SearchNode]
+  def cost: Int
+}
+
+import minotaur.search._
 
 object Search extends Search {
   def findPath(board: Board, from: Location, direction: Direction) =

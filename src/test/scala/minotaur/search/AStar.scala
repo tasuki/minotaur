@@ -1,7 +1,7 @@
 package minotaur.search
 
 import org.specs2.mutable.Specification
-import minotaur.io.{BoardReader,BoardPrinter}
+import minotaur.io.BoardReader
 import minotaur.model.{Location,North,South}
 import minotaur.model.{Black,White}
 
