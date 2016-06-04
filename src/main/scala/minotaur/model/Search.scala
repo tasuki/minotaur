@@ -32,5 +32,5 @@ import minotaur.search._
 
 object Search extends Search {
   def findPath(board: Board, from: Location, direction: Direction) =
-    AStar.findPath(board, from, direction)
+    BFS.findPath(board, from, direction)
 }
