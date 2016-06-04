@@ -28,8 +28,8 @@ object AStar extends Search {
 
     while (open.nonEmpty) {
       // best score from the open nodes
-      open = open.sortBy(n => n.priority)
-      val current = open.remove(0)
+      val current = open.minBy(_.priority)
+      open -= current
 
       closed(current.location.location) = true
 
