@@ -1,6 +1,6 @@
 package minotaur.search
 
-import scala.collection.mutable.{SortedSet,Set}
+import scala.collection.mutable.{ArraySeq,SortedSet}
 import minotaur.model.{Search,SearchNode,Board,Location,Direction}
 
 object AStar extends Search {
@@ -16,8 +16,9 @@ object AStar extends Search {
     from: Location,
     direction: Direction
   ): Option[Seq[Location]] = {
+    val closed: ArraySeq[Boolean] =
+      ArraySeq.fill(board.boardType.size * board.boardType.size){false}
 
-    val closed = Set[Node]()
     // SortedSet has log head lookup, but also log find/add/remove
     // TODO Investigate Set: linear head lookup, but constant find/add/remove
     val open = SortedSet.empty(Ordering.by((n: Node) =>
@@ -30,12 +31,7 @@ object AStar extends Search {
       // best score from the open nodes
       val current = open.head
       open.remove(current)
-      closed.add(current)
-
-      // for debugging
-      if (false) {
-        println(minotaur.io.BoardPrinter.printSearchNodes(board, closed.toSet))
-      }
+      closed(current.location.location) = true
 
       if (current.location.isBorder(direction))
         return reconstructPath(current)
@@ -43,7 +39,7 @@ object AStar extends Search {
       // loop through current neighbors
       for (neighbor <- board.neighbors(current.location)) {
         // only non-closed nodes
-        if (closed.find(_.location == neighbor).isEmpty) {
+        if (closed(neighbor.location) == false) {
           val newNode = Node(
             neighbor,
             Some(current),
