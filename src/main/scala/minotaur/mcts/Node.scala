@@ -46,7 +46,7 @@ class MoveNode(val move: Move, parentNode: Node) extends Node {
   def UCT: Double = {
     if (visited == 0)
       // prefer non-visited nodes
-      return 1.0
+      return 10.0
 
     (wins.toDouble / visited) +
       sqrt(log(parentNode.visited.toDouble) / visited)
