@@ -1,6 +1,7 @@
 package minotaur.mcts
 
 import minotaur.model.{GameState,Player,MoveGenerator,Move}
+import minotaur.io.BoardPrinter
 
 object MCTS {
   def findMove(gameState: GameState): Move = {
@@ -43,5 +44,31 @@ object MCTS {
 
     // player of the winning move
     move.gameState.onTurn
+  }
+
+  def debug(node: Node): Unit = {
+    println("top 5 moves:")
+    node.children.get.sortBy(_.visited).reverse.take(5).foreach {
+      mn => {
+        println
+        println(mn)
+        println(BoardPrinter.print(mn.move.play.board))
+      }
+    }
+
+    println
+    println
+    println
+
+    println("sequence of best found moves:")
+    var mn: Node = node
+    var state: GameState = null
+    do {
+      state = mn.gameState
+      println
+      println(mn)
+      println(BoardPrinter.print(state.board))
+      mn = mn.children.get.maxBy(_.visited)
+    } while (mn.children.isDefined)
   }
 }
