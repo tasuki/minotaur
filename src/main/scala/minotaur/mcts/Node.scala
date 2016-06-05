@@ -43,13 +43,6 @@ class MoveNode(val move: Move, parentNode: Node) extends Node {
       f" UCT: ${UCT}%1.5f"
   }
 
-  def compare(that: MoveNode): Int =
-    if (hashCode == that.hashCode) 0
-    else if (UCT < that.UCT) -1
-    else if (UCT > that.UCT) 1
-    else if (hashCode < that.hashCode) -1
-    else 1
-
   def UCT: Double = {
     if (visited == 0)
       // prefer non-visited nodes
