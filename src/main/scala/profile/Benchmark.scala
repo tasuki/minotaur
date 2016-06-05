@@ -49,21 +49,31 @@ object Benchmark {
       East -> Location(41, bt),
       West -> Location(39, bt)
     )
-    val listInts = Map(
-      0 -> Location(31, bt),
-      1 -> Location(49, bt),
-      2 -> Location(41, bt),
-      3 -> Location(39, bt)
+    val listInts = List(
+      Location(31, bt),
+      Location(49, bt),
+      Location(41, bt),
+      Location(39, bt)
+    )
+    val vectorInts = Vector(
+      Location(31, bt),
+      Location(49, bt),
+      Location(41, bt),
+      Location(39, bt)
     )
 
     Profiler.clear
     Profiler.profileMany("Directions case class", {
       mapCaseClass(South)
       mapCaseClass(West)
-    }) // not so bad
-    Profiler.profileMany("Directions int id", {
+    }) // about 4 times slower that list/vector
+    Profiler.profileMany("Directions list ints", {
       listInts(1)
       listInts(3)
+    })
+    Profiler.profileMany("Directions vector ints", {
+      vectorInts(1)
+      vectorInts(3)
     })
     Profiler.printShort
   }
