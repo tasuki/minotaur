@@ -56,7 +56,7 @@ case class PawnMovement(
     val paths = gs.board.shortestPath + (
       gs.onTurn -> (gs.board.shortestPath(gs.onTurn) match {
         case Some(path: Path) if (path.startsWith(location)) => {
-          Option(path.advance)
+          Option(path.forward)
         }
         case _ => None
       })

@@ -76,7 +76,7 @@ case class Board(
     Player.all.map(player => player -> (cachedPaths(player) match {
       case Some(_: ShortestPath) => cachedPaths(player)
       case Some(path: PotentialShortestPath) =>
-        if (path.isValid(player, this)) cachedPaths(player)
+        if (path.isValid(player, this)) Some(path.validate)
         else findPath(player)
       case None => findPath(player)
     })).toMap

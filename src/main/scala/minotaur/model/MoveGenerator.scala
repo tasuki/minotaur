@@ -28,7 +28,7 @@ object MoveGenerator {
       PawnMovement(random(possibleMoves), gs)
     }
 
-    if (percentChance(pawnMovementProbability) || gs.walls(gs.onTurn) == 0)
+    if (percentChance(pawnMovementProbability) || gs.walls(gs.onTurn) < 1)
       randomPawnMove
     else
       for (wall <- Random.shuffle(gs.board.placeableWalls.toList)) {
