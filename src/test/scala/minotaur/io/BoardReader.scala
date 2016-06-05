@@ -211,4 +211,31 @@ class BoardReaderSpec extends Specification {
       board.pawnLocation(White) === Location(4, boardType)
     }
   }
+
+  "A complex board" should {
+    "be read properly" in {
+      val board = BoardReader.fromString("""
+        |+   +   +   +   +   +   +   +   +   +
+        |    |   |   |   |   |   |
+        |+   +   +   +   +   +   +   +---+---+
+        |    |   |   |   |   |   |       |
+        |+---+---+   +---+---+   +   +   +   +
+        |                        |       |
+        |+   +---+---+---+---+   +   +   +   +
+        |                    |   |
+        |+---+---+   +   +   +   +   +   +   +
+        |            |       |   |
+        |+   +   +   +   +   +   +   +   +   +
+        |            |         o |       |
+        |+---+---+   +---+---+   +   +   +   +
+        |        |     x     |   |       |
+        |+---+---+   +---+---+   +   +---+---+
+        |        |           |   |       |
+        |+---+---+---+---+---+---+   +   +   +
+        |                                |
+        |+   +   +   +   +   +   +   +   +   +
+      """.stripMargin.trim)
+      ok
+    }
+  }
 }

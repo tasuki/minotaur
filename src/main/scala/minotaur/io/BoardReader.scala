@@ -113,7 +113,7 @@ object BoardReader {
       val bColumn = b.location % boardType.size
 
       if (aColumn < bColumn) true
-      else if (bColumn > aColumn) false
+      else if (aColumn > bColumn) false
       else a.location < b.location
     })
 
