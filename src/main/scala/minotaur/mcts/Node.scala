@@ -32,16 +32,18 @@ trait Node {
 class RootNode(gs: GameState) extends Node {
   val gameState = gs
   val parent = None
+
+  override def toString =
+    f"W/V:$wins%4d /$visited%4d = ${wins.toDouble/visited}%1.5f"
 }
 
 class MoveNode(val move: Move, parentNode: Node) extends Node {
   val gameState = move.play
   val parent = Some(parentNode)
 
-  override def toString = {
+  override def toString =
     f"W/V:$wins%4d /$visited%4d = ${wins.toDouble/visited}%1.5f;" +
       f" UCT: ${UCT}%1.5f"
-  }
 
   def UCT: Double = {
     if (visited == 0)
