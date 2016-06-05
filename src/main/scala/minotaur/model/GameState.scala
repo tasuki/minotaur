@@ -11,8 +11,7 @@ case class GameState(
 
     def getPossibleWallPlacements: Seq[WallPlacement] =
       if (walls(onTurn) == 0) Seq()
-      else board.placeableWalls.map(WallPlacement(_, this))
-        .filter(_.isValid).toSeq
+      else board.placeableWalls.map(WallPlacement(_, this))(collection.breakOut)
 
     (getPossiblePawnMovements ++ getPossibleWallPlacements)
   }

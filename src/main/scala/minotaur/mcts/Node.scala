@@ -19,7 +19,9 @@ trait Node {
 
   def expand: Unit = {
     children = Some(
-      gameState.getPossibleMoves.map(new MoveNode(_, this))
+      gameState.getPossibleMoves
+        .filter(_.isValid)
+        .map(new MoveNode(_, this))
     )
   }
 
