@@ -4,6 +4,7 @@ sealed trait Move {
   val gameState: GameState
   val play: GameState
   val wins: Boolean
+  val isValid: Boolean
 }
 
 case class WallPlacement(
@@ -40,7 +41,7 @@ case class WallPlacement(
   }
 
   // make sure each player can reach their goal
-  def isValid: Boolean = play.board.isValid
+  lazy val isValid = play.board.isValid
 
   val wins = false
 }
@@ -71,6 +72,8 @@ case class PawnMovement(
       onTurn = gs.onTurn.other
     )
   }
+
+  val isValid = true
 
   lazy val wins = {
     val player = gs.onTurn
