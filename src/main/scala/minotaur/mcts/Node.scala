@@ -35,7 +35,7 @@ class RootNode(gs: GameState) extends Node {
 }
 
 class MoveNode(val move: Move, parentNode: Node) extends Node {
-  val gameState = move.gameState
+  val gameState = move.play
   val parent = Some(parentNode)
 
   override def toString = {
