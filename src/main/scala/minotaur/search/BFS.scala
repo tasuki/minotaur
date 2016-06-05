@@ -1,7 +1,7 @@
 package minotaur.search
 
 import scala.collection.mutable.{ArraySeq,Queue}
-import minotaur.model.{Search,SearchNode,Board,Location,Direction}
+import minotaur.model.{Search,SearchNode,Board,Location,Direction,Path}
 
 object BFS extends Search {
   case class Node(
@@ -14,7 +14,7 @@ object BFS extends Search {
     board: Board,
     from: Location,
     direction: Direction
-  ): Option[Seq[Location]] = {
+  ): Option[Path] = {
     val closed: ArraySeq[Boolean] =
       ArraySeq.fill(board.boardType.size * board.boardType.size){false}
 

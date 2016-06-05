@@ -3,23 +3,26 @@ package minotaur.model
 import scala.collection.mutable.ListBuffer
 
 trait Search {
-  def reconstructPath(current: SearchNode): Option[Seq[Location]] = {
+  def reconstructPath(current: SearchNode): Option[Path] = {
     val lb = ListBuffer.empty[Location]
     var pathItem = current
 
     do {
       lb += pathItem.location
-      pathItem = pathItem.parent.get
+      // when jumping, pathItem.parent can be empty
+      // the getOrElse(pathItem) is cheating but deals with that
+      pathItem = pathItem.parent.getOrElse(pathItem)
     } while (pathItem.parent.isDefined)
 
-    Some(lb.toList.reverse)
+    // generously assume the path is shortest
+    Some(ShortestPath(lb.toList.reverse))
   }
 
   def findPath(
     board: Board,
     from: Location,
     direction: Direction
-  ): Option[Seq[Location]]
+  ): Option[Path]
 }
 
 trait SearchNode {
@@ -33,5 +36,7 @@ trait SearchNode {
 import minotaur.search._
 object Search extends Search {
   def findPath(board: Board, from: Location, direction: Direction) =
+    profile.Profiler.profile("AStar",
     AStar.findPath(board, from, direction)
+    )
 }

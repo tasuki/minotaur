@@ -20,7 +20,7 @@ object MoveGenerator {
       val possibleMoves = gs.board.possibleMoves(gs.onTurn)
 
       if (percentChance(seekShortestRouteProbability)) {
-        gs.board.shortestPath(gs.onTurn).get
+        gs.board.shortestPath(gs.onTurn).get.path
           .find(possibleMoves contains _)
           .foreach(loc => return PawnMovement(loc, gs))
       }
@@ -28,7 +28,7 @@ object MoveGenerator {
       PawnMovement(random(possibleMoves), gs)
     }
 
-    if (percentChance(pawnMovementProbability) || gs.walls(gs.onTurn) == 0)
+    if (percentChance(pawnMovementProbability) || gs.walls(gs.onTurn) < 1)
       randomPawnMove
     else
       for (wall <- Random.shuffle(gs.board.placeableWalls.toList)) {
