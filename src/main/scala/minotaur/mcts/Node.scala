@@ -25,7 +25,7 @@ trait Node {
 
   def update(winner: Player): Unit = {
     visited += 1
-    if (winner == gameState.onTurn) wins += 1
+    if (winner == gameState.onTurn.other) wins += 1
   }
 }
 

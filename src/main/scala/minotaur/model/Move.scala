@@ -35,7 +35,7 @@ case class WallPlacement(
         allowedMovements = gs.board.allowedMovements ++ movementUpdates
       )(cachedPaths = paths),
       walls = gs.walls + (gs.onTurn -> (gs.walls(gs.onTurn) - 1)),
-      onTurn = gs.onTurn.next
+      onTurn = gs.onTurn.other
     )
   }
 
@@ -68,7 +68,7 @@ case class PawnMovement(
           - gs.board.pawnLocation(gs.onTurn)
           + (location -> gs.onTurn)
       )(cachedPaths = paths),
-      onTurn = gs.onTurn.next
+      onTurn = gs.onTurn.other
     )
   }
 

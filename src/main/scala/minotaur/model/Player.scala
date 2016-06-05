@@ -3,7 +3,7 @@ package minotaur.model
 sealed trait Player {
   val pawn: Char
   val destination: Direction
-  val next: Player = this match {
+  val other: Player = this match {
     case Black => White
     case White => Black
   }
