@@ -21,7 +21,7 @@ class GameStateSpec extends Specification {
     )
 
     "list the possible moves" in {
-      gs.getChildren.map(_.board) === Set(
+      gs.getPossibleMoves.map(_.play.board) === Set(
         BoardReader.fromString("""
           |+   +   +   +   +
           |

@@ -5,7 +5,7 @@ case class GameState(
   walls: Map[Player, Int],
   onTurn: Player
 ) {
-  lazy val getChildren: Set[GameState] = {
+  lazy val getPossibleMoves: Set[Move] = {
     def getPossiblePawnMovements: Set[PawnMovement] =
       board.possibleMoves(onTurn).map(PawnMovement(_, this))
 
@@ -15,6 +15,5 @@ case class GameState(
         .filter(_.isValid)
 
     (getPossiblePawnMovements ++ getPossibleWallPlacements)
-      .map(_.play)
   }
 }
