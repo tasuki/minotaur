@@ -6,12 +6,6 @@ object MoveGenerator {
   val pawnMovementProbability = 50
   val seekShortestRouteProbability = 50
 
-  private def random[T](s: Set[T]) = {
-    val n = Random.nextInt(s.size)
-    val it = s.iterator.drop(n)
-    it.next
-  }
-
   private def percentChance(chance: Int): Boolean =
     Random.nextInt(100) < chance
 
@@ -25,7 +19,7 @@ object MoveGenerator {
           .foreach(loc => return PawnMovement(loc, gs))
       }
 
-      PawnMovement(random(possibleMoves), gs)
+      PawnMovement(possibleMoves(Random.nextInt(possibleMoves.length)), gs)
     }
 
     if (percentChance(pawnMovementProbability) || gs.walls(gs.onTurn) < 1)

@@ -50,7 +50,7 @@ case class Board(
   def pawnLocation(player: Player): Location =
     pawns.find(_._2 == player).map(_._1).get
 
-  def possibleMoves(player: Player): Set[Location] = {
+  def possibleMoves(player: Player): Seq[Location] = {
     val location = pawnLocation(player)
 
     allowedMovements(location)
@@ -66,7 +66,7 @@ case class Board(
               .filter(canMove(neighbor, _))
               .map(neighbor.neighbor(_).get)
         case (_, neighbor) => Seq(neighbor)
-      }).flatten.toSet
+      }).flatten
   }
 
   def findPath(player: Player) =

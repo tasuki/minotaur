@@ -5,14 +5,14 @@ case class GameState(
   walls: Map[Player, Int],
   onTurn: Player
 ) {
-  lazy val getPossibleMoves: Set[Move] = {
-    def getPossiblePawnMovements: Set[PawnMovement] =
+  lazy val getPossibleMoves: Seq[Move] = {
+    def getPossiblePawnMovements: Seq[PawnMovement] =
       board.possibleMoves(onTurn).map(PawnMovement(_, this))
 
-    def getPossibleWallPlacements: Set[WallPlacement] =
-      if (walls(onTurn) == 0) Set()
+    def getPossibleWallPlacements: Seq[WallPlacement] =
+      if (walls(onTurn) == 0) Seq()
       else board.placeableWalls.map(WallPlacement(_, this))
-        .filter(_.isValid)
+        .filter(_.isValid).toSeq
 
     (getPossiblePawnMovements ++ getPossibleWallPlacements)
   }
