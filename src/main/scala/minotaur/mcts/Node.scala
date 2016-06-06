@@ -10,6 +10,10 @@ trait Node {
   val gameState: GameState
   val parent: Option[Node]
 
+  override def toString = {
+    f"${gameState.onTurn.other} confidence: ${wins.toDouble/visited}%1.2f ($wins / $visited)"
+  }
+
   override lazy val hashCode = gameState.hashCode
 
   var wins = 0
@@ -43,18 +47,11 @@ trait Node {
 class RootNode(gs: GameState) extends Node {
   val gameState = gs
   val parent = None
-
-  override def toString =
-    f"W/V:$wins%4d /$visited%4d = ${wins.toDouble/visited}%1.5f"
 }
 
 class MoveNode(val move: Move, parentNode: Node) extends Node {
   val gameState = move.play
   val parent = Some(parentNode)
-
-  override def toString =
-    f"W/V:$wins%4d /$visited%4d = ${wins.toDouble/visited}%1.5f;" +
-      f" UCT: ${UCT}%1.5f"
 
   def UCT: Double = {
     (wins.toDouble / visited) +
