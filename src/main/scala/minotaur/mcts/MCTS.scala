@@ -12,25 +12,25 @@ object MCTS {
       node = root
 
       // Select
-      while (node.children.isDefined) {
+      while (node.isFullyExplored) {
         node = node.selectChild
       }
 
       // Expand
-      node.expand
+      val expanded: Node = node.expand
 
       // Simulate
-      val winner = playout(node.gameState)
+      val winner = playout(expanded.gameState)
 
       // Backpropagate
-      var optNode: Option[Node] = Some(node)
+      var optNode: Option[Node] = Some(expanded)
       while (optNode.isDefined) {
         optNode.get.update(winner)
         optNode = optNode.get.parent
       }
     }
 
-    root.children.get.maxBy(_.visited).move
+    root.children.maxBy(_.visited).move
   }
 
   def playout(gameState: GameState): Player = {
@@ -48,7 +48,7 @@ object MCTS {
 
   def debug(node: Node): Unit = {
     println("top 5 moves:")
-    node.children.get.sortBy(_.visited).reverse.take(5).foreach {
+    node.children.sortBy(_.visited).reverse.take(5).foreach {
       mn => {
         println
         println(mn)
@@ -68,7 +68,7 @@ object MCTS {
       println
       println(mn)
       println(BoardPrinter.print(state.board))
-      mn = mn.children.get.maxBy(_.visited)
-    } while (mn.children.isDefined)
+      mn = mn.children.maxBy(_.visited)
+    } while (mn.children.nonEmpty)
   }
 }

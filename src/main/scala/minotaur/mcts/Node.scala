@@ -1,6 +1,9 @@
 package minotaur.mcts
 
 import Math.{sqrt,log}
+import scala.collection.mutable.ListBuffer
+import util.Random
+
 import minotaur.model.{GameState,Move,Player}
 
 trait Node {
@@ -11,18 +14,24 @@ trait Node {
 
   var wins = 0
   var visited = 0
-  var children: Option[Seq[MoveNode]] = None
 
-  def selectChild: MoveNode = {
-    children.get.maxBy(_.UCT)
-  }
+  private lazy val unexploredChildren: Iterator[MoveNode] =
+    Random.shuffle(gameState.getPossibleMoves).toIterator
+      .filter(_.isValid)
+      .map(new MoveNode(_, this))
 
-  def expand: Unit = {
-    children = Some(
-      gameState.getPossibleMoves
-        .filter(_.isValid)
-        .map(new MoveNode(_, this))
-    )
+  def isFullyExplored: Boolean =
+    unexploredChildren.isEmpty
+
+  val children: ListBuffer[MoveNode] = ListBuffer[MoveNode]()
+
+  def selectChild: MoveNode =
+    children.maxBy(_.UCT)
+
+  def expand: MoveNode = {
+    val next = unexploredChildren.next
+    children += next
+    next
   }
 
   def update(winner: Player): Unit = {
@@ -48,10 +57,6 @@ class MoveNode(val move: Move, parentNode: Node) extends Node {
       f" UCT: ${UCT}%1.5f"
 
   def UCT: Double = {
-    if (visited == 0)
-      // prefer non-visited nodes
-      return 10.0
-
     (wins.toDouble / visited) +
       sqrt(log(parentNode.visited.toDouble) / visited)
   }
