@@ -36,7 +36,7 @@ trait SearchNode {
 import minotaur.search._
 object Search extends Search {
   def findPath(board: Board, from: Location, direction: Direction) =
-    profile.Profiler.profile("AStar",
-    AStar.findPath(board, from, direction)
+    profile.Profiler.profile("BFS",
+    BFS.findPath(board, from, direction)
     )
 }
