@@ -20,10 +20,10 @@ object BFS extends Search {
 
     val open: Queue[Node] = Queue[Node]()
     open += Node(from, None, 0)
+    closed(from.location) = true
 
     while (open.nonEmpty) {
       val current = open.dequeue
-      closed(current.location.location) = true
 
       if (current.location.isBorder(direction))
         return reconstructPath(current)
@@ -35,6 +35,8 @@ object BFS extends Search {
             Some(current),
             current.cost + 1
           )
+
+          closed(neighbor.location) = true
         }
       }
     }
