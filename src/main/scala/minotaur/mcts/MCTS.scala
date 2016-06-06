@@ -3,11 +3,14 @@ package minotaur.mcts
 import minotaur.model.{GameState,Player,MoveGenerator,Move}
 
 object MCTS {
-  def findMove(gameState: GameState): MoveNode = {
+  def findMove(
+    gameState: GameState,
+    iterations: Int = 10000
+  ): MoveNode = {
     val root = new RootNode(gameState)
     var node: Node = null
 
-    for (i <- 1 to 10000) {
+    for (i <- 1 to iterations) {
       node = root
 
       // Select
