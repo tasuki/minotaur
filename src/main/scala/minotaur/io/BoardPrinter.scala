@@ -1,6 +1,5 @@
 package minotaur.io
 
-import scala.collection.Set
 import minotaur.model.{Board,Location}
 import minotaur.model.{Direction,South,West}
 import minotaur.model.SearchNode
