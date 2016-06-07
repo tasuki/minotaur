@@ -1,7 +1,7 @@
 package profile
 
 import minotaur.model.{BoardType,Location,Wall,Horizontal}
-import minotaur.model.{North,South,East,West}
+import minotaur.model.{Direction,North,South,East,West}
 import minotaur.model.{White,Black}
 import minotaur.search.{AStar,BFS}
 import minotaur.io.BoardReader
@@ -11,6 +11,7 @@ object Benchmark {
 
   def main(args: Array[String]): Unit = {
     profileBoardWithLocations
+    profileNeighbors
     profileContains
     mapCaseClassVsListId
     searches
@@ -26,6 +27,27 @@ object Benchmark {
 
     Profiler.profileMany("Vector access (2)", locationVector(2))
     Profiler.profileMany("Vector access (73)", locationVector(73)) // this is bad
+    Profiler.printShort
+  }
+
+  def profileNeighbors = {
+    val neighborVector: Vector[Seq[Direction]] =
+      bt.locations.map(location => Direction.all).toVector
+    val neighborList: List[Seq[Direction]] =
+      neighborVector.toList
+    val neighborMap: Map[Location, Seq[Direction]] =
+      bt.locations.map(location => location -> Direction.all).toMap
+
+    val two = Location(2, bt)
+    val many = Location(73, bt)
+
+    Profiler.clear
+    Profiler.profileMany("Neighbor vector (73)", neighborVector(many.location))
+    Profiler.profileMany("Neighbor vector (2)", neighborVector(two.location))
+    Profiler.profileMany("Neighbor list (73)", neighborList(many.location))
+    Profiler.profileMany("Neighbor list (2)", neighborList(two.location))
+    Profiler.profileMany("Neighbor map (73)", neighborMap(many))
+    Profiler.profileMany("Neighbor map (2)", neighborMap(two))
     Profiler.printShort
   }
 
