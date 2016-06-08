@@ -9,14 +9,15 @@ import minotaur.model.{GameState,Move,Player}
 trait Node {
   val gameState: GameState
   val parent: Option[Node]
+  val wins: Boolean
 
-  override def toString = {
-    f"${gameState.onTurn.other} confidence: ${wins.toDouble/visited}%1.2f ($wins / $visited)"
-  }
+  override def toString =
+    f"${gameState.onTurn.other} " +
+    f"confidence: ${winCount.toDouble/visited}%1.2f ($winCount / $visited)"
 
   override lazy val hashCode = gameState.hashCode
 
-  var wins = 0
+  var winCount = 0
   var visited = 0
 
   private lazy val unexploredChildren: Iterator[MoveNode] =
@@ -40,21 +41,23 @@ trait Node {
 
   def update(winner: Player): Unit = {
     visited += 1
-    if (winner == gameState.onTurn.other) wins += 1
+    if (winner == gameState.onTurn.other) winCount += 1
   }
 }
 
 class RootNode(gs: GameState) extends Node {
   val gameState = gs
   val parent = None
+  val wins = false
 }
 
 class MoveNode(val move: Move, parentNode: Node) extends Node {
   val gameState = move.play
   val parent = Some(parentNode)
+  val wins = move.wins
 
   def UCT: Double = {
-    (wins.toDouble / visited) +
+    (winCount.toDouble / visited) +
       sqrt(log(parentNode.visited.toDouble) / visited)
   }
 }

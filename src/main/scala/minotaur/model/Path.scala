@@ -13,7 +13,7 @@ sealed trait Path {
 
   def isValid(player: Player, board: Board): Boolean = {
     @tailrec def check(loc: Location, path: Seq[Location]): Boolean = {
-      if (!board.canMove(loc, path.head)) false
+      if (path.isEmpty || !board.canMove(loc, path.head)) false
       else if (path.tail.isEmpty) true
       else check(path.head, path.tail)
     }

@@ -9,9 +9,9 @@ object Debug {
     println(BoardPrinter.print(node.move.play.board))
   }
 
-  def printFullInfo(node: MoveNode): Unit = {
+  def printFullInfo(chosen: MoveNode): Unit = {
     println("top 5 moves:")
-    node.parent.get.children.sortBy(_.visited).reverse.take(5).foreach {
+    chosen.parent.get.children.sortBy(_.visited).reverse.take(5).foreach {
       mn => {
         println
         println(mn)
@@ -24,14 +24,17 @@ object Debug {
     println
 
     println("sequence of best found moves:")
-    var mn: Node = node.parent.get
+    var node: Node = chosen.parent.get
     var state: GameState = null
-    do {
-      state = mn.gameState
+    while (true) {
+      state = node.gameState
       println
-      println(mn)
+      println(node)
       println(BoardPrinter.print(state.board))
-      mn = mn.children.maxBy(_.visited)
-    } while (mn.children.nonEmpty)
+      if (node.children.isEmpty) {
+        return
+      }
+      node = node.children.maxBy(_.visited)
+    }
   }
 }

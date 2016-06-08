@@ -15,7 +15,7 @@ class MCTSSpec extends Specification {
     )
 
     "choose the obvious move" in {
-      val moveNode = MCTS.findMove(gs)
+      val moveNode = MCTS.findMove(gs, 10000)
       moveNode.move === WallPlacement(
         Wall(Location(40, board.boardType), Horizontal),
         gs
@@ -31,9 +31,31 @@ class MCTSSpec extends Specification {
     )
 
     "should choose the right move for black" in {
-      val moveNode = MCTS.findMove(gs)
-      moveNode.move === WallPlacement(
-        Wall(Location(40, board.boardType), Horizontal),
+      val moveNode = MCTS.findMove(gs, 50000)
+      Set(
+        WallPlacement(
+          Wall(Location(31, board.boardType), Horizontal),
+          gs
+        ),
+        WallPlacement(
+          Wall(Location(40, board.boardType), Horizontal),
+          gs
+        )
+      ) must contain(moveNode.move)
+    }
+  }
+
+  "For a game that's almost finished, MCTS" should {
+    val file = "src/test/resources/problems/almost-finished.txt"
+    val board = BoardReader.fromFile(file)
+    val gs = GameState(
+      board, Map(Black -> 0, White -> 0), White
+    )
+
+    "find the winning move for white" in {
+      val moveNode = MCTS.findMove(gs, 1000)
+      moveNode.move === PawnMovement(
+        Location(80, board.boardType),
         gs
       )
     }

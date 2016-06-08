@@ -13,6 +13,8 @@ case class WallPlacement(
 ) extends Move {
   private val gs = gameState
 
+  override def toString = s"(WallPlacement: $wall)"
+
   lazy val play = {
     // blocked movements
     val movementUpdates: Seq[(Location, Seq[Direction])] =
@@ -51,6 +53,8 @@ case class PawnMovement(
   gameState: GameState
 ) extends Move {
   private val gs = gameState
+
+  override def toString = s"(PawnMovement: ${gs.onTurn} to $location)"
 
   lazy val play = {
     // update paths with current advance if following
