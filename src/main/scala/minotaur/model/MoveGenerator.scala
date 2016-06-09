@@ -22,15 +22,18 @@ object MoveGenerator {
       PawnMovement(possibleMoves(Random.nextInt(possibleMoves.length)), gs)
     }
 
+    def randomWallMove: Option[WallPlacement] = {
+      for (wall <- Random.shuffle(gs.board.placeableWalls.toList)) {
+        val wp = WallPlacement(wall, gs)
+        if (wp.isValid) return Some(wp)
+      }
+
+      None
+    }
+
     if (percentChance(pawnMovementProbability) || gs.walls(gs.onTurn) < 1)
       randomPawnMove
     else
-      for (wall <- Random.shuffle(gs.board.placeableWalls.toList)) {
-        val wp = WallPlacement(wall, gs)
-        if (wp.isValid)
-          return wp
-      }
-
-    randomPawnMove
+      randomWallMove.getOrElse(randomPawnMove)
   }
 }
