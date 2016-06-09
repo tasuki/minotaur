@@ -9,9 +9,9 @@ object Debug {
     println(BoardPrinter.print(node.move.play.board))
   }
 
-  def printFullInfo(chosen: MoveNode): Unit = {
-    println("top 5 moves:")
-    chosen.parent.get.children.sortBy(_.visited).reverse.take(5).foreach {
+  def printFullInfo(chosen: MoveNode, topX: Int = 5): Unit = {
+    println(s"top $topX moves:")
+    chosen.parent.get.children.sortBy(_.visited).reverse.take(topX).foreach {
       mn => {
         println
         println(mn)
