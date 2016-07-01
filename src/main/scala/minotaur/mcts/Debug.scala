@@ -11,7 +11,7 @@ object Debug {
 
   def printFullInfo(chosen: MoveNode, topX: Int = 5): Unit = {
     println(s"top $topX moves:")
-    chosen.parent.get.children.sortBy(_.visited).reverse.take(topX).foreach {
+    chosen.parent.get.bestChildren(topX).foreach {
       mn => {
         println
         println(mn)
@@ -34,7 +34,7 @@ object Debug {
       if (node.children.isEmpty) {
         return
       }
-      node = node.children.maxBy(_.visited)
+      node = node.bestChild
     }
   }
 }

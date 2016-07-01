@@ -34,7 +34,7 @@ object MCTS {
       }
     }
 
-    root.children.maxBy(_.visited)
+    root.bestChild
   }
 
   def playout(gameState: GameState): Player = {

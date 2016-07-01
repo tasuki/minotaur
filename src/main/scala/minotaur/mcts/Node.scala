@@ -43,6 +43,15 @@ trait Node {
     visited += 1
     if (winner == gameState.onTurn.other) winCount += 1
   }
+
+  private def bestHeuristic(node: Node): Double =
+    node.winCount.toDouble / node.visited
+
+  def bestChild: MoveNode =
+    children.maxBy(bestHeuristic)
+
+  def bestChildren(count: Int): ListBuffer[MoveNode] =
+    children.sortBy(bestHeuristic).reverse.take(count)
 }
 
 class RootNode(gs: GameState) extends Node {
