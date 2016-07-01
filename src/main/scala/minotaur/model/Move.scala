@@ -2,6 +2,7 @@ package minotaur.model
 
 sealed trait Move {
   val gameState: GameState
+  val priority: Double
   val play: GameState
   val wins: Boolean
   val isValid: Boolean
@@ -12,6 +13,7 @@ case class WallPlacement(
   gameState: GameState
 ) extends Move {
   private val gs = gameState
+  val priority = 1.0
 
   override def toString = s"(WallPlacement: $wall)"
 
@@ -53,6 +55,7 @@ case class PawnMovement(
   gameState: GameState
 ) extends Move {
   private val gs = gameState
+  val priority = 2.0
 
   override def toString = s"(PawnMovement: ${gs.onTurn} to $location)"
 
