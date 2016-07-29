@@ -51,6 +51,44 @@ object BoardPrinter {
         .getOrElse("   ")
     )
 
+  def printWithCoords(board: Board): String = {
+    val boardSize = board.boardType.size
+    val verticalCoords   = "abcdfghijklmopr".take(boardSize - 1).toList
+    val horizontalCoords = "123456789tuvxyz".take(boardSize - 1).toList
+
+    val padTo = boardSize * 4 + 1
+    val lines: List[String] = print(board).split("\\n").toList.map(
+      (line) => String.format("%1$-" + padTo + "s", line)
+    )
+
+    val numberedBoard = lines.zipWithIndex.map{ case (line, index) =>
+      val coord: Char =
+        if (index % 2 == 0 && index != 0 && index != boardSize * 2)
+          horizontalCoords(index / 2 - 1)
+        else
+          ' '
+
+      def getDirectionLabel(label: String): Char =
+        if (index > boardSize - 3 && index < boardSize + 2)
+          label.toList(index - (boardSize - 2))
+        else
+          ' '
+
+      val assembled = getDirectionLabel("WEST") + "  " +
+        coord + " " + line + "  " +
+        getDirectionLabel("EAST")
+
+      assembled.replaceAll("""\s+$""","")
+    }.mkString("\n")
+
+    val center = List.fill(5 + boardSize*2 - 2)(" ").mkString
+    val before = center + "NORTH\n\n      " +
+      verticalCoords.map("   " + _).mkString + "\n"
+    val after = "\n\n" + center + "SOUTH\n"
+
+    before + numberedBoard + after
+  }
+
   def printSearchNodes(board: Board, nodes: Set[SearchNode]): String =
     printWithCellContent(board, (optLoc: Option[Location]) =>
       optLoc.flatMap(loc => nodes.find(_.location == loc))

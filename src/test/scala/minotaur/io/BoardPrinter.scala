@@ -11,5 +11,11 @@ class BoardPrinterSpec extends Specification {
     "get printed properly" in {
       BoardPrinter.print(board) === Source.fromFile(file).mkString
     }
+
+    "get printed with coordinates" in {
+      BoardPrinter.printWithCoords(board) === Source.fromFile(
+        "src/test/resources/board-coords.txt"
+      ).mkString
+    }
   }
 }
