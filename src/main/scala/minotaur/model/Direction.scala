@@ -2,10 +2,8 @@ package minotaur.model
 
 sealed trait Direction {
   val orientation: Orientation = this match {
-    case North => Vertical
-    case South => Vertical
-    case East => Horizontal
-    case West => Horizontal
+    case (North | South) => Vertical
+    case (East | West) => Horizontal
   }
 }
 object Direction {
