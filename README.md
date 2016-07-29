@@ -4,7 +4,7 @@
 
 Minotaur is an MCTS-based AI to play [Quoridor](https://en.wikipedia.org/wiki/Quoridor). The author can usually beat it.
 
-To play against your computer, you'll need to install [sbt](http://www.scala-sbt.org/). Then run:
+To play against your computer, you'll need to install [sbt](http://www.scala-sbt.org/). Then open the console, go to the directory containing this readme, and run:
 
     sbt "run-main Client"
 
