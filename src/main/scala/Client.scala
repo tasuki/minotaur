@@ -81,7 +81,7 @@ object Client {
       }
 
       command match {
-        case Some(move) if (move.isValid) => {
+        case Some(move) if (gs.getPossibleMoves.contains(move) && move.isValid) => {
           gs = move.play
           println
           print(BoardPrinter.printWithCoords(gs.board))
