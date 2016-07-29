@@ -61,5 +61,22 @@ class MCTSSpec extends Specification {
     }
   }
 
+  "For a game that just needs running, MCTS" should {
+    val file = "src/test/resources/problems/just-run.txt"
+    val board = BoardReader.fromFile(file)
+    val gs = GameState(
+      board, Map(Black -> 0, White -> 3), White
+    )
+
+    "just run" in {
+      val moveNode = MCTS.findMove(gs, 100000)
+
+      moveNode.move === PawnMovement(
+        Location(50, board.boardType),
+        gs
+      )
+    }
+  }
+
   section("integration")
 }
