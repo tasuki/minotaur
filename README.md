@@ -2,7 +2,11 @@
 
 [![Build Status](https://travis-ci.org/tasuk/minotaur.png?branch=master)](https://travis-ci.org/tasuk/minotaur)
 
-This is going to be an AI to play [Quoridor](https://en.wikipedia.org/wiki/Quoridor).
+Minotaur is an MCTS-based AI to play [Quoridor](https://en.wikipedia.org/wiki/Quoridor). The author can usually beat it.
+
+To play against your computer, you'll need [sbt](http://www.scala-sbt.org/). Then run:
+
+    sbt "run-main Client"
 
 ---
 
