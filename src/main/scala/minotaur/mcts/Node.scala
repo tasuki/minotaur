@@ -65,9 +65,6 @@ class MoveNode(val move: Move, parentNode: Node) extends Node {
   val parent = Some(parentNode)
   val wins = move.wins
 
-  override def toString = super.toString +
-    f", UCT: ${winCount.toDouble / visited} + ${move.priority} * ${1.4 * sqrt(log(parentNode.visited.toDouble) / visited)}"
-
   def UCT: Double = {
     (winCount.toDouble / visited) + move.priority *
       1.4 * sqrt(log(parentNode.visited.toDouble) / visited)
