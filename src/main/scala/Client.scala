@@ -1,31 +1,28 @@
-import minotaur.io._
-
-import minotaur.model.{Player,Black,White}
-import minotaur.model.{Direction,North,South,East,West}
-import minotaur.model.{GameState,Location,Wall}
-import minotaur.model.{Orientation,Vertical,Horizontal}
-import minotaur.model.{Move,PawnMovement,WallPlacement}
-import minotaur.io.Coordinates
-import minotaur.mcts.MCTS
-import profile.Profiler
+import scala.collection.mutable.Stack
+import minotaur.io.{BoardReader,GameStatePrinter,Coordinates}
+import minotaur.model.{Black,White}
+import minotaur.model.{GameState,Location,Direction,Wall}
+import minotaur.model.{Vertical,Horizontal}
+import minotaur.model.{PawnMovement,WallPlacement}
 
 object Client {
+  val player = Black
+  val computer = White
+
   def main(args: Array[String]): Unit = {
     val cli: Map[String, String] = args.map(
       _.split("=") match { case Array(k, v) => k -> v }
     ).toMap
     val handicap: Int = cli.getOrElse("handicap", "0").toInt
-
-    val player = Black
-    val computer = White
+    val playouts: Int = cli.getOrElse("playouts", "50000").toInt
 
     val file = "src/test/resources/empty.txt"
-    var gs = GameState(
+    val game = Stack(GameState(
       BoardReader.fromFile(file), Map(
         computer -> (10 - handicap),
         player -> (10 + handicap)
       ), player
-    )
+    ))
 
     print(
       """
@@ -35,6 +32,7 @@ object Client {
 
       Example commands:
         quit: exists the console
+        undo: undo the last move
         n: moves your pawn North
         s: moves your pawn South
         e: moves your pawn East
@@ -48,88 +46,57 @@ object Client {
 """
     )
 
-    printState(gs, player, computer)
-
-    val coordinates = Coordinates(gs.board.boardType)
-    val movePattern = "^([nsew]{1,2})$".r
-    val coordsPattern = "^(..)$".r
+    GameStatePrinter(game.head)
 
     while (true) {
-      val command: Option[Move] = readLine("Your move: ") match {
-        case ("quit" | "exit") => return
-        case movePattern(directions) =>
-          directions.toList.foldLeft(Option(gs.board.pawnLocation(player)))(
-            (optLoc, dir) => optLoc match {
-              case Some(loc) => loc.neighbor(Direction.fromChar(dir))
-              case _ => None
-            }
-          ).map(loc => PawnMovement(loc, gs))
-
-        case coordsPattern(coords) => {
-          (coords.toList match {
-            case List(vertical, horizontal)
-                      if (coordinates.exist(vertical, horizontal)) =>
-              Some((vertical, horizontal, Vertical))
-            case List(horizontal, vertical)
-                      if (coordinates.exist(vertical, horizontal)) =>
-              Some((vertical, horizontal, Horizontal))
-            case _ =>
-              None
-          }).map((data) => {
-            val (vertical, horizontal, orientation) = data
-
-            Wall(
-              Location(
-                coordinates.vertical.indexOf(vertical) +
-                coordinates.horizontal.indexOf(horizontal) * gs.board.size,
-                gs.board.boardType
-              ),
-              orientation
-            )
-          }).map(wall => WallPlacement(wall, gs))
-        }
-
-        case _ => None
-      }
-
-      command match {
-        case Some(move) if (gs.getPossibleMoves.contains(move) && move.isValid) => {
-          gs = move.play
-          printState(gs, player, computer)
-
-          if (move.wins) {
-            println
-            println("Congratulations, Theseus, you have killed the Minotaur!")
-            return
-          }
-
-          println
-          println("Minotaur is feeding on the dead bodies of his victims, please wait...")
-
-          val node = Profiler.profile("MCTS", MCTS.findMove(gs, 50000))
-          Profiler.print("MCTS")
-          Profiler.clear
-          println(node)
-
-          gs = node.move.play
-          printState(gs, player, computer)
-
-          if (node.move.wins) {
-            println
-            println("You have been devoured by the Minotaur. RIP")
-            return
-          }
-        }
-        case Some(move) => println("That move is illegal, try again")
-        case _ => println("Sorry, didn't understand that")
-      }
+      getCommand(game, playouts).execute(game)
     }
   }
 
-  private def printState(gs: GameState, player: Player, computer: Player) = {
-    println
-    println("Walls left, you: " + gs.walls(player) + ", minotaur " + gs.walls(computer))
-    println
-    print(BoardPrinter.printWithCoords(gs.board))
+  private def getCommand(game: Stack[GameState], playouts: Int): Command = {
+    val coordinates = Coordinates(game.head.board.boardType)
+    val movePattern = "^([nsew]{1,2})$".r
+    val coordsPattern = "^(..)$".r
+
+    readLine("Your move: ") match {
+      case "quit" | "exit" => Quit
+      case "undo" => Undo
+
+      case movePattern(directions) =>
+        directions.toList.foldLeft(Option(game.head.board.pawnLocation(player)))(
+          (optLoc, dir) => optLoc match {
+            case Some(loc) => loc.neighbor(Direction.fromChar(dir))
+            case _ => None
+          }
+        ).map(loc => Play(PawnMovement(loc, game.head), playouts))
+        .getOrElse(Unknown)
+
+      case coordsPattern(coords) => {
+        (coords.toList match {
+          case List(vertical, horizontal)
+                    if (coordinates.exist(vertical, horizontal)) =>
+            Some((vertical, horizontal, Vertical))
+          case List(horizontal, vertical)
+                    if (coordinates.exist(vertical, horizontal)) =>
+            Some((vertical, horizontal, Horizontal))
+          case _ =>
+            None
+        }).map((data) => {
+          val (vertical, horizontal, orientation) = data
+
+          Wall(
+            Location(
+              coordinates.vertical.indexOf(vertical) +
+              coordinates.horizontal.indexOf(horizontal) * game.head.board.size,
+              game.head.board.boardType
+            ),
+            orientation
+          )
+        }).map(wall => Play(WallPlacement(wall, game.head), playouts))
+        .getOrElse(Unknown)
+      }
+
+      case _ => Unknown
+    }
   }
 }
