@@ -1,6 +1,5 @@
 import minotaur.io._
 
-import scala.util.matching.Regex
 import minotaur.model.{GameState,Black,White}
 import minotaur.model.{Direction,North,South,East,West}
 import minotaur.model.{Location,Wall}
@@ -43,9 +42,11 @@ object Client {
     println
     print(BoardPrinter.printWithCoords(gs.board))
 
+    val coordinates = Coordinates(gs.board.boardType)
+    val movePattern = "^([nsew]{1,2})$".r
+    val coordsPattern = "^(..)$".r
+
     while (true) {
-      val movePattern = "^([nsew]{1,2})$".r
-      val coordsPattern = "^(..)$".r
       val command: Option[Move] = readLine("Your move: ") match {
         case ("quit" | "exit") => return
         case movePattern(directions) =>
@@ -59,10 +60,10 @@ object Client {
         case coordsPattern(coords) => {
           (coords.toList match {
             case List(vertical, horizontal)
-                      if (Coordinates.exist(vertical, horizontal)) =>
+                      if (coordinates.exist(vertical, horizontal)) =>
               Some((vertical, horizontal, Vertical))
             case List(horizontal, vertical)
-                      if (Coordinates.exist(vertical, horizontal)) =>
+                      if (coordinates.exist(vertical, horizontal)) =>
               Some((vertical, horizontal, Horizontal))
             case _ =>
               None
@@ -71,8 +72,8 @@ object Client {
 
             Wall(
               Location(
-                Coordinates.vertical.indexOf(vertical) +
-                Coordinates.horizontal.indexOf(horizontal) * gs.board.size,
+                coordinates.vertical.indexOf(vertical) +
+                coordinates.horizontal.indexOf(horizontal) * gs.board.size,
                 gs.board.boardType
               ),
               orientation

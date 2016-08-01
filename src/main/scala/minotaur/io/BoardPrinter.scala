@@ -53,6 +53,7 @@ object BoardPrinter {
 
   def printWithCoords(board: Board): String = {
     val boardSize = board.boardType.size
+    val coordinates = Coordinates(board.boardType)
 
     val padTo = boardSize * 4 + 1
     val lines: List[String] = print(board).split("\\n").toList.map(
@@ -62,7 +63,7 @@ object BoardPrinter {
     val numberedBoard = lines.zipWithIndex.map{ case (line, index) =>
       val coord: Char =
         if (index % 2 == 0 && index != 0 && index != boardSize * 2)
-          Coordinates.horizontal(index / 2 - 1)
+          coordinates.horizontal(index / 2 - 1)
         else
           ' '
 
@@ -81,7 +82,7 @@ object BoardPrinter {
 
     val center = List.fill(5 + boardSize*2 - 2)(" ").mkString
     val before = center + "NORTH\n\n      " +
-      Coordinates.vertical.take(boardSize - 1).map("   " + _).mkString + "\n"
+      coordinates.vertical.take(boardSize - 1).map("   " + _).mkString + "\n"
     val after = "\n\n" + center + "SOUTH\n"
 
     before + numberedBoard + after
