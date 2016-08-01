@@ -42,7 +42,7 @@ object Client {
     print(BoardPrinter.printWithCoords(gs.board))
 
     while (true) {
-      val pattern = "^(..)$".r
+      val coordsPattern = "^(..)$".r
       val command: Option[Move] = readLine("Your move: ") match {
         case ("quit" | "exit") => return
         case d @ ("n" | "s" | "e" | "w") =>
@@ -53,14 +53,14 @@ object Client {
             case "w" => West
           }).flatMap(loc => Some(PawnMovement(loc, gs)))
 
-        case pattern(coords) => {
+        case coordsPattern(coords) => {
           (coords.toList match {
             case List(vertical, horizontal)
                       if (Coordinates.exist(vertical, horizontal)) =>
-              Some(vertical, horizontal, Vertical)
+              Some((vertical, horizontal, Vertical))
             case List(horizontal, vertical)
                       if (Coordinates.exist(vertical, horizontal)) =>
-              Some(vertical, horizontal, Horizontal)
+              Some((vertical, horizontal, Horizontal))
             case _ =>
               None
           }).flatMap((data) => {
