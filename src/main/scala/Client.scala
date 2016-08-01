@@ -10,12 +10,20 @@ import minotaur.mcts.MCTS
 
 object Client {
   def main(args: Array[String]): Unit = {
+    val cli: Map[String, String] = args.map(
+      _.split("=") match { case Array(k, v) => k -> v }
+    ).toMap
+    val handicap: Int = cli.getOrElse("handicap", "0").toInt
+
     val player = Black
     val computer = White
 
     val file = "src/test/resources/empty.txt"
     var gs = GameState(
-      BoardReader.fromFile(file), Map(Black -> 10, White -> 10), player
+      BoardReader.fromFile(file), Map(
+        computer -> (10 - handicap),
+        player -> (10 + handicap)
+      ), player
     )
 
     print(
