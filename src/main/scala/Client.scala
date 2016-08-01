@@ -31,6 +31,8 @@ object Client {
         s: moves your pawn South
         e: moves your pawn East
         w: moves your pawn West
+        nn: jumps over enemy piece North
+        nw: jumps over enemy piece North-West
         a1: places a vertical wall in the upper left corner
         1a: places a horizontal wall in the upper left corner
         i8: places a vertical wall in the bottom right corner
@@ -42,16 +44,25 @@ object Client {
     print(BoardPrinter.printWithCoords(gs.board))
 
     while (true) {
+      val movePattern = "^([nsew]{1,2})$".r
       val coordsPattern = "^(..)$".r
       val command: Option[Move] = readLine("Your move: ") match {
         case ("quit" | "exit") => return
-        case d @ ("n" | "s" | "e" | "w") =>
-          gs.board.pawnLocation(player).neighbor(d match {
-            case "n" => North
-            case "s" => South
-            case "e" => East
-            case "w" => West
-          }).flatMap(loc => Some(PawnMovement(loc, gs)))
+        case movePattern(directions) =>
+          directions.toList.foldLeft(Option(gs.board.pawnLocation(player)))(
+            (optLoc, dir) => {
+              optLoc match {
+                case Some(location) =>
+                  location.neighbor(dir match {
+                    case 'n' => North
+                    case 's' => South
+                    case 'e' => East
+                    case 'w' => West
+                  })
+                case _ => None
+              }
+            }
+          ).flatMap(loc => Some(PawnMovement(loc, gs)))
 
         case coordsPattern(coords) => {
           (coords.toList match {
