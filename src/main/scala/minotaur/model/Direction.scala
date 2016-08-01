@@ -8,6 +8,12 @@ sealed trait Direction {
 }
 object Direction {
   def all = Seq(North, South, East, West)
+  def fromChar(char: Char): Direction = char match {
+    case 'n' => North
+    case 's' => South
+    case 'e' => East
+    case 'w' => West
+  }
 }
 case object North extends Direction
 case object South extends Direction

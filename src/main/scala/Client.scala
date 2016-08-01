@@ -2,7 +2,7 @@ import minotaur.io._
 
 import scala.util.matching.Regex
 import minotaur.model.{GameState,Black,White}
-import minotaur.model.{North,South,East,West}
+import minotaur.model.{Direction,North,South,East,West}
 import minotaur.model.{Location,Wall}
 import minotaur.model.{Orientation,Vertical,Horizontal}
 import minotaur.model.{Move,PawnMovement,WallPlacement}
@@ -50,19 +50,11 @@ object Client {
         case ("quit" | "exit") => return
         case movePattern(directions) =>
           directions.toList.foldLeft(Option(gs.board.pawnLocation(player)))(
-            (optLoc, dir) => {
-              optLoc match {
-                case Some(location) =>
-                  location.neighbor(dir match {
-                    case 'n' => North
-                    case 's' => South
-                    case 'e' => East
-                    case 'w' => West
-                  })
-                case _ => None
-              }
+            (optLoc, dir) => optLoc match {
+              case Some(loc) => loc.neighbor(Direction.fromChar(dir))
+              case _ => None
             }
-          ).flatMap(loc => Some(PawnMovement(loc, gs)))
+          ).map(loc => PawnMovement(loc, gs))
 
         case coordsPattern(coords) => {
           (coords.toList match {
@@ -74,18 +66,18 @@ object Client {
               Some((vertical, horizontal, Horizontal))
             case _ =>
               None
-          }).flatMap((data) => {
+          }).map((data) => {
             val (vertical, horizontal, orientation) = data
 
-            Some(Wall(
+            Wall(
               Location(
                 Coordinates.vertical.indexOf(vertical) +
                 Coordinates.horizontal.indexOf(horizontal) * gs.board.size,
                 gs.board.boardType
               ),
               orientation
-            ))
-          }).flatMap(wall => Some(WallPlacement(wall, gs)))
+            )
+          }).map(wall => WallPlacement(wall, gs))
         }
 
         case _ => None
