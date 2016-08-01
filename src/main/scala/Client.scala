@@ -108,6 +108,7 @@ object Client {
 
           val node = Profiler.profile("MCTS", MCTS.findMove(gs, 50000))
           Profiler.print("MCTS")
+          Profiler.clear
           println(node)
 
           gs = node.move.play
