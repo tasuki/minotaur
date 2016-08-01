@@ -5,6 +5,9 @@ import collection.mutable.Map
 object Profiler {
   val stats = Map[String, (Int, Long)]()
 
+  private def toSeconds(nanotime: Long): Double =
+    nanotime / 1000000000.0
+
   def profile[R](name: String, block: => R): R = {
     val tBegin = System.nanoTime()
     val result = block // call-by-name
@@ -48,7 +51,7 @@ object Profiler {
 
     stats.toSeq.sortBy(_._2._2).map {
       case (name: String, (ncalls: Int, time: Long)) => {
-        val seconds = time / 1000000000.0
+        val seconds = toSeconds(time)
         val percall = seconds / ncalls
         println(f"$name%30s $ncalls%10d $seconds%11.5f $percall%9.5f")
       }
@@ -62,12 +65,17 @@ object Profiler {
 
     stats.toSeq.sortBy(_._2._2).map {
       case (name: String, (ncalls: Int, time: Long)) => {
-        val seconds = time / 1000000000.0
+        val seconds = toSeconds(time)
         println(f"$name%30s $seconds%11.5f")
       }
     }
 
     println
+  }
+
+  def print(key: String): Unit = {
+    val seconds = toSeconds(stats(key)._2)
+    println(f"$key took $seconds%1.2f seconds")
   }
 
   def clear: Unit = stats.clear

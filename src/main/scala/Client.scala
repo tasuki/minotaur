@@ -1,12 +1,13 @@
 import minotaur.io._
 
-import minotaur.model.{GameState,Black,White}
+import minotaur.model.{Player,Black,White}
 import minotaur.model.{Direction,North,South,East,West}
-import minotaur.model.{Location,Wall}
+import minotaur.model.{GameState,Location,Wall}
 import minotaur.model.{Orientation,Vertical,Horizontal}
 import minotaur.model.{Move,PawnMovement,WallPlacement}
 import minotaur.io.Coordinates
 import minotaur.mcts.MCTS
+import profile.Profiler
 
 object Client {
   def main(args: Array[String]): Unit = {
@@ -47,8 +48,7 @@ object Client {
 """
     )
 
-    println
-    print(BoardPrinter.printWithCoords(gs.board))
+    printState(gs, player, computer)
 
     val coordinates = Coordinates(gs.board.boardType)
     val movePattern = "^([nsew]{1,2})$".r
@@ -95,8 +95,8 @@ object Client {
       command match {
         case Some(move) if (gs.getPossibleMoves.contains(move) && move.isValid) => {
           gs = move.play
-          println
-          print(BoardPrinter.printWithCoords(gs.board))
+          printState(gs, player, computer)
+
           if (move.wins) {
             println
             println("Congratulations, Theseus, you have killed the Minotaur!")
@@ -105,24 +105,30 @@ object Client {
 
           println
           println("Minotaur is feeding on the dead bodies of his victims, please wait...")
-          val newMove = MCTS.findMove(gs, 50000).move
 
-          gs = newMove.play
-          println
-          print(BoardPrinter.printWithCoords(gs.board))
-          if (newMove.wins) {
+          val node = Profiler.profile("MCTS", MCTS.findMove(gs, 50000))
+          Profiler.print("MCTS")
+          println(node)
+
+          gs = node.move.play
+          printState(gs, player, computer)
+
+          if (node.move.wins) {
             println
             println("You have been devoured by the Minotaur. RIP")
             return
           }
-
-          println
-          println("Walls left, you: " + gs.walls(player) + ", minotaur " + gs.walls(computer))
-          println
         }
         case Some(move) => println("That move is illegal, try again")
         case _ => println("Sorry, didn't understand that")
       }
     }
+  }
+
+  private def printState(gs: GameState, player: Player, computer: Player) = {
+    println
+    println("Walls left, you: " + gs.walls(player) + ", minotaur " + gs.walls(computer))
+    println
+    print(BoardPrinter.printWithCoords(gs.board))
   }
 }
