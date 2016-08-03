@@ -50,6 +50,12 @@ case class Play(move: Move, playouts: Int) extends Command {
     Profiler.clear
     println(node)
 
+    if (node.winRatio < 0.1) {
+      println
+      println("Congratulations, Theseus, you have killed the Minotaur!")
+      System.exit(0)
+    }
+
     game.push(node.move.play)
     GameStatePrinter(game.head)
 
