@@ -11,24 +11,24 @@ trait Node {
   val parent: Option[Node]
   val wins: Boolean
 
-  override def toString =
-    f"${gameState.onTurn.other} " +
-    f"confidence: ${winRatio}%1.3f ($winCount / $visited)"
-
-  override lazy val hashCode = gameState.hashCode
-
   var winCount = 0
   var visited = 0
+
+  val children: ListBuffer[MoveNode] = ListBuffer[MoveNode]()
 
   private lazy val unexploredChildren: Iterator[MoveNode] =
     Random.shuffle(gameState.getPossibleMoves).toIterator
       .filter(_.isValid)
       .map(new MoveNode(_, this))
 
+  override lazy val hashCode = gameState.hashCode
+
+  override def toString =
+    f"${gameState.onTurn.other} " +
+    f"confidence: ${winRatio}%1.3f ($winCount / $visited)"
+
   def isFullyExplored: Boolean =
     unexploredChildren.isEmpty
-
-  val children: ListBuffer[MoveNode] = ListBuffer[MoveNode]()
 
   def selectChild: MoveNode =
     children.maxBy(_.UCT)
