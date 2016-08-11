@@ -13,7 +13,7 @@ trait Node {
 
   override def toString =
     f"${gameState.onTurn.other} " +
-    f"confidence: ${winCount.toDouble/visited}%1.2f ($winCount / $visited)"
+    f"confidence: ${winRatio}%1.3f ($winCount / $visited)"
 
   override lazy val hashCode = gameState.hashCode
 
@@ -44,14 +44,17 @@ trait Node {
     if (winner == gameState.onTurn.other) winCount += 1
   }
 
-  private def bestHeuristic(node: Node): Double =
-    node.winCount.toDouble / node.visited
+  def winRatio: Double =
+    winCount.toDouble / visited
+
+  private def winRatio(node: Node): Double =
+    node.winRatio
 
   def bestChild: MoveNode =
-    children.maxBy(bestHeuristic)
+    children.maxBy(winRatio)
 
   def bestChildren(count: Int): ListBuffer[MoveNode] =
-    children.sortBy(bestHeuristic).reverse.take(count)
+    children.sortBy(winRatio).reverse.take(count)
 }
 
 class RootNode(gs: GameState) extends Node {
