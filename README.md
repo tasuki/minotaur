@@ -8,6 +8,14 @@ To play against your computer, you'll need to install [sbt](http://www.scala-sbt
 
     sbt "run-main Client"
 
+### Development
+
+Run the tests with:
+
+    sbt 'testOnly * -- exclude integration'
+
+---
+
 _When he had grown up and become a most ferocious animal, and of incredible
 strength, they tell that Minos had him shut up in a prison called the
 labyrinth, and that he had sent to him there all those whom he wanted to die a
