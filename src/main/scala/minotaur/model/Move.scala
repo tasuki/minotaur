@@ -62,12 +62,8 @@ case class PawnMovement(
   lazy val play = {
     // update paths with current advance if following
     val paths = gs.board.shortestPath + (
-      gs.onTurn -> (gs.board.shortestPath(gs.onTurn) match {
-        case Some(path: Path) if (path.startsWith(location)) => {
-          Option(path.forward)
-        }
-        case _ => None
-      })
+      gs.onTurn -> (gs.board.shortestPath(gs.onTurn)
+        .filter(_.startsWith(location)).map(_.forward))
     )
 
     gs.copy(
