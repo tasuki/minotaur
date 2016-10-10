@@ -2,7 +2,8 @@ package minotaur.io
 
 import org.specs2.mutable.Specification
 
-import minotaur.model.BoardType
+import minotaur.model.{BoardType,Wall,Location}
+import minotaur.model.{Horizontal,Vertical}
 
 class CoordinatesSpec extends Specification {
   "Standard board coordinates" should {
@@ -22,6 +23,20 @@ class CoordinatesSpec extends Specification {
 
     "disallow too low" in {
       coords.exist('a', '9') === false
+    }
+  }
+
+  "Coordinates" should {
+    val bt = BoardType(9)
+    val coords = Coordinates(bt)
+    "print horizontal wall coords" in {
+      coords.forWall(Wall(Location(7, bt), Horizontal)) === "1i"
+    }
+    "print vertical wall coords" in {
+      coords.forWall(Wall(Location(0, bt), Vertical)) === "a1"
+    }
+    "print bottom right vertical wall coords" in {
+      coords.forWall(Wall(Location(70, bt), Vertical)) === "i8"
     }
   }
 }

@@ -1,6 +1,8 @@
 package minotaur.io
 
-import minotaur.model.BoardType
+import minotaur.model.{BoardType,Wall}
+import minotaur.model.{Horizontal,Vertical}
+import minotaur.model.{North,West}
 
 case class Coordinates(boardType: BoardType) {
   val vertical   = getCoords("abcdfghijklmopr")
@@ -11,4 +13,14 @@ case class Coordinates(boardType: BoardType) {
 
   def exist(verticalCoord: Char, horizontalCoord: Char): Boolean =
     vertical.contains(verticalCoord) && horizontal.contains(horizontalCoord)
+
+  def forWall(wall: Wall): String = {
+    val v = vertical(wall.location.estimateDistance(West))
+    val h = horizontal(wall.location.estimateDistance(North))
+
+    wall.orientation match {
+      case Vertical => s"$v$h"
+      case Horizontal => s"$h$v"
+    }
+  }
 }
