@@ -1,5 +1,6 @@
 package minotaur.search
 
+import scala.io.Source
 import org.specs2.mutable.Specification
 import minotaur.io.BoardReader
 import minotaur.model.{Search,ShortestPath,Location,North,South}
@@ -67,6 +68,21 @@ class SearchSpec extends Specification {
     }
     "find no path from an enclosed space" in {
       noPath(search)
+    }
+  }
+
+  "Flood search" should {
+    val search = Flood
+    "find everything" in {
+      val boardFile = "src/test/resources/floodsearch/board.txt"
+      val board = BoardReader.fromFile(boardFile)
+
+      val searchNodes = Flood.findNodes(board, board.pawnLocation(Black))
+
+      val solutionFile = "src/test/resources/floodsearch/solution.txt"
+      val solution = Source.fromFile(solutionFile).mkString
+
+      minotaur.io.BoardPrinter.printSearchNodes(board, searchNodes) === solution
     }
   }
 }

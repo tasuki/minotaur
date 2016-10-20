@@ -15,10 +15,10 @@ object BFS extends Search {
     from: Location,
     direction: Direction
   ): Option[Path] = {
+    val open: Queue[Node] = Queue[Node]()
     val closed: ArraySeq[Boolean] =
       ArraySeq.fill(board.boardType.size * board.boardType.size){false}
 
-    val open: Queue[Node] = Queue[Node]()
     open += Node(from, None, 0)
     closed(from.location) = true
 
