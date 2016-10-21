@@ -9,11 +9,11 @@ class BoardPrinterSpec extends Specification {
     val board = BoardReader.fromFile(file)
 
     "get printed properly" in {
-      BoardPrinter.print(board) === Source.fromFile(file).mkString
+      BoardPrinter.print(board) === "\n" + Source.fromFile(file).mkString
     }
 
     "get printed with coordinates" in {
-      BoardPrinter.printWithCoords(board) === Source.fromFile(
+      BoardPrinter.printWithCoords(board) === "\n" + Source.fromFile(
         "src/test/resources/board-coords.txt"
       ).mkString
     }

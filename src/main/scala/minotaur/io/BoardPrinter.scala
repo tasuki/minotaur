@@ -44,7 +44,7 @@ object BoardPrinter {
   }
 
   def print(board: Board): String =
-    printWithCellContent(board, (optLoc: Option[Location]) =>
+    "\n" + printWithCellContent(board, (optLoc: Option[Location]) =>
       board.pawns
         .find { case(location, _) => optLoc == Some(location) }
         .map { case(_, player) => s" ${player.pawn} " }
@@ -56,7 +56,7 @@ object BoardPrinter {
     val coordinates = Coordinates(board.boardType)
 
     val padTo = boardSize * 4 + 1
-    val lines: List[String] = print(board).split("\\n").toList.map(
+    val lines: List[String] = print(board).trim.split("\\n").toList.map(
       (line) => String.format("%1$-" + padTo + "s", line)
     )
 
@@ -85,7 +85,7 @@ object BoardPrinter {
       coordinates.vertical.take(boardSize - 1).map("   " + _).mkString + "\n"
     val after = "\n\n" + center + "SOUTH\n"
 
-    before + numberedBoard + after
+    "\n" + before + numberedBoard + after
   }
 
   def printSearchNodes[SN <: SearchNode](board: Board, nodes: Set[SN]): String =
