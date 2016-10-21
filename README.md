@@ -14,6 +14,10 @@ Run the tests with:
 
     sbt 'testOnly * -- exclude integration'
 
+Run MCTS tests (may fail somewhat randomly):
+
+    sbt 'testOnly *MCTSSpec'
+
 ---
 
 _When he had grown up and become a most ferocious animal, and of incredible
