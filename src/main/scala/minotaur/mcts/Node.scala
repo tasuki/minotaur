@@ -42,6 +42,7 @@ trait Node {
   def update(winner: Player): Unit = {
     visited += 1
     if (winner == gameState.onTurn.other) winCount += 1
+    children.map(_.updateUCT)
   }
 
   def winRatio: Double =
@@ -67,9 +68,12 @@ class MoveNode(val move: Move, parentNode: Node) extends Node {
   val gameState = move.play
   val parent = Some(parentNode)
   val wins = move.wins
+  var UCT: Double = 0.0
 
-  def UCT: Double = {
-    (winCount.toDouble / visited) + move.priority *
+  def updateUCT = {
+    UCT = profile.Profiler.profile("Node UCT",
+      (winCount.toDouble / visited) + move.priority *
       1.4 * sqrt(log(parentNode.visited.toDouble) / visited)
+    )
   }
 }
