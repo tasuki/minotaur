@@ -1,8 +1,10 @@
 package profile
 
 import collection.mutable.Map
+import org.slf4j.LoggerFactory
 
 object Profiler {
+  val log = LoggerFactory.getLogger("Profiler")
   val stats = Map[String, (Int, Long)]()
 
   private def toSeconds(nanotime: Long): Double =
@@ -47,13 +49,14 @@ object Profiler {
     val ncalls = "ncalls"
     val time = "tottime"
     val percall = "percall"
-    println(f"$name%30s $ncalls%10s $time%11s $percall%9s")
+
+    log.info(f"$name%30s $ncalls%10s $time%11s $percall%9s")
 
     stats.toSeq.sortBy(_._2._2).map {
       case (name: String, (ncalls: Int, time: Long)) => {
         val seconds = toSeconds(time)
         val percall = seconds / ncalls
-        println(f"$name%30s $ncalls%10d $seconds%11.5f $percall%9.5f")
+        log.info(f"$name%30s $ncalls%10d $seconds%11.5f $percall%9.5f")
       }
     }
   }
@@ -61,21 +64,21 @@ object Profiler {
   def printShort: Unit = {
     val name = "name"
     val time = "time"
-    println(f"$name%30s $time%11s")
+
+    log.info(f"$name%30s $time%11s")
 
     stats.toSeq.sortBy(_._2._2).map {
       case (name: String, (ncalls: Int, time: Long)) => {
         val seconds = toSeconds(time)
-        println(f"$name%30s $seconds%11.5f")
+        log.info(f"$name%30s $seconds%11.5f")
       }
     }
-
-    println
   }
 
   def print(key: String): Unit = {
     val seconds = toSeconds(stats(key)._2)
-    println(f"$key took $seconds%1.2f seconds")
+
+    log.info(f"$key took $seconds%1.2f seconds")
   }
 
   def clear: Unit = stats.clear

@@ -1,17 +1,27 @@
 package minotaur.mcts
 
 import scala.annotation.tailrec
+import org.slf4j.LoggerFactory
 import minotaur.model.{GameState,Player,MoveGenerator,Move}
 
 object MCTS {
+  val log = LoggerFactory.getLogger("MCTS")
+
   def findMove(
     gameState: GameState,
     iterations: Int = 10000
   ): MoveNode = {
     val root = new RootNode(gameState)
     var node: Node = null
+    var time = System.nanoTime()
 
     for (i <- 1 to iterations) {
+      val timeDiff = System.nanoTime() - time
+      if (timeDiff > 1000000000) {
+        log.info("%3.2f sec; %s".format(timeDiff / 1000000000.0, root))
+        time = System.nanoTime()
+      }
+
       node = root
 
       // Select
