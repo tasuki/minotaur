@@ -26,24 +26,19 @@ object MCTS {
 
       node = root
 
-      // Select
       while (node.isFullyExplored && node.wins == false) {
         node = Profiler.profile("MCTS Select child", node.selectChild)
       }
 
-      if (node.wins) {
-        backpropagate(Some(node), node.gameState.onTurn.other)
-      } else {
-        // Expand
-        val expanded: MoveNode = Profiler.profile("MCTS Expand", node.expand)
+      val expanded: Node =
+        if (node.wins) node
+        else Profiler.profile("MCTS Expand", node.expand)
 
-        val winner: Player =
-          if (expanded.wins) expanded.move.gameState.onTurn
-          // Playout
-          else Profiler.profile("MCTS Playout", playout(expanded.gameState))
+      val winner =
+        if (expanded.wins) expanded.gameState.onTurn.other
+        else Profiler.profile("MCTS Playout", playout(expanded.gameState))
 
-        Profiler.profile("MCTS Backprop", backpropagate(Some(expanded), winner))
-      }
+      Profiler.profile("MCTS Backprop", backpropagate(Some(expanded), winner))
     }
 
     root.bestChild
