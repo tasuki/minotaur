@@ -1,51 +1,35 @@
-import scala.collection.mutable.Stack
 import minotaur.io.GameStatePrinter
 import minotaur.mcts.MCTS
-import minotaur.model.GameState
+import minotaur.model.{Game,GameState}
 import minotaur.model.Move
 import profile.Profiler
 
 sealed trait Command {
-  def execute(game: Stack[GameState]): Boolean // AI on turn
+  def execute(game: Game): Game
 }
 
 case object Quit extends Command {
-  def execute(game: Stack[GameState]) = {
+  def execute(game: Game) = {
     println("You have escaped the labyrinth.")
     System.exit(0)
-    false
+    game
   }
 }
 
 case object Undo extends Command {
-  def execute(game: Stack[GameState]) = {
-    game.pop
-    game.pop
-    GameStatePrinter(game.head)
-    false
+  def execute(game: Game) = {
+    val undoed = game.parent.flatMap(_.parent).getOrElse(game)
+    GameStatePrinter(undoed.state)
+    undoed
   }
 }
 
 case class Play(move: Move, playouts: Int) extends Command {
-  def execute(game: Stack[GameState]): Boolean = {
-    if (! game.head.getPossibleMoves.contains(move) || ! move.isValid) {
-      println("That move is illegal, try again")
-      return false
-    }
-
-    game.push(move.play)
-    GameStatePrinter(game.head)
-
-    if (move.wins) {
-      println
-      println("Congratulations, Theseus, you have killed the Minotaur!")
-      System.exit(0)
-    }
-
+  private def findMove(game: Game): Game = {
     println
     println("Minotaur is feeding on the dead bodies of his victims, please wait...")
 
-    val node = Profiler.profile("MCTS", MCTS.findMove(game.head, playouts))
+    val node = Profiler.profile("MCTS", MCTS.findMove(game.state, playouts))
     Profiler.print("MCTS")
     Profiler.clear
     println(node)
@@ -56,8 +40,8 @@ case class Play(move: Move, playouts: Int) extends Command {
       System.exit(0)
     }
 
-    game.push(node.move.play)
-    GameStatePrinter(game.head)
+    val gameAfterAImove = Game(node.move.play, Some(game))
+    GameStatePrinter(gameAfterAImove.state)
 
     if (node.move.wins) {
       println
@@ -65,13 +49,31 @@ case class Play(move: Move, playouts: Int) extends Command {
       System.exit(0)
     }
 
-    true
+    gameAfterAImove
+  }
+
+  def execute(game: Game): Game = {
+    if (! game.state.getPossibleMoves.contains(move) || ! move.isValid) {
+      println("That move is illegal, try again")
+      return game
+    }
+
+    val gameAfterPlayerMove = Game(move.play, Some(game))
+    GameStatePrinter(gameAfterPlayerMove.state)
+
+    if (move.wins) {
+      println
+      println("Congratulations, Theseus, you have killed the Minotaur!")
+      System.exit(0)
+    }
+
+    findMove(gameAfterPlayerMove)
   }
 }
 
 case object Unknown extends Command {
-  def execute(game: Stack[GameState]) = {
+  def execute(game: Game) = {
     println("Sorry, didn't understand that")
-    false
+    game
   }
 }

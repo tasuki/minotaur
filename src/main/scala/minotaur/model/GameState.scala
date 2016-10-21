@@ -1,5 +1,7 @@
 package minotaur.model
 
+case class Game(state: GameState, parent: Option[Game])
+
 case class GameState(
   board: Board,
   walls: Map[Player, Int],

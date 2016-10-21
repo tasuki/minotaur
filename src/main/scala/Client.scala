@@ -1,7 +1,6 @@
-import scala.collection.mutable.Stack
 import minotaur.io.{BoardReader,GameStatePrinter,Coordinates}
 import minotaur.model.{Black,White}
-import minotaur.model.{GameState,Location,Direction,Wall}
+import minotaur.model.{Game,GameState,Location,Direction,Wall}
 import minotaur.model.{Vertical,Horizontal}
 import minotaur.model.{PawnMovement,WallPlacement}
 
@@ -17,12 +16,12 @@ object Client {
     val playouts: Int = cli.getOrElse("playouts", "50000").toInt
 
     val file = "src/test/resources/empty.txt"
-    val game = Stack(GameState(
+    var game = Game(GameState(
       BoardReader.fromFile(file), Map(
         computer -> (10 - handicap),
         player -> (10 + handicap)
       ), player
-    ))
+    ), None)
 
     print(
       """
@@ -46,15 +45,15 @@ object Client {
 """
     )
 
-    GameStatePrinter(game.head)
+    GameStatePrinter(game.state)
 
     while (true) {
-      getCommand(game, playouts).execute(game)
+      game = getCommand(game, playouts).execute(game)
     }
   }
 
-  private def getCommand(game: Stack[GameState], playouts: Int): Command = {
-    val coordinates = Coordinates(game.head.board.boardType)
+  private def getCommand(game: Game, playouts: Int): Command = {
+    val coordinates = Coordinates(game.state.board.boardType)
     val movePattern = "^([nsew]{1,2})$".r
     val coordsPattern = "^(..)$".r
 
@@ -63,12 +62,12 @@ object Client {
       case "undo" => Undo
 
       case movePattern(directions) =>
-        directions.toList.foldLeft(Option(game.head.board.pawnLocation(player)))(
+        directions.toList.foldLeft(Option(game.state.board.pawnLocation(player)))(
           (optLoc, dir) => optLoc match {
             case Some(loc) => loc.neighbor(Direction.fromChar(dir))
             case _ => None
           }
-        ).map(loc => Play(PawnMovement(loc, game.head), playouts))
+        ).map(loc => Play(PawnMovement(loc, game.state), playouts))
         .getOrElse(Unknown)
 
       case coordsPattern(coords) => {
@@ -87,12 +86,12 @@ object Client {
           Wall(
             Location(
               coordinates.vertical.indexOf(vertical) +
-              coordinates.horizontal.indexOf(horizontal) * game.head.board.size,
-              game.head.board.boardType
+              coordinates.horizontal.indexOf(horizontal) * game.state.board.size,
+              game.state.board.boardType
             ),
             orientation
           )
-        }).map(wall => Play(WallPlacement(wall, game.head), playouts))
+        }).map(wall => Play(WallPlacement(wall, game.state), playouts))
         .getOrElse(Unknown)
       }
 

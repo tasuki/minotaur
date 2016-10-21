@@ -6,11 +6,11 @@ import minotaur.model.{Orientation,Horizontal,Vertical}
 import minotaur.model.{Direction,North,South,East,West}
 
 object BoardReader {
-  def fromFile(file: String) = {
+  def fromFile(file: String): Board = {
     fromString(Source.fromFile(file).mkString)
   }
 
-  def fromString(str: String) = {
+  def fromString(str: String): Board = {
     val fields: List[List[String]] = str.split("\\n").toList
       .map(_.grouped(4).toList)
 
