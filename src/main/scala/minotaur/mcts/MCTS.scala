@@ -4,6 +4,8 @@ import scala.annotation.tailrec
 import org.slf4j.LoggerFactory
 import minotaur.model.{GameState,Player,MoveGenerator,Move}
 
+import profile.Profiler
+
 object MCTS {
   val log = LoggerFactory.getLogger("MCTS")
 
@@ -26,21 +28,21 @@ object MCTS {
 
       // Select
       while (node.isFullyExplored && node.wins == false) {
-        node = node.selectChild
+        node = Profiler.profile("MCTS Select child", node.selectChild)
       }
 
       if (node.wins) {
         backpropagate(Some(node), node.gameState.onTurn.other)
       } else {
         // Expand
-        val expanded: MoveNode = node.expand
+        val expanded: MoveNode = Profiler.profile("MCTS Expand", node.expand)
 
-        val winner =
+        val winner: Player =
           if (expanded.wins) expanded.move.gameState.onTurn
           // Playout
-          else playout(expanded.gameState)
+          else Profiler.profile("MCTS Playout", playout(expanded.gameState))
 
-        backpropagate(Some(expanded), winner)
+        Profiler.profile("MCTS Backprop", backpropagate(Some(expanded), winner))
       }
     }
 
