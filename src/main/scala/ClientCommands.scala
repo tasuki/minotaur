@@ -19,7 +19,7 @@ case object Quit extends Command {
 case object Undo extends Command {
   def execute(game: Game) = {
     val undoed = game.parent.flatMap(_.parent).getOrElse(game)
-    GameStatePrinter(undoed.state)
+    print(GameStatePrinter(undoed.state))
     undoed
   }
 }
@@ -41,7 +41,7 @@ case class Play(move: Move, playouts: Int) extends Command {
     }
 
     val gameAfterAImove = Game(node.move.play, Some(game))
-    GameStatePrinter(gameAfterAImove.state)
+    print(GameStatePrinter(gameAfterAImove.state))
 
     if (node.move.wins) {
       println
@@ -59,7 +59,7 @@ case class Play(move: Move, playouts: Int) extends Command {
     }
 
     val gameAfterPlayerMove = Game(move.play, Some(game))
-    GameStatePrinter(gameAfterPlayerMove.state)
+    print(GameStatePrinter(gameAfterPlayerMove.state))
 
     if (move.wins) {
       println

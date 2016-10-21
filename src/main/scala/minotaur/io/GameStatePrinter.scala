@@ -4,14 +4,14 @@ import minotaur.model.{GameState,Black,White}
 import minotaur.model.{Wall,Orientation,Horizontal,Vertical}
 
 object GameStatePrinter {
-  def apply(gs: GameState): Unit = {
-    println
-    println("Walls left, black: " + gs.walls(Black) + ", white " + gs.walls(White))
-    println
-    print(BoardPrinter.printWithCoords(gs.board))
+  def apply(gs: GameState): String = {
+    "\n" +
+    "Walls left, black: " + gs.walls(Black) + ", white " + gs.walls(White) +
+    "\n" +
+    BoardPrinter.printWithCoords(gs.board)
   }
 
-  def getWalls(gs: GameState, orientation: Orientation): String = {
+  private def getWalls(gs: GameState, orientation: Orientation): String = {
     val coords = Coordinates(gs.board.boardType)
     gs.board.walls.toList.filter(_.orientation == orientation)
       .toList.sortBy(_.location.location).map(coords.forWall(_)).mkString

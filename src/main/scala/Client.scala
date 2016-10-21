@@ -45,7 +45,7 @@ object Client {
 """
     )
 
-    GameStatePrinter(game.state)
+    print(GameStatePrinter(game.state))
 
     while (true) {
       game = getCommand(game, playouts).execute(game)
