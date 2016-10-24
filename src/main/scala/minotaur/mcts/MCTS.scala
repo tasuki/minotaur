@@ -1,12 +1,16 @@
 package minotaur.mcts
 
 import scala.annotation.tailrec
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration.Duration
+import scala.concurrent.ExecutionContext.Implicits.global
 import org.slf4j.LoggerFactory
 import minotaur.model.{GameState,Player,MoveGenerator,Move}
 
 import profile.Profiler
 
 object MCTS {
+  val threads = 4
   val log = LoggerFactory.getLogger("MCTS")
 
   def findMove(
@@ -17,7 +21,7 @@ object MCTS {
     var node: Node = null
     var time = System.nanoTime()
 
-    for (i <- 1 to iterations) {
+    for (i <- 1 to iterations / threads) {
       val timeDiff = System.nanoTime() - time
       if (timeDiff > 1000000000) {
         log.info("%3.2f sec; %s".format(timeDiff / 1000000000.0, root))
@@ -34,11 +38,15 @@ object MCTS {
         if (node.wins) node
         else Profiler.profile("MCTS Expand", node.expand)
 
-      val winner =
-        if (expanded.wins) expanded.gameState.onTurn.other
-        else Profiler.profile("MCTS Playout", playout(expanded.gameState))
+      val winners: List[Player] =
+        if (expanded.wins) List(expanded.gameState.onTurn.other)
+        else Profiler.profile("MCTS Playout",
+          Await.result(Future.sequence(List.fill(threads)(
+            Future { playout(expanded.gameState) }
+          )), Duration.Inf)
+        )
 
-      Profiler.profile("MCTS Backprop", backpropagate(Some(expanded), winner))
+      Profiler.profile("MCTS Backprop", backpropagate(Some(expanded), winners))
     }
 
     root.bestChild
@@ -58,12 +66,12 @@ object MCTS {
   }
 
   @tailrec private def backpropagate(
-    optNode: Option[Node], winner: Player
+    optNode: Option[Node], winners: List[Player]
   ): Unit = {
     if (optNode.isDefined) {
       val node = optNode.get
-      node.update(winner)
-      backpropagate(node.parent, winner)
+      winners.map(node.update)
+      backpropagate(node.parent, winners)
     }
   }
 }
