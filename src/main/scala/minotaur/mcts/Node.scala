@@ -71,9 +71,8 @@ class MoveNode(val move: Move, parentNode: Node) extends Node {
   var UCT: Double = 0.0
 
   def updateUCT = {
-    UCT = profile.Profiler.profile("Node UCT",
+    UCT =
       (winCount.toDouble / visited) + move.priority *
       1.4 * sqrt(log(parentNode.visited.toDouble) / visited)
-    )
   }
 }
