@@ -1,22 +1,61 @@
 package profile
 
-import collection.mutable.Map
+import collection.mutable.{Map,ListBuffer}
 import org.slf4j.LoggerFactory
 
-object Profiler {
-  val log = LoggerFactory.getLogger("Profiler")
-  val stats = Map[String, (Int, Long)]().withDefaultValue((0, 0L))
+object Head {
+  override def toString = {
+    val name = "name"
+    val ncalls = "ncalls"
+    val tottime = "tottime"
+    val average = "average"
+    val mean = "50%"
+    val upper = "95%"
+    val max = "max"
+
+    f"$name%20s $ncalls%10s $tottime%11s $average%9s $mean%9s $upper%9s $max%9s"
+  }
+}
+
+case class Stat(
+  name: String,
+  runList: ListBuffer[Long]
+) {
+  val ncalls = runList.size
+  val tottime = toSeconds(runList.sum)
+  val average = tottime / ncalls
+
+  val ordered = runList.sorted
+  val mean  = toSeconds(ordered((ncalls * 0.50).toInt))
+  val upper = toSeconds(ordered((ncalls * 0.95).toInt))
+  val max   = toSeconds(ordered.last)
 
   private def toSeconds(nanotime: Long): Double =
     nanotime / 1000000000.0
 
-  def profile[R](name: String, block: => R): R = {
-    val tBegin = System.nanoTime()
-    val result = block // call-by-name
-    val tEnd = System.nanoTime()
+  private def toMs(nanotime: Long): Double =
+    nanotime / 1000000.0
 
-    val tmp = stats(name)
-    stats += (name -> (tmp._1 + 1, tmp._2 + tEnd - tBegin))
+  override def toString =
+    f"$name%20s $ncalls%10d $tottime%11.5f $average%9.6f $mean%9.6f $upper%9.6f $max%9.6f"
+}
+
+object Profiler {
+  val log = LoggerFactory.getLogger("Profiler")
+  val runs = Map[String, ListBuffer[Long]]()
+
+  private def add(name: String, timeDiff: Long): Unit = {
+    if (! runs.contains(name))
+      runs += (name -> ListBuffer[Long]())
+
+    runs(name) += timeDiff
+  }
+
+  def profile[R](name: String, block: => R, variance: Boolean = true): R = {
+    val begin = System.nanoTime()
+    val result = block // call-by-name
+
+    add(name, System.nanoTime() - begin)
 
     result
   }
@@ -26,57 +65,43 @@ object Profiler {
   }
 
   def profileMany[R](name: String, limit: Int, block: => R): Unit = {
-    val tBegin = System.nanoTime()
+    val begin = System.nanoTime()
     var i = 0
     while (i < limit) {
       block // call-by-name
       i += 1
     }
-    val tEnd = System.nanoTime()
 
-    if (! stats.contains(name))
-      stats += (name -> (0, 0L))
+    add(name, System.nanoTime() - begin)
+  }
 
-    val tmp = stats(name)
-    stats += (name -> (tmp._1 + 1, tmp._2 + tEnd - tBegin))
+  private def getStats: List[Stat] = {
+    runs.toList.map(run => Stat(run._1, run._2)).sortBy(_.tottime)
   }
 
   def printComplete: Unit = {
-    val name = "name"
-    val ncalls = "ncalls"
-    val time = "tottime"
-    val percall = "percall"
+    log.info(Head.toString)
 
-    log.info(f"$name%30s $ncalls%10s $time%11s $percall%9s")
-
-    stats.toSeq.sortBy(_._2._2).map {
-      case (name: String, (ncalls: Int, time: Long)) => {
-        val seconds = toSeconds(time)
-        val percall = seconds / ncalls
-        log.info(f"$name%30s $ncalls%10d $seconds%11.5f $percall%9.5f")
-      }
-    }
+    getStats.map(stat => {
+      log.info(stat.toString)
+    })
   }
 
   def printShort: Unit = {
     val name = "name"
-    val time = "time"
+    val tottime = "tottime"
 
-    log.info(f"$name%30s $time%11s")
+    log.info(f"$name%20s $tottime%11s")
 
-    stats.toSeq.sortBy(_._2._2).map {
-      case (name: String, (ncalls: Int, time: Long)) => {
-        val seconds = toSeconds(time)
-        log.info(f"$name%30s $seconds%11.5f")
-      }
-    }
+    getStats.foreach(stat => {
+      log.info(f"${stat.name}%20s ${tottime}%11s")
+    })
   }
 
   def print(key: String): Unit = {
-    val seconds = toSeconds(stats(key)._2)
-
-    log.info(f"$key took $seconds%1.2f seconds")
+    val tottime = Stat(key, runs(key)).tottime
+    log.info(f"$key took $tottime%1.2f seconds")
   }
 
-  def clear: Unit = stats.clear
+  def clear: Unit = runs.clear
 }
