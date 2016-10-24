@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory
 
 object Profiler {
   val log = LoggerFactory.getLogger("Profiler")
-  val stats = Map[String, (Int, Long)]()
+  val stats = Map[String, (Int, Long)]().withDefaultValue((0, 0L))
 
   private def toSeconds(nanotime: Long): Double =
     nanotime / 1000000000.0
@@ -14,9 +14,6 @@ object Profiler {
     val tBegin = System.nanoTime()
     val result = block // call-by-name
     val tEnd = System.nanoTime()
-
-    if (! stats.contains(name))
-      stats += (name -> (0, 0L))
 
     val tmp = stats(name)
     stats += (name -> (tmp._1 + 1, tmp._2 + tEnd - tBegin))
