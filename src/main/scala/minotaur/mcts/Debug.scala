@@ -7,18 +7,18 @@ import minotaur.io.BoardPrinter
 object Debug {
   val log = LoggerFactory.getLogger("MCTS Debug")
 
-  def printShortInfo(node: MoveNode): Unit = {
+  def printShortInfo(node: Node): Unit = {
     log.debug(node.toString)
-    log.debug(BoardPrinter.print(node.move.play.board))
+    log.debug(BoardPrinter.print(node.gameState.board))
   }
 
-  def printFullInfo(chosen: MoveNode, topX: Int = 5): Unit = {
+  def printFullInfo(node: Node, topX: Int = 5): Unit = {
     log.debug(s"top $topX moves:")
-    chosen.parent.get.bestChildren(topX).foreach {
-      mn => {
+    node.bestChildren(topX).foreach {
+      n => {
         log.debug("")
-        log.debug(mn.toString)
-        log.debug(BoardPrinter.print(mn.move.play.board))
+        log.debug(n.toString)
+        log.debug(BoardPrinter.print(n.gameState.board))
       }
     }
 
@@ -27,17 +27,13 @@ object Debug {
     log.debug("")
 
     log.debug("sequence of best found moves:")
-    var node: Node = chosen.parent.get
-    var state: GameState = null
+    var tmpNode = node
     while (true) {
-      state = node.gameState
       log.debug("")
-      log.debug(node.toString)
-      log.debug(BoardPrinter.print(state.board))
-      if (node.children.isEmpty) {
-        return
-      }
-      node = node.bestChild
+      log.debug(tmpNode.toString)
+      log.debug(BoardPrinter.print(tmpNode.gameState.board))
+      if (tmpNode.children.isEmpty) return
+      tmpNode = tmpNode.bestChild
     }
   }
 }

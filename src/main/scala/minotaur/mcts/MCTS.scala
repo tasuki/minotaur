@@ -11,8 +11,16 @@ case class MCTS(iterations: Int = 10000) {
 
   def findMove(
     gameState: GameState
-  ): MoveNode = {
-    val root = new RootNode(gameState)
+  ): Node = {
+    findMove(gameState, new Node(gameState))
+  }
+
+  def findMove(
+    gameState: GameState,
+    root: Node
+  ): Node = {
+    log.info("carried over; %s".format(root))
+
     var node: Node = null
     var time = System.nanoTime()
 
@@ -39,6 +47,8 @@ case class MCTS(iterations: Int = 10000) {
 
       Profiler.profile("MCTS Backprop", backpropagate(expanded, winner))
     }
+
+    log.info("finished at; %s".format(root))
 
     root.bestChild
   }

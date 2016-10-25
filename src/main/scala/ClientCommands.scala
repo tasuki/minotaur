@@ -40,10 +40,10 @@ case class Play(move: Move, playouts: Int) extends Command {
       System.exit(0)
     }
 
-    val gameAfterAImove = Game(node.move.play, Some(game))
+    val gameAfterAImove = Game(node.gameState, Some(game))
     print(GameStatePrinter(gameAfterAImove.state))
 
-    if (node.move.wins) {
+    if (node.wins) {
       println
       println("You have been devoured by the Minotaur. RIP")
       System.exit(0)

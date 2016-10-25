@@ -6,20 +6,32 @@ import util.Random
 
 import minotaur.model.{GameState,Move,Player}
 
-trait Node {
-  val gameState: GameState
-  val parent: Option[Node]
-  val wins: Boolean
+class Node(
+  val gameState: GameState,
+  val move: Option[Move],
+  var parent: Option[Node],
+  val children: ListBuffer[Node],
+  unexplored: Option[Iterator[Node]],
+  var winCount: Int,
+  var visited: Int
+) {
+  val wins: Boolean = move.map(_.wins).getOrElse(false)
+  val unexploredChildren = unexplored.getOrElse(getShuffledChildren)
 
-  var winCount = 0
-  var visited = 0
+  var UCT: Double = 0.0
 
-  val children: ListBuffer[MoveNode] = ListBuffer[MoveNode]()
+  def this(gameState: GameState) = {
+    this(gameState, None, None, ListBuffer[Node](), None, 0, 0)
+  }
 
-  private lazy val unexploredChildren: Iterator[MoveNode] =
+  def this(move: Move, parentNode: Node) = {
+    this(move.play, Some(move), Some(parentNode), ListBuffer[Node](), None, 0, 0)
+  }
+
+  def getShuffledChildren: Iterator[Node] =
     Random.shuffle(gameState.getPossibleMoves).toIterator
       .filter(_.isValid)
-      .map(new MoveNode(_, this))
+      .map(new Node(_, this))
 
   override lazy val hashCode = gameState.hashCode
 
@@ -30,10 +42,10 @@ trait Node {
   def isFullyExplored: Boolean =
     unexploredChildren.isEmpty
 
-  def selectChild: MoveNode =
+  def selectChild: Node =
     children.maxBy(_.UCT)
 
-  def expand: MoveNode = {
+  def expand: Node = {
     val next = unexploredChildren.next
     children += next
     next
@@ -45,34 +57,25 @@ trait Node {
     children.map(_.updateUCT)
   }
 
+  def updateUCT =
+    UCT = (winCount.toDouble / visited) +
+      move.get.priority *
+      1.4 * sqrt(log(parent.get.visited.toDouble) / visited)
+
   def winRatio: Double =
     winCount.toDouble / visited
 
   private def winRatio(node: Node): Double =
     node.winRatio
 
-  def bestChild: MoveNode =
+  def bestChild: Node =
     children.maxBy(winRatio)
 
-  def bestChildren(count: Int): ListBuffer[MoveNode] =
+  def bestChildren(count: Int): ListBuffer[Node] =
     children.sortBy(winRatio).reverse.take(count)
-}
 
-class RootNode(gs: GameState) extends Node {
-  val gameState = gs
-  val parent = None
-  val wins = false
-}
-
-class MoveNode(val move: Move, parentNode: Node) extends Node {
-  val gameState = move.play
-  val parent = Some(parentNode)
-  val wins = move.wins
-  var UCT: Double = 0.0
-
-  def updateUCT = {
-    UCT =
-      (winCount.toDouble / visited) + move.priority *
-      1.4 * sqrt(log(parentNode.visited.toDouble) / visited)
+  def toRoot: Node = {
+    parent = None
+    this
   }
 }
