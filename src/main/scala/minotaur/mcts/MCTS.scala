@@ -24,7 +24,7 @@ case class MCTS(iterations: Int = 10000) {
     var node: Node = null
     var time = System.nanoTime()
 
-    for (i <- 1 to iterations) {
+    while (root.visited < iterations) {
       val timeDiff = System.nanoTime() - time
       if (timeDiff > 1000000000) {
         log.info("%3.2f sec; %s".format(timeDiff / 1000000000.0, root))
