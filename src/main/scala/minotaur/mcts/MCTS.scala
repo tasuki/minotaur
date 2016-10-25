@@ -6,12 +6,11 @@ import minotaur.model.{GameState,Player,MoveGenerator,Move}
 
 import profile.Profiler
 
-object MCTS {
+case class MCTS(iterations: Int = 10000) {
   val log = LoggerFactory.getLogger("MCTS")
 
   def findMove(
     gameState: GameState,
-    iterations: Int = 10000
   ): MoveNode = {
     val root = new RootNode(gameState)
     var node: Node = null
