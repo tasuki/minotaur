@@ -10,7 +10,7 @@ case class MCTS(iterations: Int = 10000) {
   val log = LoggerFactory.getLogger("MCTS")
 
   def findMove(
-    gameState: GameState,
+    gameState: GameState
   ): MoveNode = {
     val root = new RootNode(gameState)
     var node: Node = null
@@ -37,7 +37,7 @@ case class MCTS(iterations: Int = 10000) {
         if (expanded.wins) expanded.gameState.onTurn.other
         else Profiler.profile("MCTS Playout", playout(expanded.gameState))
 
-      Profiler.profile("MCTS Backprop", backpropagate(Some(expanded), winner))
+      Profiler.profile("MCTS Backprop", backpropagate(expanded, winner))
     }
 
     root.bestChild
@@ -57,12 +57,11 @@ case class MCTS(iterations: Int = 10000) {
   }
 
   @tailrec private def backpropagate(
-    optNode: Option[Node], winner: Player
+    node: Node, winner: Player
   ): Unit = {
-    if (optNode.isDefined) {
-      val node = optNode.get
-      node.update(winner)
-      backpropagate(node.parent, winner)
-    }
+    node.update(winner)
+
+    if (node.parent.isDefined)
+      backpropagate(node.parent.get, winner)
   }
 }
