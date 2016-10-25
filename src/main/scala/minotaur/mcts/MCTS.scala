@@ -9,19 +9,26 @@ import minotaur.model.{GameState,Player,MoveGenerator,Move}
 
 import profile.Profiler
 
-object MCTS {
+case class MCTS(iterations: Int = 10000) {
   val threads = 4
   val log = LoggerFactory.getLogger("MCTS")
 
   def findMove(
+    gameState: GameState
+  ): Node = {
+    findMove(gameState, new Node(gameState))
+  }
+
+  def findMove(
     gameState: GameState,
-    iterations: Int = 10000
-  ): MoveNode = {
-    val root = new RootNode(gameState)
+    root: Node
+  ): Node = {
+    log.info("carried over; %s".format(root))
+
     var node: Node = null
     var time = System.nanoTime()
 
-    for (i <- 1 to iterations / threads) {
+    while (root.visited < iterations) {
       val timeDiff = System.nanoTime() - time
       if (timeDiff > 1000000000) {
         log.info("%3.2f sec; %s".format(timeDiff / 1000000000.0, root))
@@ -46,8 +53,10 @@ object MCTS {
           )), Duration.Inf)
         )
 
-      Profiler.profile("MCTS Backprop", backpropagate(Some(expanded), winners))
+      Profiler.profile("MCTS Backprop", backpropagate(expanded, winners))
     }
+
+    log.info("finished at; %s".format(root))
 
     root.bestChild
   }
@@ -66,12 +75,11 @@ object MCTS {
   }
 
   @tailrec private def backpropagate(
-    optNode: Option[Node], winners: List[Player]
+    node: Node, winners: List[Player]
   ): Unit = {
-    if (optNode.isDefined) {
-      val node = optNode.get
-      winners.map(node.update)
-      backpropagate(node.parent, winners)
-    }
+    winners.map(node.update)
+
+    if (node.parent.isDefined)
+      backpropagate(node.parent.get, winners)
   }
 }
