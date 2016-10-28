@@ -9,8 +9,7 @@ import minotaur.model.{GameState,Player,MoveGenerator,Move}
 
 import profile.Profiler
 
-case class MCTS(iterations: Int = 10000) {
-  val threads = 4
+case class MCTS(iterations: Int = 10000, threads: Int = 4) {
   val log = LoggerFactory.getLogger("MCTS")
 
   def findMove(
