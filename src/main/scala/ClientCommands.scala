@@ -29,7 +29,7 @@ case class Play(move: Move, playouts: Int) extends Command {
     println
     println("Minotaur is feeding on the dead bodies of his victims, please wait...")
 
-    val node = Profiler.profile("MCTS", MCTS(playouts).findMove(game.state))
+    val node = Profiler.profile("MCTS", new MCTS(playouts).findMove(game.state))
     Profiler.print("MCTS")
     Profiler.clear
     println(node)

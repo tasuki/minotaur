@@ -15,7 +15,7 @@ class MCTSSpec extends Specification {
     )
 
     "choose the obvious move" in {
-      val node = MCTS(20000).findMove(gs)
+      val node = new MCTS(20000).findMove(gs)
       node.move === Some(WallPlacement(
         Wall(Location(40, board.boardType), Horizontal),
         gs
@@ -31,7 +31,7 @@ class MCTSSpec extends Specification {
     )
 
     "should choose one of the two good moves for black" in {
-      val node = MCTS(100000).findMove(gs)
+      val node = new MCTS(100000).findMove(gs)
       Set(
         Some(WallPlacement(
           Wall(Location(31, board.boardType), Horizontal),
@@ -53,7 +53,7 @@ class MCTSSpec extends Specification {
     )
 
     "find the winning move for white very quickly" in {
-      val node = MCTS(200).findMove(gs)
+      val node = new MCTS(200).findMove(gs)
       node.move === Some(PawnMovement(
         Location(80, board.boardType),
         gs
@@ -69,7 +69,7 @@ class MCTSSpec extends Specification {
     )
 
     "just run" in {
-      val node = MCTS(200000).findMove(gs)
+      val node = new MCTS(200000).findMove(gs)
 
       node.move === Some(PawnMovement(
         Location(50, board.boardType),

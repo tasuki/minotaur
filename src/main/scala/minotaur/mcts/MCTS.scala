@@ -9,7 +9,7 @@ import minotaur.model.{GameState,Player,MoveGenerator,Move}
 
 import profile.Profiler
 
-case class MCTS(
+class MCTS(
   val iterations: Int = 10000,
   val moveGenerator: MoveGenerator = new MoveGenerator(),
   val threads: Int = 4
