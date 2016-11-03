@@ -9,7 +9,11 @@ import minotaur.model.{GameState,Player,MoveGenerator,Move}
 
 import profile.Profiler
 
-case class MCTS(iterations: Int = 10000, threads: Int = 4) {
+case class MCTS(
+  val iterations: Int = 10000,
+  val moveGenerator: MoveGenerator = new MoveGenerator(),
+  val threads: Int = 4
+) {
   val log = LoggerFactory.getLogger("MCTS")
 
   def findMove(
@@ -65,7 +69,7 @@ case class MCTS(iterations: Int = 10000, threads: Int = 4) {
     var move: Move = null
 
     do {
-      move = MoveGenerator.randomMove(gs)
+      move = moveGenerator.randomMove(gs)
       gs = move.play
     } while (! move.wins)
 

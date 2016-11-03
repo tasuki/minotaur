@@ -2,10 +2,10 @@ package minotaur.model
 
 import util.Random
 
-object MoveGenerator {
-  val pawnMovementProbability = 90
-  val seekShortestRouteProbability = 90
-
+class MoveGenerator(
+  val pawnMovementProbability: Int = 90,
+  val seekShortestRouteProbability: Int = 90
+) {
   private def percentChance(chance: Int): Boolean =
     Random.nextInt(100) < chance
 
