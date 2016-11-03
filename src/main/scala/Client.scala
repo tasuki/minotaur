@@ -1,12 +1,17 @@
+import com.typesafe.config.ConfigFactory
+
 import minotaur.io.{BoardReader,GameStatePrinter,Coordinates}
-import minotaur.model.{Black,White}
-import minotaur.model.{Game,GameState,Location,Direction,Wall}
-import minotaur.model.{Vertical,Horizontal}
-import minotaur.model.{PawnMovement,WallPlacement}
+import minotaur.mcts.MCTS
+import minotaur.model.{Game,GameState,Black,White}
+import minotaur.model.{Location,Direction,Wall,Vertical,Horizontal}
+import minotaur.model.{MoveGenerator,Move,PawnMovement,WallPlacement}
 
 object Client {
   val player = Black
   val computer = White
+
+  val config = ConfigFactory.load()
+  println(config.getString("minotaur.moveGenerator.pawnMovementProbability").toInt)
 
   def main(args: Array[String]): Unit = {
     val cli: Map[String, String] = args.map(
@@ -52,6 +57,15 @@ object Client {
     }
   }
 
+  private def getPlayCommand(move: Move, playouts: Int): Play = {
+    val moveGenerator = new MoveGenerator(
+      config.getString("minotaur.moveGenerator.pawnMovementProbability").toInt,
+      config.getString("minotaur.moveGenerator.seekShortestRouteProbability").toInt
+    )
+    val mcts = new MCTS(playouts, moveGenerator, config.getString("minotaur.threads").toInt)
+    Play(move, mcts)
+  }
+
   private def getCommand(game: Game, playouts: Int): Command = {
     val coordinates = Coordinates(game.state.board.boardType)
     val movePattern = "^([nsew]{1,2})$".r
@@ -67,7 +81,7 @@ object Client {
             case Some(loc) => loc.neighbor(Direction.fromChar(dir))
             case _ => None
           }
-        ).map(loc => Play(PawnMovement(loc, game.state), playouts))
+        ).map(loc => getPlayCommand(PawnMovement(loc, game.state), playouts))
         .getOrElse(Unknown)
 
       case coordsPattern(coords) => {
@@ -91,7 +105,7 @@ object Client {
             ),
             orientation
           )
-        }).map(wall => Play(WallPlacement(wall, game.state), playouts))
+        }).map(wall => getPlayCommand(WallPlacement(wall, game.state), playouts))
         .getOrElse(Unknown)
       }
 
