@@ -11,7 +11,6 @@ object Client {
   val computer = White
 
   val config = ConfigFactory.load()
-  println(config.getString("minotaur.moveGenerator.pawnMovementProbability").toInt)
 
   def main(args: Array[String]): Unit = {
     val cli: Map[String, String] = args.map(
@@ -59,10 +58,10 @@ object Client {
 
   private def getPlayCommand(move: Move, playouts: Int): Play = {
     val moveGenerator = new MoveGenerator(
-      config.getString("minotaur.moveGenerator.pawnMovementProbability").toInt,
-      config.getString("minotaur.moveGenerator.seekShortestRouteProbability").toInt
+      config.getInt("minotaur.moveGenerator.pawnMovementProbability"),
+      config.getInt("minotaur.moveGenerator.seekShortestRouteProbability")
     )
-    val mcts = new MCTS(playouts, moveGenerator, config.getString("minotaur.threads").toInt)
+    val mcts = new MCTS(playouts, moveGenerator, config.getInt("minotaur.threads"))
     Play(move, mcts)
   }
 
