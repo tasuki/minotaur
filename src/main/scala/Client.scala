@@ -33,6 +33,10 @@ object Client {
         Interactive Minotaur console
       --------------------------------
 
+      You're the "x" and your goal is to get to the top.
+      Your opponent is the "o" and his goal is to get to the bottom.
+      See more at: https://en.wikipedia.org/wiki/Quoridor
+
       Example commands:
         quit: exists the console
         undo: undo the last move
