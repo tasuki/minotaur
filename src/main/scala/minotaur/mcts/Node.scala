@@ -2,7 +2,6 @@ package minotaur.mcts
 
 import Math.{sqrt,log}
 import scala.collection.mutable.ListBuffer
-import util.Random
 
 import minotaur.model.{GameState,Move,Player}
 
@@ -10,28 +9,25 @@ class Node(
   val gameState: GameState,
   val move: Option[Move],
   var parent: Option[Node],
-  val children: ListBuffer[Node],
-  unexplored: Option[Iterator[Node]],
-  var winCount: Int,
-  var visited: Int
+  val children: ListBuffer[Node] = ListBuffer[Node](),
+  unexplored: Option[Iterator[Node]] = None,
+  var winCount: Int = 0,
+  var visited: Int = 0
 ) {
   val wins: Boolean = move.map(_.wins).getOrElse(false)
-  val unexploredChildren = unexplored.getOrElse(getShuffledChildren)
+  val unexploredChildren = unexplored.getOrElse(
+    gameState.getLazyShuffledChildren.map(new Node(_, this))
+  )
 
   var UCT: Double = 0.0
 
   def this(gameState: GameState) = {
-    this(gameState, None, None, ListBuffer[Node](), None, 0, 0)
+    this(gameState, None, None)
   }
 
   def this(move: Move, parentNode: Node) = {
-    this(move.play, Some(move), Some(parentNode), ListBuffer[Node](), None, 0, 0)
+    this(move.play, Some(move), Some(parentNode))
   }
-
-  def getShuffledChildren: Iterator[Node] =
-    Random.shuffle(gameState.getPossibleMoves).toIterator
-      .filter(_.isValid)
-      .map(new Node(_, this))
 
   override lazy val hashCode = gameState.hashCode
 

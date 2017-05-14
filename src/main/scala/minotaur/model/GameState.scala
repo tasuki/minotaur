@@ -1,5 +1,7 @@
 package minotaur.model
 
+import util.Random
+
 case class Game(state: GameState, parent: Option[Game])
 
 case class GameState(
@@ -17,4 +19,7 @@ case class GameState(
 
     (getPossiblePawnMovements ++ getPossibleWallPlacements)
   }
+
+  def getLazyShuffledChildren: Iterator[Move] =
+    Random.shuffle(getPossibleMoves).toIterator.filter(_.isValid)
 }
