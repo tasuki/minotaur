@@ -45,10 +45,10 @@ case class Board(
     neighbors(loc1) contains loc2
 
   def neighbors(location: Location): Seq[Location] =
-    allowedMovements(location).map(location.neighbor(_).get)
+    allowedMovements(location).flatMap(location.neighbor(_))
 
   def pawnLocation(player: Player): Location =
-    pawns.find(_._2 == player).map(_._1).get
+    pawns.find(_._2 == player).get._1
 
   def possibleMoves(player: Player): Seq[Location] = {
     val location = pawnLocation(player)
@@ -64,7 +64,7 @@ case class Board(
             // jump sideways
             dir.orientation.opposite.directions
               .filter(canMove(neighbor, _))
-              .map(neighbor.neighbor(_).get)
+              .flatMap(neighbor.neighbor(_))
         case (_, neighbor) => Seq(neighbor)
       }).flatten
   }
