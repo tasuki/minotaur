@@ -51,6 +51,8 @@ class Scraper:
       print("Already saved game " + gameId)
       return
 
+    time.sleep(1)
+
     record = self.fetchGame(gameId)
     if record != None:
       f = open(fname, 'w')
@@ -76,6 +78,8 @@ class Scraper:
 
   def loopGameList(self, timestamp = int(time.time())):
     while True:
+      time.sleep(1)
+
       print("")
       print("=======")
       print("fetching page " + str(timestamp))
