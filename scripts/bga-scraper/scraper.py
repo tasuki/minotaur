@@ -22,17 +22,18 @@ class Scraper:
   def fetchGame(self, gameId):
     url = self.getDetailLink(gameId)
     if url == None:
-      print("Url not found for game" + gameId)
+      print("Url not found for game " + gameId)
       return
 
     response = self.httpClient.getPage(url)
-    gamelog = re.search('g_gamelogs = (.*);$', response, re.MULTILINE)
+    gamelog = re.search('g_gamelogs = (.*)$', response, re.MULTILINE)
+
 
     if gamelog == None:
       print("Couldn't parse game data for url: " + url)
       return
 
-    record = gamelog.group(1)
+    record = re.sub(';$', '', gamelog.group(1))
 
     # verify valid json
     try:
