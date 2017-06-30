@@ -13,12 +13,15 @@ console, go to the directory containing this readme, and run:
 
 Run the tests with:
 
-    sbt 'testOnly * -- exclude integration'
+    sbt 'testOnly * -- exclude integration,wip'
 
 Run MCTS tests (may fail somewhat randomly):
 
     sbt 'testOnly *MCTSSpec'
 
+Run WIP tests (_will_ fail):
+
+    sbt 'testOnly *TestSpec'
 ---
 
 _When he had grown up and become a most ferocious animal, and of incredible

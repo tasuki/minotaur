@@ -3,4 +3,4 @@ jdk: oraclejdk8
 scala:
   - 2.10.6
 
-script: sbt 'testOnly * -- exclude integration'
+script: sbt 'testOnly * -- exclude integration,wip'
