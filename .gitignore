@@ -8,4 +8,5 @@ run.py
 
 # data
 bga-games/
+bga-games*.txt
 tmp/
