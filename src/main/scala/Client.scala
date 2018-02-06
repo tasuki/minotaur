@@ -1,3 +1,4 @@
+import scala.io.StdIn.readLine
 import com.typesafe.config.ConfigFactory
 
 import minotaur.io.{BoardReader,GameStatePrinter,Coordinates}
