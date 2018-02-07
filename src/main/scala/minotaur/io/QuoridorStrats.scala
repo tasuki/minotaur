@@ -4,7 +4,7 @@ import scala.annotation.tailrec
 import minotaur.model._
 
 object QuoridorStrats {
-  val stratsColumns = "abcdefghi".toList
+  val stratsColumns: List[Char] = "abcdefghi".toList
 
   val file = "src/test/resources/empty.txt"
   val game = Game(GameState(
@@ -13,7 +13,7 @@ object QuoridorStrats {
       White -> 10
     ), Black
   ), None)
-  val bt = game.state.board.boardType
+  val bt: BoardType = game.state.board.boardType
 
   def fromString(str: String): Game =
     getGame(str.split(";"), game)

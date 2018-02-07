@@ -43,7 +43,7 @@ object Replayer {
     }
   }
 
-  private def printState(gs: GameState) =
+  private def printState(gs: GameState): Unit =
     println(GameStatePrinter(gs))
 
   @tailrec
