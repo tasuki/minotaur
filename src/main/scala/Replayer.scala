@@ -14,15 +14,23 @@ object Replayer {
       Enter a game record in the quoridorstrats notation.
 
       Commands:
-        quit: exit the console
         Enter: next move
         x: previous move
+        new: enter new game record
+        quit: exit the console
 """
     )
 
-    val gameRecord = readLine("Quoridorstrats game record: ")
-    val game = QuoridorStrats.fromString(gameRecord)
-    val gameStates = getGameStates(game, Nil)
+    while (true) {
+      val gameRecord = readLine("Quoridorstrats game record: ")
+      val game = QuoridorStrats.fromString(gameRecord)
+      val gameStates = getGameStates(game, Nil)
+
+      replayGame(gameStates)
+    }
+  }
+
+  private def replayGame(gameStates: List[GameState]): Unit = {
     var index = 0
     printState(gameStates(index))
 
@@ -33,9 +41,10 @@ object Replayer {
         case "x" =>
           index -= 1
           printState(gameStates(index))
+        case "new" =>
+          return
         case _ if !gameStates.isDefinedAt(index + 1) =>
           println("That's it!")
-          System.exit(0)
         case _ =>
           index += 1
           printState(gameStates(index))
