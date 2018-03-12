@@ -1,12 +1,3 @@
 # scala
 project/
 target/
-
-# python
-__pycache__/
-run.py
-
-# data
-bga-games/
-bga-games*.txt
-tmp/
