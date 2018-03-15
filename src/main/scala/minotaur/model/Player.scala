@@ -13,10 +13,10 @@ object Player {
 }
 
 case object Black extends Player {
-  val pawn = 'x'
-  val destination = North
+  val pawn: Char = 'x'
+  val destination: Direction = North
 }
 case object White extends Player {
-  val pawn = 'o'
-  val destination = South
+  val pawn: Char = 'o'
+  val destination: Direction = South
 }

@@ -53,7 +53,7 @@ class TestSpec extends Specification {
         mn = mcts.findMove(state, mn.toRoot)
       }
 
-      profile.Profiler.printComplete
+      profile.Profiler.printComplete()
 
       ok
     }

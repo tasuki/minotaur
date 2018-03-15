@@ -20,7 +20,7 @@ object BoardPrinter {
     ): Boolean =
       location
         .filter(l => !l.isBorder(direction) && !board.canMove(l, direction))
-        .forall(l => false)
+        .forall(_ => false)
 
     val oddLines = (-1 until board.size)
       .map(row => (0 until board.size).map(column => {

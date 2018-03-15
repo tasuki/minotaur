@@ -30,7 +30,7 @@ case class Play(move: Move, mcts: MCTS) extends Command {
 
     val node = Profiler.profile("MCTS", mcts.findMove(game.state))
     Profiler.print("MCTS")
-    Profiler.clear
+    Profiler.clear()
     println(node)
 
     if (node.winRatio < 0.1) {

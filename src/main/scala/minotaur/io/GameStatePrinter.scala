@@ -15,7 +15,7 @@ object GameStatePrinter {
   private def getWalls(gs: GameState, orientation: Orientation): String = {
     val coords = Coordinates(gs.board.boardType)
     gs.board.walls.toList.filter(_.orientation == orientation)
-      .toList.sortBy(_.location.location).map(coords.forWall).mkString
+      .sortBy(_.location.location).map(coords.forWall).mkString
   }
 
   def succinct(gs: GameState): String = {

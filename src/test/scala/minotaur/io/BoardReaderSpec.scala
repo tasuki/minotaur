@@ -4,6 +4,8 @@ import minotaur.model._
 import org.specs2.mutable.Specification
 
 class BoardReaderSpec extends Specification {
+  private val boardType = BoardType()
+
   "An invalid board" should {
     "throw an exception on invalid board shape" in {
       BoardReader.fromString("""
@@ -179,7 +181,6 @@ class BoardReaderSpec extends Specification {
 
   "Valid sample board" should {
     val board = BoardReader.fromFile("src/test/resources/board.txt")
-    val boardType = BoardType()
 
     "have correct board type" in {
       board.boardType === boardType
@@ -232,7 +233,9 @@ class BoardReaderSpec extends Specification {
         |                                |
         |+   +   +   +   +   +   +   +   +   +
       """.stripMargin.trim)
-      ok
+
+      board.pawnLocation(Black) === Location(57, boardType)
+      board.pawnLocation(White) === Location(50, boardType)
     }
   }
 }

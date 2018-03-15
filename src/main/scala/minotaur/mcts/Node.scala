@@ -34,7 +34,7 @@ class Node(
 
   override def toString: String =
     f"${gameState.onTurn.other} " +
-    f"confidence: $winRatio%1.3f ($winCount / $visited)"
+    f"confidence: ${winRatio()}%1.3f ($winCount / $visited)"
 
   def isFullyExplored: Boolean =
     unexploredChildren.isEmpty
@@ -51,7 +51,7 @@ class Node(
   def update(winner: Player): Unit = {
     visited += 1
     if (winner == gameState.onTurn.other) winCount += 1
-    children.foreach(_.updateUCT)
+    children.foreach(_.updateUCT())
   }
 
   def updateUCT(): Unit =
@@ -63,7 +63,7 @@ class Node(
     winCount.toDouble / visited
 
   private def winRatio(node: Node): Double =
-    node.winRatio
+    node.winRatio()
 
   def bestChild: Node =
     children.maxBy(winRatio)
