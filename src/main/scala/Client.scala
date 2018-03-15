@@ -39,7 +39,7 @@ object Client {
       See more at: https://en.wikipedia.org/wiki/Quoridor
 
       Example commands:
-        quit: exists the console
+        quit: exits the console
         undo: undo the last move
         n: moves your pawn North
         s: moves your pawn South
