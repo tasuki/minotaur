@@ -6,7 +6,6 @@ connectInput in run := true
 scalaVersion := "2.11.11"
 
 val dl4jVersion = "0.9.1"
-val nd4jOS = "linux-x86_64"
 
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.3.1",
