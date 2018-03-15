@@ -12,6 +12,7 @@ libraryDependencies ++= Seq(
   "org.nd4j" % "nd4j-native-platform" % dl4jVersion,
   "org.nd4j" %% "nd4s" % dl4jVersion,
   "org.deeplearning4j" % "deeplearning4j-core" % dl4jVersion,
+  "org.deeplearning4j" % "deeplearning4j-modelimport" % dl4jVersion,
   "ch.qos.logback" % "logback-classic" % "1.1.7",
   "org.specs2" %% "specs2-core" % "3.9.5" % "test"
 )
