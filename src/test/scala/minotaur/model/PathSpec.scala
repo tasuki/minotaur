@@ -1,7 +1,7 @@
 package minotaur.model
 
-import org.specs2.mutable.Specification
 import minotaur.io.BoardReader
+import org.specs2.mutable.Specification
 
 class PathSpec extends Specification {
   val file = "src/test/resources/board.txt"

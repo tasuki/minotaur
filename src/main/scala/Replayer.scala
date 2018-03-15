@@ -1,5 +1,6 @@
 import scala.annotation.tailrec
 import scala.io.StdIn.readLine
+
 import minotaur.io.{ GameStatePrinter, QuoridorStrats }
 import minotaur.model.{ Game, GameState }
 

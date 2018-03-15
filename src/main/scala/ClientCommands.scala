@@ -1,7 +1,6 @@
 import minotaur.io.GameStatePrinter
 import minotaur.mcts.MCTS
-import minotaur.model.{Game,GameState}
-import minotaur.model.Move
+import minotaur.model.{ Game, Move }
 import profile.Profiler
 
 sealed trait Command {

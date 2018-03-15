@@ -1,7 +1,8 @@
 package minotaur.search
 
-import scala.collection.mutable.{ArraySeq,ListBuffer}
-import minotaur.model.{Search,SearchNode,Board,Location,Direction,Path}
+import scala.collection.mutable.{ ArraySeq, ListBuffer }
+
+import minotaur.model._
 
 object AStar extends Search {
   case class Node(
@@ -39,7 +40,7 @@ object AStar extends Search {
       // loop through current neighbors
       for (neighbor <- board.neighbors(current.location)) {
         // only non-closed nodes
-        if (closed(neighbor.location) == false) {
+        if (!closed(neighbor.location)) {
           val newNode = Node(
             neighbor,
             Some(current),

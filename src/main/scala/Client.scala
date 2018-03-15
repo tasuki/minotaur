@@ -1,11 +1,9 @@
 import scala.io.StdIn.readLine
-import com.typesafe.config.ConfigFactory
 
-import minotaur.io.{BoardReader,GameStatePrinter,Coordinates}
+import com.typesafe.config.ConfigFactory
+import minotaur.io.{ BoardReader, Coordinates, GameStatePrinter }
 import minotaur.mcts.MCTS
-import minotaur.model.{Game,GameState,Black,White}
-import minotaur.model.{Location,Direction,Wall,Vertical,Horizontal}
-import minotaur.model.{MoveGenerator,Move,PawnMovement,WallPlacement}
+import minotaur.model._
 
 object Client {
   val player = Black
@@ -88,7 +86,7 @@ object Client {
         ).map(loc => getPlayCommand(PawnMovement(loc, game.state), playouts))
         .getOrElse(Unknown)
 
-      case coordsPattern(coords) => {
+      case coordsPattern(coords) =>
         (coords.toList match {
           case List(vertical, horizontal)
                     if (coordinates.exist(vertical, horizontal)) =>
@@ -111,7 +109,6 @@ object Client {
           )
         }).map(wall => getPlayCommand(WallPlacement(wall, game.state), playouts))
         .getOrElse(Unknown)
-      }
 
       case _ => Unknown
     }

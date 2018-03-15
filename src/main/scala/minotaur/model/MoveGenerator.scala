@@ -1,6 +1,6 @@
 package minotaur.model
 
-import util.Random
+import scala.util.Random
 
 class MoveGenerator(
   val pawnMovementProbability: Int = 90,

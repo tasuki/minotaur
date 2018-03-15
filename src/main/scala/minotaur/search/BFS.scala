@@ -1,7 +1,8 @@
 package minotaur.search
 
-import scala.collection.mutable.{ArraySeq,Queue}
-import minotaur.model.{Search,SearchNode,Board,Location,Direction,Path}
+import scala.collection.mutable.{ ArraySeq, Queue }
+
+import minotaur.model._
 
 object BFS extends Search {
   case class Node(
@@ -29,7 +30,7 @@ object BFS extends Search {
         return reconstructPath(current)
 
       for (neighbor <- board.neighbors(current.location)) {
-        if (closed(neighbor.location) == false) {
+        if (!closed(neighbor.location)) {
           open += Node(
             neighbor,
             Some(current),

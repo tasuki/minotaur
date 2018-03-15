@@ -1,8 +1,6 @@
 package minotaur.io
 
-import minotaur.model.{Board,Location}
-import minotaur.model.{Direction,South,West}
-import minotaur.model.SearchNode
+import minotaur.model._
 
 object BoardPrinter {
   private def printWithCellContent(

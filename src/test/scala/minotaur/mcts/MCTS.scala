@@ -1,8 +1,8 @@
 package minotaur.mcts
 
-import org.specs2.mutable.Specification
-import minotaur.io.{BoardReader,BoardPrinter}
+import minotaur.io.BoardReader
 import minotaur.model._
+import org.specs2.mutable.Specification
 
 class MCTSSpec extends Specification {
   section("integration")

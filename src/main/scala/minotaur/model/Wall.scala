@@ -54,7 +54,7 @@ case class Wall(
       case Vertical => Seq(East, West, East, West)
     }
 
-    (locations zip directions)
+    locations zip directions
   }
 
   lazy val touches: Seq[Wall] = {

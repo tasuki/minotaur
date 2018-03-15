@@ -1,9 +1,8 @@
 package minotaur.io
 
 import scala.io.Source
-import minotaur.model.{BoardType,Board,Location,Player,Wall}
-import minotaur.model.{Orientation,Horizontal,Vertical}
-import minotaur.model.{Direction,North,South,East,West}
+
+import minotaur.model._
 
 object BoardReader {
   def fromFile(file: String): Board = {
@@ -24,8 +23,8 @@ object BoardReader {
 
     require((
       horizontalWalls.map(_.location) intersect
-      verticalWalls.map(_.location)
-    ).size == 0,
+        verticalWalls.map(_.location)
+      ).isEmpty,
     "Walls cross each other")
 
     Board(
@@ -47,8 +46,8 @@ object BoardReader {
     for {
       (line, row) <- indexed
       (field, column) <- line
-      if (condition(field))
-    } yield (Location(row * boardType.size + column, boardType))
+      if condition(field)
+    } yield Location(row * boardType.size + column, boardType)
   }
 
   private def getWalls(
@@ -69,7 +68,7 @@ object BoardReader {
       )
     }
 
-    pairs.map(_(0))
+    pairs.map(_.head)
       .map(Wall(_, orientation)).toSet
   }
 
@@ -133,6 +132,6 @@ object BoardReader {
 
     require(pawnLocations.length == 1, s"There needs to be exactly one pawn $pawn")
 
-    pawnLocations(0)
+    pawnLocations.head
   }
 }

@@ -23,7 +23,7 @@ object Board {
       boardType,
       pawns,
       walls,
-      boardType.possibleWalls -- walls -- walls.map(_.overlaps).flatten,
+      boardType.possibleWalls -- walls -- walls.flatMap(_.overlaps),
       getAllowedMovements(boardType, walls)
     )(Player.all.map(player => player -> None).toMap)
   }
@@ -36,7 +36,7 @@ case class Board(
   placeableWalls: Set[Wall],
   allowedMovements: Map[Location, Seq[Direction]]
 )(cachedPaths: Map[Player, Option[Path]]) {
-  val size = boardType.size
+  val size: Int = boardType.size
 
   def canMove(location: Location, direction: Direction): Boolean =
     allowedMovements(location).contains(direction)
@@ -55,7 +55,7 @@ case class Board(
 
     allowedMovements(location)
       .map(dir => (dir, location.neighbor(dir).get))
-      .map(_ match {
+      .flatMap {
         case (dir, neighbor) if pawns.isDefinedAt(neighbor) =>
           if (canMove(neighbor, dir))
             // jump straight over piece
@@ -66,10 +66,10 @@ case class Board(
               .filter(canMove(neighbor, _))
               .flatMap(neighbor.neighbor(_))
         case (_, neighbor) => Seq(neighbor)
-      }).flatten
+      }
   }
 
-  def findPath(player: Player) =
+  def findPath(player: Player): Option[Path] =
     Search.findPath(this, pawnLocation(player), player.destination)
 
   lazy val shortestPath: Map[Player, Option[Path]] =
@@ -82,5 +82,5 @@ case class Board(
     })).toMap
 
   lazy val isValid: Boolean =
-    Player.all.map(shortestPath(_)).filter(_.isEmpty).length == 0
+    Player.all.map(shortestPath(_)).filter(_.isEmpty).isEmpty
 }

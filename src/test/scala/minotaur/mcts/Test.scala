@@ -1,9 +1,8 @@
 package minotaur.mcts
 
-import org.specs2.mutable.Specification
 import minotaur.io._
-import minotaur.mcts._
 import minotaur.model._
+import org.specs2.mutable.Specification
 
 class TestSpec extends Specification {
   section("wip")
@@ -46,7 +45,7 @@ class TestSpec extends Specification {
       val mcts = new MCTS(30000)
       mn = mcts.findMove(state)
 
-      while (mn.wins == false) {
+      while (!mn.wins) {
         state = mn.gameState
         println
         print(mn)
@@ -84,7 +83,7 @@ class TestSpec extends Specification {
         node = new MCTS().findMove(state)
         state = node.move.get.play
         println(BoardPrinter.print(state.board))
-      } while (node.move.get.wins == false)
+      } while (!node.move.get.wins)
 
       ok
     }
@@ -112,7 +111,7 @@ class TestSpec extends Specification {
         node = new MCTS(10000).findMove(state)
         state = node.move.get.play
         Debug.printShortInfo(node)
-      } while (node.move.get.wins == false)
+      } while (!node.move.get.wins)
 
       ok
     }

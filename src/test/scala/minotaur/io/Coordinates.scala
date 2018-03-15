@@ -1,9 +1,7 @@
 package minotaur.io
 
+import minotaur.model._
 import org.specs2.mutable.Specification
-
-import minotaur.model.{BoardType,Wall,Location}
-import minotaur.model.{Horizontal,Vertical}
 
 class CoordinatesSpec extends Specification {
   "Standard board coordinates" should {

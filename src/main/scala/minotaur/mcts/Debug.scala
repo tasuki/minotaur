@@ -1,8 +1,7 @@
 package minotaur.mcts
 
-import org.slf4j.LoggerFactory
-import minotaur.model.GameState
 import minotaur.io.BoardPrinter
+import org.slf4j.LoggerFactory
 
 object Debug {
   val log = LoggerFactory.getLogger("MCTS Debug")

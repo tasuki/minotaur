@@ -1,9 +1,10 @@
 package minotaur.mcts
 
-import Math.{sqrt,log}
+import java.lang.Math.{ log, sqrt }
+
 import scala.collection.mutable.ListBuffer
 
-import minotaur.model.{GameState,Move,Player}
+import minotaur.model.{ GameState, Move, Player }
 
 class Node(
   val gameState: GameState,
@@ -33,7 +34,7 @@ class Node(
 
   override def toString =
     f"${gameState.onTurn.other} " +
-    f"confidence: ${winRatio}%1.3f ($winCount / $visited)"
+    f"confidence: $winRatio%1.3f ($winCount / $visited)"
 
   def isFullyExplored: Boolean =
     unexploredChildren.isEmpty

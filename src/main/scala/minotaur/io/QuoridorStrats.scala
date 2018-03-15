@@ -1,6 +1,7 @@
 package minotaur.io
 
 import scala.annotation.tailrec
+
 import minotaur.model._
 
 object QuoridorStrats {

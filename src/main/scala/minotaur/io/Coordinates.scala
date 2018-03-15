@@ -1,8 +1,6 @@
 package minotaur.io
 
-import minotaur.model.{BoardType,Wall}
-import minotaur.model.{Horizontal,Vertical}
-import minotaur.model.{North,West}
+import minotaur.model._
 
 case class Coordinates(boardType: BoardType) {
   val vertical   = getCoords("abcdfghijklmopr")

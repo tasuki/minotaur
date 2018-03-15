@@ -1,6 +1,7 @@
 package minotaur.io
 
 import scala.io.Source
+
 import org.specs2.mutable.Specification
 
 class BoardPrinterSpec extends Specification {

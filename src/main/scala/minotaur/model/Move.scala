@@ -28,10 +28,10 @@ case class WallPlacement(
       }
 
     // make paths potential
-    val paths = gs.board.shortestPath.map(_ match {
+    val paths = gs.board.shortestPath.map {
       case (player, Some(path)) => (player -> Some(path.potentialize))
       case (player, None) => (player -> None)
-    })
+    }
 
     gs.copy(
       board = gs.board.copy(
@@ -62,8 +62,8 @@ case class PawnMovement(
   lazy val play = {
     // update paths with current advance if following
     val paths = gs.board.shortestPath + (
-      gs.onTurn -> (gs.board.shortestPath(gs.onTurn)
-        .filter(_.startsWith(location)).map(_.forward))
+      gs.onTurn -> gs.board.shortestPath(gs.onTurn)
+        .filter(_.startsWith(location)).map(_.forward)
     )
 
     gs.copy(

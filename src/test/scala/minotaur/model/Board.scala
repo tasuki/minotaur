@@ -1,7 +1,7 @@
 package minotaur.model
 
-import org.specs2.mutable.Specification
 import minotaur.io.BoardReader
+import org.specs2.mutable.Specification
 
 class BoardSpec extends Specification {
   "Sample board" should {

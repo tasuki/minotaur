@@ -1,12 +1,12 @@
 package minotaur.mcts
 
 import scala.annotation.tailrec
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
-import org.slf4j.LoggerFactory
-import minotaur.model.{GameState,Player,MoveGenerator,Move}
 
+import minotaur.model.{ GameState, Move, MoveGenerator, Player }
+import org.slf4j.LoggerFactory
 import profile.Profiler
 
 class MCTS(
@@ -40,7 +40,7 @@ class MCTS(
 
       node = root
 
-      while (node.isFullyExplored && node.wins == false) {
+      while (node.isFullyExplored && !node.wins) {
         node = Profiler.profile("MCTS Select child", node.selectChild)
       }
 

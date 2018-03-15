@@ -1,10 +1,7 @@
 package minotaur.io
 
+import minotaur.model._
 import org.specs2.mutable.Specification
-
-import minotaur.model.{BoardType,Location,Wall,Board}
-import minotaur.model.{Horizontal,Vertical}
-import minotaur.model.{Black,White}
 
 class BoardReaderSpec extends Specification {
   "An invalid board" should {

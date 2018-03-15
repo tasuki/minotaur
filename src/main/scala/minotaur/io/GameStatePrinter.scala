@@ -1,9 +1,8 @@
 package minotaur.io
 
+import minotaur.model._
 import org.nd4j.linalg.api.ndarray.INDArray
 import org.nd4j.linalg.factory.Nd4j
-
-import minotaur.model._
 
 object GameStatePrinter {
   def apply(gs: GameState): String = {

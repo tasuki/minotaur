@@ -1,10 +1,10 @@
 package minotaur.search
 
 import scala.io.Source
-import org.specs2.mutable.Specification
+
 import minotaur.io.BoardReader
-import minotaur.model.{Search,ShortestPath,Location,North,South}
-import minotaur.model.{Black,White}
+import minotaur.model._
+import org.specs2.mutable.Specification
 
 class SearchSpec extends Specification {
   val file = "src/test/resources/board.txt"

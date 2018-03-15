@@ -1,10 +1,9 @@
 package minotaur.io
 
+import minotaur.model.{ Black, GameState, White }
 import org.nd4j.linalg.api.ndarray.INDArray
 import org.nd4j.linalg.factory.Nd4j
 import org.specs2.mutable.Specification
-
-import minotaur.model.{GameState,Black,White}
 
 
 class GameStatePrinterSpec extends Specification {

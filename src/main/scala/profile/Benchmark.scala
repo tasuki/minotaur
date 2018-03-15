@@ -1,10 +1,8 @@
 package profile
 
-import minotaur.model.{BoardType,Location,Wall,Horizontal}
-import minotaur.model.{Direction,North,South,East,West}
-import minotaur.model.{White,Black}
-import minotaur.search.{AStar,BFS}
 import minotaur.io.BoardReader
+import minotaur.model._
+import minotaur.search.{ AStar, BFS }
 
 object Benchmark {
   val bt = BoardType(9)
@@ -105,13 +103,13 @@ object Benchmark {
     val board = BoardReader.fromFile(file)
 
     Profiler.clear
-    Map("A*" -> AStar, "BFS" -> BFS).foreach( _ match {
+    Map("A*" -> AStar, "BFS" -> BFS).foreach {
       case (name, algo) =>
         Profiler.profileMany(name, 10000, {
           algo.findPath(board, board.pawnLocation(White), South)
           algo.findPath(board, board.pawnLocation(Black), North)
         })
-    })
+    }
     Profiler.printShort
   }
 }

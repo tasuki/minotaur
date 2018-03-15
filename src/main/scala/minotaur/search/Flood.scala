@@ -1,7 +1,8 @@
 package minotaur.search
 
-import scala.collection.mutable.{ArraySeq,Queue}
-import minotaur.model.{SearchNode,Board,Location}
+import scala.collection.mutable.{ ArraySeq, Queue }
+
+import minotaur.model.{ Board, Location, SearchNode }
 
 object Flood {
   case class Node(
@@ -26,7 +27,7 @@ object Flood {
       val current = open.dequeue
 
       for (neighbor <- board.neighbors(current.location)) {
-        if (closed(neighbor.location) == None) {
+        if (closed(neighbor.location).isEmpty) {
           val node = Node(
             neighbor,
             Some(current),

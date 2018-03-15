@@ -1,6 +1,8 @@
 package profile
 
-import collection.mutable.{Map,ListBuffer}
+import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
+
 import org.slf4j.LoggerFactory
 
 object Head {
@@ -39,7 +41,7 @@ case class Stat(
 
 object Profiler {
   val log = LoggerFactory.getLogger("Profiler")
-  val runs = Map[String, ListBuffer[Long]]()
+  val runs = mutable.Map[String, ListBuffer[Long]]()
 
   private def add(name: String, timeDiff: Long): Unit = {
     if (! runs.contains(name))
@@ -91,7 +93,7 @@ object Profiler {
     log.info(f"$name%20s $tottime%11s")
 
     getStats.foreach(stat => {
-      log.info(f"${stat.name}%20s ${tottime}%11s")
+      log.info(f"${stat.name}%20s $tottime%11s")
     })
   }
 

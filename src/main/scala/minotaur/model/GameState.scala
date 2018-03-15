@@ -1,6 +1,6 @@
 package minotaur.model
 
-import util.Random
+import scala.util.Random
 
 case class Game(state: GameState, parent: Option[Game])
 
@@ -17,7 +17,7 @@ case class GameState(
       if (walls(onTurn) == 0) Seq()
       else board.placeableWalls.map(WallPlacement(_, this))(collection.breakOut)
 
-    (getPossiblePawnMovements ++ getPossibleWallPlacements)
+    getPossiblePawnMovements ++ getPossibleWallPlacements
   }
 
   def getLazyShuffledChildren: Iterator[Move] =
