@@ -35,6 +35,6 @@ trait SearchNode {
 // TODO the below should be DI-ified
 import minotaur.search._
 object Search extends Search {
-  def findPath(board: Board, from: Location, direction: Direction) =
+  def findPath(board: Board, from: Location, direction: Direction): Option[Path] =
     profile.Profiler.profile("BFS", BFS.findPath(board, from, direction))
 }

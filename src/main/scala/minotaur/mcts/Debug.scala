@@ -1,10 +1,10 @@
 package minotaur.mcts
 
 import minotaur.io.BoardPrinter
-import org.slf4j.LoggerFactory
+import org.slf4j.{ Logger, LoggerFactory }
 
 object Debug {
-  val log = LoggerFactory.getLogger("MCTS Debug")
+  val log: Logger = LoggerFactory.getLogger("MCTS Debug")
 
   def printShortInfo(node: Node): Unit = {
     log.debug(node.toString)

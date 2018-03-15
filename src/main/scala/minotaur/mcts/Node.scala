@@ -15,8 +15,8 @@ class Node(
   var winCount: Int = 0,
   var visited: Int = 0
 ) {
-  val wins: Boolean = move.map(_.wins).getOrElse(false)
-  val unexploredChildren = unexplored.getOrElse(
+  val wins: Boolean = move.exists(_.wins)
+  val unexploredChildren: Iterator[Node] = unexplored.getOrElse(
     gameState.getLazyShuffledChildren.map(new Node(_, this))
   )
 
@@ -30,9 +30,9 @@ class Node(
     this(move.play, Some(move), Some(parentNode))
   }
 
-  override lazy val hashCode = gameState.hashCode
+  override lazy val hashCode: Int = gameState.hashCode
 
-  override def toString =
+  override def toString: String =
     f"${gameState.onTurn.other} " +
     f"confidence: $winRatio%1.3f ($winCount / $visited)"
 
@@ -51,15 +51,15 @@ class Node(
   def update(winner: Player): Unit = {
     visited += 1
     if (winner == gameState.onTurn.other) winCount += 1
-    children.map(_.updateUCT)
+    children.foreach(_.updateUCT)
   }
 
-  def updateUCT =
+  def updateUCT(): Unit =
     UCT = (winCount.toDouble / visited) +
       move.get.priority *
       1.4 * sqrt(log(parent.get.visited.toDouble) / visited)
 
-  def winRatio: Double =
+  def winRatio(): Double =
     winCount.toDouble / visited
 
   private def winRatio(node: Node): Double =

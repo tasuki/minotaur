@@ -179,7 +179,7 @@ class BoardReaderSpec extends Specification {
 
   "Valid sample board" should {
     val board = BoardReader.fromFile("src/test/resources/board.txt")
-    val boardType = BoardType(9)
+    val boardType = BoardType()
 
     "have correct board type" in {
       board.boardType === boardType

@@ -7,10 +7,10 @@ import minotaur.model._
 import org.specs2.mutable.Specification
 
 class SearchSpec extends Specification {
-  val file = "src/test/resources/board.txt"
-  val board = BoardReader.fromFile(file)
+  private val file = "src/test/resources/board.txt"
+  private val board = BoardReader.fromFile(file)
 
-  def blackNorth(search: Search) = {
+  private def blackNorth(search: Search) = {
     search.findPath(board, board.pawnLocation(Black), North) === Some(
       ShortestPath(Seq(
         Location(57, board.boardType),
@@ -26,7 +26,7 @@ class SearchSpec extends Specification {
     )
   }
 
-  def whiteSouth(search: Search) = {
+  private def whiteSouth(search: Search) = {
     search.findPath(board, board.pawnLocation(White), South) === Some(
       ShortestPath(Seq(
         Location(13, board.boardType),
@@ -42,7 +42,7 @@ class SearchSpec extends Specification {
     )
   }
 
-  def noPath(search: Search) =
+  private def noPath(search: Search) =
     search.findPath(board, Location(63, board.boardType), North) === None
 
   "AStar" should {
@@ -72,7 +72,6 @@ class SearchSpec extends Specification {
   }
 
   "Flood search" should {
-    val search = Flood
     "find everything" in {
       val boardFile = "src/test/resources/floodsearch/board.txt"
       val board = BoardReader.fromFile(boardFile)

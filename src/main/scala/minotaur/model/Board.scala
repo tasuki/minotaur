@@ -82,5 +82,5 @@ case class Board(
     })).toMap
 
   lazy val isValid: Boolean =
-    Player.all.map(shortestPath(_)).filter(_.isEmpty).isEmpty
+    !Player.all.map(shortestPath(_)).exists(_.isEmpty)
 }

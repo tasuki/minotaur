@@ -5,7 +5,7 @@ import minotaur.model._
 import minotaur.search.{ AStar, BFS }
 
 object Benchmark {
-  val bt = BoardType(9)
+  val bt = BoardType()
 
   def main(args: Array[String]): Unit = {
     profileBoardWithLocations
@@ -15,7 +15,7 @@ object Benchmark {
     searches
   }
 
-  def profileBoardWithLocations = {
+  def profileBoardWithLocations(): Unit = {
     val locationList: List[Location] = (for(i <- 0 to 80) yield Location(i, bt)).toList
     val locationVector: Vector[Location] = locationList.toVector
 
@@ -28,9 +28,9 @@ object Benchmark {
     Profiler.printShort
   }
 
-  def profileNeighbors = {
+  def profileNeighbors(): Unit = {
     val neighborVector: Vector[Seq[Direction]] =
-      bt.locations.map(location => Direction.all).toVector
+      bt.locations.map(_ => Direction.all).toVector
     val neighborList: List[Seq[Direction]] =
       neighborVector.toList
     val neighborMap: Map[Location, Seq[Direction]] =
@@ -49,7 +49,7 @@ object Benchmark {
     Profiler.printShort
   }
 
-  def profileContains = {
+  def profileContains(): Unit = {
     val wallSet: Set[Wall] = bt.possibleWalls.toSet
     val wallList: List[Wall] = wallSet.toList.sortBy(_.location.location)
     val wallVector: Vector[Wall] = wallList.toVector
@@ -62,7 +62,7 @@ object Benchmark {
     Profiler.printShort
   }
 
-  def mapCaseClassVsListId = {
+  def mapCaseClassVsListId(): Unit = {
     val mapCaseClass = Map(
       North -> Location(31, bt),
       South -> Location(49, bt),
@@ -98,7 +98,7 @@ object Benchmark {
     Profiler.printShort
   }
 
-  def searches = {
+  def searches(): Unit = {
     val file = "src/test/resources/board.txt"
     val board = BoardReader.fromFile(file)
 

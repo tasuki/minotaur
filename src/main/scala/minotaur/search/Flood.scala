@@ -1,5 +1,6 @@
 package minotaur.search
 
+import scala.collection.mutable
 import scala.collection.mutable.{ ArraySeq, Queue }
 
 import minotaur.model.{ Board, Location, SearchNode }
@@ -15,9 +16,9 @@ object Flood {
     board: Board,
     from: Location
   ): Set[Node] = {
-    val open: Queue[Node] = Queue[Node]()
-    val closed: ArraySeq[Option[Node]] =
-      ArraySeq.fill(board.boardType.size * board.boardType.size){None}
+    val open: mutable.Queue[Node] = mutable.Queue[Node]()
+    val closed: mutable.ArraySeq[Option[Node]] =
+      mutable.ArraySeq.fill(board.boardType.size * board.boardType.size){None}
 
     val startingNode = Node(from, None, 0)
     open += startingNode
@@ -40,6 +41,6 @@ object Flood {
       }
     }
 
-    return closed.flatten.toSet
+    closed.flatten.toSet
   }
 }

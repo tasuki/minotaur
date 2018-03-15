@@ -3,7 +3,7 @@ package minotaur.model
 case class BoardType(size: Int = 9) {
   // used to verify location validity
   val possibleLocations: Vector[Int] = (
-    for (field <- 0 to size * size - 1) yield field
+    for (field <- 0 until size * size) yield field
   )(collection.breakOut)
 
   // all locations on the board for jumping around

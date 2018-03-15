@@ -84,13 +84,13 @@ class WallSpec extends Specification {
   }
 
   "Somewhere in the middle wall" should {
-    val wall = Wall(Location(21, BoardType(9)), Horizontal)
+    val wall = Wall(Location(21, BoardType()), Horizontal)
 
     "overlap with crossing and its neighbors" in {
       wall.overlaps === Seq(
-        Wall(Location(22, BoardType(9)), Horizontal),
-        Wall(Location(20, BoardType(9)), Horizontal),
-        Wall(Location(21, BoardType(9)), Vertical)
+        Wall(Location(22, BoardType()), Horizontal),
+        Wall(Location(20, BoardType()), Horizontal),
+        Wall(Location(21, BoardType()), Vertical)
       )
     }
   }

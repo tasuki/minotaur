@@ -1,11 +1,11 @@
 package minotaur.model
 
 sealed trait Orientation {
-  val opposite = this match {
+  val opposite: Orientation = this match {
     case Vertical => Horizontal
     case Horizontal => Vertical
   }
-  val directions = this match {
+  val directions: Seq[Direction] = this match {
     case Vertical => Seq(North, South)
     case Horizontal => Seq(East, West)
   }

@@ -21,7 +21,7 @@ class BoardTypeSpec extends Specification {
     }
 
     "be 81 for a 9x9 board" in {
-      val boardType = BoardType(size = 9)
+      val boardType = BoardType()
 
       boardType.locations.length === 81
     }
@@ -44,7 +44,7 @@ class BoardTypeSpec extends Specification {
     }
 
     "be 128 for a 9x9 board" in {
-      val boardType = BoardType(size = 9)
+      val boardType = BoardType()
 
       boardType.possibleWalls.size === 128
     }

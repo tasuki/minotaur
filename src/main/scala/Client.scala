@@ -1,15 +1,15 @@
 import scala.io.StdIn.readLine
 
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{ Config, ConfigFactory }
 import minotaur.io.{ BoardReader, Coordinates, GameStatePrinter }
 import minotaur.mcts.MCTS
 import minotaur.model._
 
 object Client {
-  val player = Black
-  val computer = White
+  val player: Player = Black
+  val computer: Player = White
 
-  val config = ConfigFactory.load()
+  val config: Config = ConfigFactory.load()
 
   def main(args: Array[String]): Unit = {
     val cli: Map[String, String] = args.map(
@@ -89,10 +89,10 @@ object Client {
       case coordsPattern(coords) =>
         (coords.toList match {
           case List(vertical, horizontal)
-                    if (coordinates.exist(vertical, horizontal)) =>
+                    if coordinates.exist(vertical, horizontal) =>
             Some((vertical, horizontal, Vertical))
           case List(horizontal, vertical)
-                    if (coordinates.exist(vertical, horizontal)) =>
+                    if coordinates.exist(vertical, horizontal) =>
             Some((vertical, horizontal, Horizontal))
           case _ =>
             None

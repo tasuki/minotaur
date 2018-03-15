@@ -5,7 +5,7 @@ import org.specs2.mutable.Specification
 
 class CoordinatesSpec extends Specification {
   "Standard board coordinates" should {
-    val coords = Coordinates(BoardType(9))
+    val coords = Coordinates(BoardType())
 
     "allow top left" in {
       coords.exist('a', '1') === true
@@ -25,7 +25,7 @@ class CoordinatesSpec extends Specification {
   }
 
   "Coordinates" should {
-    val bt = BoardType(9)
+    val bt = BoardType()
     val coords = Coordinates(bt)
     "print horizontal wall coords" in {
       coords.forWall(Wall(Location(7, bt), Horizontal)) === "1i"

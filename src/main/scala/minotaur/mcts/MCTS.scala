@@ -14,7 +14,7 @@ class MCTS(
   val moveGenerator: MoveGenerator = new MoveGenerator(),
   val threads: Int = 4
 ) {
-  val log = LoggerFactory.getLogger("MCTS")
+  private val log = LoggerFactory.getLogger("MCTS")
 
   def findMove(
     gameState: GameState
@@ -80,7 +80,7 @@ class MCTS(
   @tailrec private def backpropagate(
     node: Node, winners: List[Player]
   ): Unit = {
-    winners.map(node.update)
+    winners.foreach(node.update)
 
     if (node.parent.isDefined)
       backpropagate(node.parent.get, winners)

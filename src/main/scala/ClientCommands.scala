@@ -8,7 +8,7 @@ sealed trait Command {
 }
 
 case object Quit extends Command {
-  def execute(game: Game) = {
+  def execute(game: Game): Game = {
     println("You have escaped the labyrinth.")
     System.exit(0)
     game
@@ -16,7 +16,7 @@ case object Quit extends Command {
 }
 
 case object Undo extends Command {
-  def execute(game: Game) = {
+  def execute(game: Game): Game = {
     val undoed = game.parent.flatMap(_.parent).getOrElse(game)
     print(GameStatePrinter(undoed.state))
     undoed
@@ -71,7 +71,7 @@ case class Play(move: Move, mcts: MCTS) extends Command {
 }
 
 case object Unknown extends Command {
-  def execute(game: Game) = {
+  def execute(game: Game): Game = {
     println("Sorry, didn't understand that")
     game
   }

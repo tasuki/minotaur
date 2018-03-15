@@ -63,7 +63,7 @@ object BoardReader {
 
     for (List(first, second) <- pairs) {
       require(
-        first.neighbor(direction) == Some(second),
+        first.neighbor(direction).contains(second),
         s"$orientation walls do not form proper pairs"
       )
     }

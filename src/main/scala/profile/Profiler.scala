@@ -3,10 +3,10 @@ package profile
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-import org.slf4j.LoggerFactory
+import org.slf4j.{ Logger, LoggerFactory }
 
 object Head {
-  override def toString = {
+  override def toString: String = {
     val name = "name"
     val ncalls = "ncalls"
     val tottime = "tottime"
@@ -23,14 +23,14 @@ case class Stat(
   name: String,
   runList: ListBuffer[Long]
 ) {
-  val ncalls = runList.size
-  val tottime = toSeconds(runList.sum)
-  val average = tottime / ncalls
+  val ncalls: Int = runList.size
+  val tottime: Double = toSeconds(runList.sum)
+  val average: Double = tottime / ncalls
 
-  val ordered = runList.sorted
-  val mean  = toSeconds(ordered((ncalls * 0.50).toInt))
-  val upper = toSeconds(ordered((ncalls * 0.95).toInt))
-  val max   = toSeconds(ordered.last)
+  val ordered: ListBuffer[Long] = runList.sorted
+  val mean: Double = toSeconds(ordered((ncalls * 0.50).toInt))
+  val upper: Double = toSeconds(ordered((ncalls * 0.95).toInt))
+  val max: Double = toSeconds(ordered.last)
 
   private def toSeconds(nanotime: Long): Double =
     nanotime / 1000000000.0
@@ -40,8 +40,8 @@ case class Stat(
 }
 
 object Profiler {
-  val log = LoggerFactory.getLogger("Profiler")
-  val runs = mutable.Map[String, ListBuffer[Long]]()
+  val log: Logger = LoggerFactory.getLogger("Profiler")
+  val runs: mutable.Map[String, ListBuffer[Long]] = mutable.Map[String, ListBuffer[Long]]()
 
   private def add(name: String, timeDiff: Long): Unit = {
     if (! runs.contains(name))
@@ -78,15 +78,15 @@ object Profiler {
     runs.toList.map(run => Stat(run._1, run._2)).sortBy(_.tottime)
   }
 
-  def printComplete: Unit = {
+  def printComplete(): Unit = {
     log.info(Head.toString)
 
-    getStats.map(stat => {
+    getStats.foreach(stat => {
       log.info(stat.toString)
     })
   }
 
-  def printShort: Unit = {
+  def printShort(): Unit = {
     val name = "name"
     val tottime = "tottime"
 
@@ -102,5 +102,5 @@ object Profiler {
     log.info(f"$key took $tottime%1.2f seconds")
   }
 
-  def clear: Unit = runs.clear
+  def clear(): Unit = runs.clear
 }

@@ -11,7 +11,7 @@ object BoardPrinter {
 
     def getOptionalLocation(position: Int): Option[Location] =
       Option(position)
-        .filter(boardType.containsLocation(_))
+        .filter(boardType.containsLocation)
         .map(Location(_, boardType))
 
     def shouldPrintWall(
@@ -20,17 +20,17 @@ object BoardPrinter {
     ): Boolean =
       location
         .filter(l => !l.isBorder(direction) && !board.canMove(l, direction))
-        .map(l => false).getOrElse(true)
+        .forall(l => false)
 
-    val oddLines = (-1 to board.size - 1)
-      .map(row => (0 to board.size - 1).map(column => {
+    val oddLines = (-1 until board.size)
+      .map(row => (0 until board.size).map(column => {
         val optLoc = getOptionalLocation(row*board.size + column)
         if (shouldPrintWall(optLoc, South)) "+   "
         else "+---"
       }).mkString + "+")
 
-    val evenLines = (0 to board.size - 1)
-      .map(row => (0 to board.size - 1).map(column => {
+    val evenLines = (0 until board.size)
+      .map(row => (0 until board.size).map(column => {
         val optLoc = getOptionalLocation(row*board.size + column)
         val side = if (shouldPrintWall(optLoc, West)) " " else "|"
 
@@ -44,7 +44,7 @@ object BoardPrinter {
   def print(board: Board): String =
     "\n" + printWithCellContent(board, (optLoc: Option[Location]) =>
       board.pawns
-        .find { case(location, _) => optLoc == Some(location) }
+        .find { case(location, _) => optLoc.contains(location) }
         .map { case(_, player) => s" ${player.pawn} " }
         .getOrElse("   ")
     )

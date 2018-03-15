@@ -113,7 +113,7 @@ class LocationSpec extends Specification {
   }
 
   "A location near the top of the board" should {
-    val location = Location(21, BoardType(9))
+    val location = Location(21, BoardType())
 
     "be 2 steps from the north border" in {
       location.estimateDistance(North) === 2

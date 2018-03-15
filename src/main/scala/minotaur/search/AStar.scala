@@ -1,5 +1,6 @@
 package minotaur.search
 
+import scala.collection.mutable
 import scala.collection.mutable.{ ArraySeq, ListBuffer }
 
 import minotaur.model._
@@ -11,7 +12,7 @@ object AStar extends Search {
     cost: Int,
     estimatedDistance: Int
   ) extends SearchNode {
-    val priority =
+    val priority: Double =
       // adding a small fraction to make these unique by location
       estimatedDistance + cost + location.location / 1000.0
   }
@@ -21,8 +22,8 @@ object AStar extends Search {
     from: Location,
     direction: Direction
   ): Option[Path] = {
-    val closed: ArraySeq[Boolean] =
-      ArraySeq.fill(board.boardType.size * board.boardType.size){false}
+    val closed: mutable.ArraySeq[Boolean] =
+      mutable.ArraySeq.fill(board.boardType.size * board.boardType.size){false}
 
     var open = ListBuffer[Node]()
     open += Node(from, None, 0, from.estimateDistance(direction))
@@ -63,6 +64,6 @@ object AStar extends Search {
       }
     }
 
-    return None
+    None
   }
 }

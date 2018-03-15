@@ -3,8 +3,8 @@ package minotaur.io
 import minotaur.model._
 
 case class Coordinates(boardType: BoardType) {
-  val vertical   = getCoords("abcdfghijklmopr")
-  val horizontal = getCoords("123456789tuvxyz")
+  val vertical: List[Char] = getCoords("abcdfghijklmopr")
+  val horizontal: List[Char] = getCoords("123456789tuvxyz")
 
   private def getCoords(possibilities: String): List[Char] =
     possibilities.toList.take(boardType.size - 1)

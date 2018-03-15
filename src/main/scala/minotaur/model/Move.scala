@@ -17,7 +17,7 @@ case class WallPlacement(
 
   override def toString = s"(WallPlacement: $wall)"
 
-  lazy val play = {
+  lazy val play: GameState = {
     // blocked movements
     val movementUpdates: Seq[(Location, Seq[Direction])] =
       wall.blocksMovement.map {
@@ -29,8 +29,8 @@ case class WallPlacement(
 
     // make paths potential
     val paths = gs.board.shortestPath.map {
-      case (player, Some(path)) => (player -> Some(path.potentialize))
-      case (player, None) => (player -> None)
+      case (player, Some(path)) => player -> Some(path.potentialize)
+      case (player, None) => player -> None
     }
 
     gs.copy(
@@ -45,7 +45,7 @@ case class WallPlacement(
   }
 
   // make sure each player can reach their goal
-  lazy val isValid = play.board.isValid
+  lazy val isValid: Boolean = play.board.isValid
 
   val wins = false
 }
@@ -59,7 +59,7 @@ case class PawnMovement(
 
   override def toString = s"(PawnMovement: ${gs.onTurn} to $location)"
 
-  lazy val play = {
+  lazy val play: GameState = {
     // update paths with current advance if following
     val paths = gs.board.shortestPath + (
       gs.onTurn -> gs.board.shortestPath(gs.onTurn)
@@ -78,7 +78,7 @@ case class PawnMovement(
 
   val isValid = true
 
-  lazy val wins = {
+  lazy val wins: Boolean = {
     val player = gs.onTurn
 
     play.board.pawnLocation(player).isBorder(player.destination)

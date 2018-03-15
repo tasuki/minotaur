@@ -5,7 +5,7 @@ import org.specs2.mutable.Specification
 
 class PathSpec extends Specification {
   val file = "src/test/resources/board.txt"
-  val board = BoardReader.fromFile(file)
+  val board: Board = BoardReader.fromFile(file)
 
   "Valid path" should {
     val path = PotentialShortestPath(Seq(
