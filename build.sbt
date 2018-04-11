@@ -1,7 +1,7 @@
 name := "minotaur"
 version := "0.0.0"
 
-connectInput in run := true
+run / connectInput := true
 
 scalaVersion := "2.11.11"
 
