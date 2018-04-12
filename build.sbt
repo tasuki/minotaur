@@ -1,8 +1,6 @@
 name := "minotaur"
 version := "0.0.0"
 
-run / connectInput := true
-
 scalaVersion := "2.11.11"
 
 val dl4jVersion = "1.0.0-alpha"
@@ -16,4 +14,6 @@ libraryDependencies ++= Seq(
   "org.specs2" %% "specs2-core" % "3.9.5" % Test
 )
 
-scalacOptions in Test ++= Seq("-Yrangepos")
+run / connectInput := true
+compile / mainClass := Some("Client")
+Test / scalacOptions ++= Seq("-Yrangepos")
