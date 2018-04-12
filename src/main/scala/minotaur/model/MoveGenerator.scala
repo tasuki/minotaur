@@ -2,6 +2,8 @@ package minotaur.model
 
 import scala.util.Random
 
+import profile.Profiler
+
 class MoveGenerator(
   val pawnMovementProbability: Int = 90,
   val seekShortestRouteProbability: Int = 90
@@ -32,8 +34,8 @@ class MoveGenerator(
     }
 
     if (percentChance(pawnMovementProbability) || gs.walls(gs.onTurn) < 1)
-      randomPawnMove
+      Profiler.profile("Random pawn move", randomPawnMove)
     else
-      randomWallMove.getOrElse(randomPawnMove)
+      Profiler.profile("Random wall move", randomWallMove.getOrElse(randomPawnMove))
   }
 }
