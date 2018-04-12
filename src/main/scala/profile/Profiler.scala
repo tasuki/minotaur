@@ -36,7 +36,7 @@ case class Stat(
     nanotime / 1000000000.0
 
   override def toString =
-    f"$name%20s $ncalls%10d $tottime%11.5f $average%9.6f $mean%9.6f $upper%9.6f $max%9.6f"
+    f"${name.padTo(20, ' ')} $ncalls%10d $tottime%11.5f $average%9.6f $mean%9.6f $upper%9.6f $max%9.6f"
 }
 
 object Profiler {
