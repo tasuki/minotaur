@@ -52,7 +52,7 @@ case class Play(move: Move, mcts: MCTS) extends Command {
   }
 
   def execute(game: Game): Game = {
-    if (! game.state.getPossibleMoves.contains(move) || ! move.isValid) {
+    if (! game.state.legalMoves.contains(move)) {
       println("That move is illegal, try again")
       return game
     }

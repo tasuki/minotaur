@@ -21,7 +21,7 @@ class GameStateSpec extends Specification {
     )
 
     "list the possible moves" in {
-      gs.getPossibleMoves.filter(_.isValid).map(_.play.board).toSet === Set(
+      gs.legalMoves.map(_.play.board).toSet === Set(
         BoardReader.fromString("""
           |+   +   +   +   +
           |

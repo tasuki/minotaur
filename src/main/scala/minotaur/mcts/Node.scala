@@ -17,7 +17,7 @@ class Node(
 ) {
   val wins: Boolean = move.exists(_.wins)
   val unexploredChildren: Iterator[Node] = unexplored.getOrElse(
-    gameState.getLazyShuffledChildren.map(new Node(_, this))
+    gameState.lazyShuffledLegalMoves.map(new Node(_, this))
   )
 
   var UCT: Double = 0.0
