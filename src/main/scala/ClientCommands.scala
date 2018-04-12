@@ -1,4 +1,4 @@
-import minotaur.io.GameStatePrinter
+import minotaur.io.{ GameStatePrinter, NodePrinter }
 import minotaur.mcts.MCTS
 import minotaur.model.{ Game, Move }
 import profile.Profiler
@@ -31,7 +31,9 @@ case class Play(move: Move, mcts: MCTS) extends Command {
     val node = Profiler.profile("MCTS", mcts.findMove(game.state))
     Profiler.print("MCTS")
     Profiler.clear()
-    println(node)
+    node.parent.map { node =>
+      NodePrinter.printTopMoves(node).map(println)
+    }
 
     if (node.winRatio < 0.1) {
       println
