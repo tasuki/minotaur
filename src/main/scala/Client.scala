@@ -15,8 +15,9 @@ object Client {
     val cli: Map[String, String] = args.map(
       _.split("=") match { case Array(k, v) => k -> v }
     ).toMap
+    val defaultPlayouts: String = config.getString("minotaur.playouts")
+    val playouts: Int = cli.getOrElse("playouts", defaultPlayouts).toInt
     val handicap: Int = cli.getOrElse("handicap", "0").toInt
-    val playouts: Int = cli.getOrElse("playouts", "50000").toInt
 
     val file = "src/test/resources/empty.txt"
     var game = Game(GameState(
