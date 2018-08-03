@@ -32,11 +32,11 @@ object QuoridorStrats {
 
   private def getMove(gs: GameState, move: String): Move =
     move match {
-      case wall if move.length == 3 => getWallPlacement(gs, wall)
-      case pawn if move.length == 2 => getPawnMovement(gs, pawn)
+      case wall if move.length == 3 => WallPlacement(getWall(wall), gs)
+      case pawn if move.length == 2 => PawnMovement(getLocation(pawn), gs)
     }
 
-  private def getWallPlacement(gs: GameState, str: String): WallPlacement = {
+  private def getWall(str: String): Wall = {
     val columnIndex = stratsColumns.indexOf(str.charAt(0))
     // flip it, deduce one cause we use upper left and they use lower left
     val rowIndex = bt.size - str.charAt(1).asDigit - 1
@@ -46,14 +46,14 @@ object QuoridorStrats {
     }
 
     val location = columnIndex + bt.size * rowIndex
-    WallPlacement(Wall(Location(location, bt), orientation), gs)
+    Wall(Location(location, bt), orientation)
   }
 
-  private def getPawnMovement(gs: GameState, str: String): PawnMovement = {
+  private def getLocation(str: String): Location = {
     val columnIndex = stratsColumns.indexOf(str.charAt(0))
     val rowIndex = bt.size - str.charAt(1).asDigit // flip it!
 
     val location = columnIndex + bt.size * rowIndex
-    PawnMovement(Location(location, bt), gs)
+    Location(location, bt)
   }
 }
