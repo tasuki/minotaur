@@ -66,21 +66,27 @@ object QuoridorStrats {
       case pm: PawnMovement => toQsPawn(pm)
     }
 
+  private def qsLocation(location: Location): (Char, Int) = {
+    val column = location.estimateDistance(West)
+    val row = location.estimateDistance(South)
+
+    (stratsColumns(column), row)
+  }
+
   private def toQsWall(wp: WallPlacement): String = {
-    val column = wp.wall.location.estimateDistance(West)
-    val row = wp.wall.location.estimateDistance(South)
+    val (column, row) = qsLocation(wp.wall.location)
+
     val orientation = wp.wall.orientation match {
       case Horizontal => "h"
       case Vertical => "v"
     }
 
-    stratsColumns(column).toString + row.toString + orientation
+    column.toString + row.toString + orientation
   }
 
   private def toQsPawn(pm: PawnMovement): String = {
-    val column = pm.location.estimateDistance(West)
-    val row = pm.location.estimateDistance(South)
+    val (column, row) = qsLocation(pm.location)
 
-    stratsColumns(column).toString + (row + 1).toString
+    column.toString + (row + 1).toString
   }
 }
