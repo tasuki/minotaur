@@ -24,7 +24,7 @@ object Replayer {
 
     while (true) {
       val gameRecord = readLine("Quoridorstrats game record: ")
-      val game = QuoridorStrats.fromString(gameRecord)
+      val game = QuoridorStrats.importGame(gameRecord)
       val gameStates = getGameStates(game, Nil)
 
       replayGame(gameStates)
@@ -59,7 +59,7 @@ object Replayer {
   @tailrec
   def getGameStates(game: Game, states: List[GameState]): List[GameState] =
     game match {
-      case Game(gs, Some(parent)) => getGameStates(parent, gs :: states)
-      case Game(gs, None) => gs :: states
+      case Game(gs, Some(move), Some(parent)) => getGameStates(parent, gs :: states)
+      case Game(gs, _, _) => gs :: states
     }
 }

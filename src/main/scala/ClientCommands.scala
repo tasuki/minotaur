@@ -41,7 +41,7 @@ case class Play(move: Move, mcts: MCTS) extends Command {
       System.exit(0)
     }
 
-    val gameAfterAImove = Game(node.gameState, Some(game))
+    val gameAfterAImove = Game(node.gameState, node.move, Some(game))
     print(GameStatePrinter(gameAfterAImove.state))
 
     if (node.wins) {
@@ -59,7 +59,7 @@ case class Play(move: Move, mcts: MCTS) extends Command {
       return game
     }
 
-    val gameAfterPlayerMove = Game(move.play, Some(game))
+    val gameAfterPlayerMove = Game(move.play, Some(move), Some(game))
     print(GameStatePrinter(gameAfterPlayerMove.state))
 
     if (move.wins) {

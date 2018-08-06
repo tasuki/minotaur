@@ -2,7 +2,7 @@ package minotaur.model
 
 import scala.util.Random
 
-case class Game(state: GameState, parent: Option[Game])
+case class Game(state: GameState, lastMove: Option[Move], parent: Option[Game])
 
 case class GameState(
   board: Board,

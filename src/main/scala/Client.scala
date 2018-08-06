@@ -25,7 +25,7 @@ object Client {
         computer -> (10 - handicap),
         player -> (10 + handicap)
       ), player
-    ), None)
+    ), None, None)
 
     print(
       """

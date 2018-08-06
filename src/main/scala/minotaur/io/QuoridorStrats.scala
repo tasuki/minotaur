@@ -13,10 +13,10 @@ object QuoridorStrats {
       Black -> 10,
       White -> 10
     ), Black
-  ), None)
+  ), None, None)
   val bt: BoardType = game.state.board.boardType
 
-  def fromString(str: String): Game =
+  def importGame(str: String): Game =
     getGame(str.split(";"), game)
 
   @tailrec
@@ -24,7 +24,7 @@ object QuoridorStrats {
     if (moves.isEmpty) parent
     else {
       val move: Move = getMove(parent.state, moves.head)
-      val game = Game(move.play, Some(parent))
+      val game = Game(move.play, Some(move), Some(parent))
 
       //println(GameStatePrinter(game.state))
       getGame(moves.tail, game)
