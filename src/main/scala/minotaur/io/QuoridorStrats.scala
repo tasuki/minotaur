@@ -56,4 +56,31 @@ object QuoridorStrats {
     val location = columnIndex + bt.size * rowIndex
     Location(location, bt)
   }
+
+  def exportGame(game: Game): String =
+    game.getMoves().map(toQuoridorStrats).mkString(";")
+
+  private def toQuoridorStrats(move: Move): String =
+    move match {
+      case wp: WallPlacement => toQsWall(wp)
+      case pm: PawnMovement => toQsPawn(pm)
+    }
+
+  private def toQsWall(wp: WallPlacement): String = {
+    val column = wp.wall.location.estimateDistance(West)
+    val row = wp.wall.location.estimateDistance(South)
+    val orientation = wp.wall.orientation match {
+      case Horizontal => "h"
+      case Vertical => "v"
+    }
+
+    stratsColumns(column).toString + row.toString + orientation
+  }
+
+  private def toQsPawn(pm: PawnMovement): String = {
+    val column = pm.location.estimateDistance(West)
+    val row = pm.location.estimateDistance(South)
+
+    stratsColumns(column).toString + (row + 1).toString
+  }
 }

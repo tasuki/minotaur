@@ -1,8 +1,16 @@
 package minotaur.model
 
+import scala.annotation.tailrec
 import scala.util.Random
 
-case class Game(state: GameState, lastMove: Option[Move], parent: Option[Game])
+case class Game(state: GameState, lastMove: Option[Move], parent: Option[Game]) {
+  @tailrec
+  final def getMoves(moves: List[Move] = Nil): List[Move] =
+    (parent, lastMove) match {
+      case (Some(game), Some(move)) => game.getMoves(move :: moves)
+      case _ => moves
+    }
+}
 
 case class GameState(
   board: Board,
