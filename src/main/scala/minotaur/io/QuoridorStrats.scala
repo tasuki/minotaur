@@ -30,7 +30,7 @@ object QuoridorStrats {
       getGame(moves.tail, game)
     }
 
-  private def getMove(gs: GameState, move: String): Move =
+  def getMove(gs: GameState, move: String): Move =
     move match {
       case wall if move.length == 3 => WallPlacement(getWall(wall), gs)
       case pawn if move.length == 2 => PawnMovement(getLocation(pawn), gs)
@@ -60,7 +60,7 @@ object QuoridorStrats {
   def exportGame(game: Game): String =
     game.getMoves().map(toQuoridorStrats).mkString(";")
 
-  private def toQuoridorStrats(move: Move): String =
+  def toQuoridorStrats(move: Move): String =
     move match {
       case wp: WallPlacement => toQsWall(wp)
       case pm: PawnMovement => toQsPawn(pm)
