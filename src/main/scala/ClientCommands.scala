@@ -1,4 +1,4 @@
-import minotaur.io.{ GameStatePrinter, NodePrinter }
+import minotaur.io.{ GameStatePrinter, MovePrinter, NodePrinter, Recommender }
 import minotaur.mcts.MCTS
 import minotaur.model.{ Game, Move }
 import profile.Profiler
@@ -23,8 +23,8 @@ case object Undo extends Command {
   }
 }
 
-case class Play(move: Move, mcts: MCTS) extends Command {
-  private def findMove(game: Game): Game = {
+case class Play(move: Move, mcts: MCTS, recommender: Recommender) extends Command {
+  private def findMcts(game: Game): Game = {
     println
     println("Minotaur is feeding on the dead bodies of his victims, please wait...")
 
@@ -53,6 +53,22 @@ case class Play(move: Move, mcts: MCTS) extends Command {
     gameAfterAImove
   }
 
+  def findRecommended(game: Game): Game = {
+    val moves = recommender.recommend(game)
+
+    val move = moves.head
+    val gameAfterAImove = Game(move.play, Some(move), Some(game))
+    print(GameStatePrinter(gameAfterAImove.state))
+
+    if (move.wins) {
+      println
+      println("You have been devoured by the Minotaur. RIP")
+      System.exit(0)
+    }
+
+    gameAfterAImove
+  }
+
   def execute(game: Game): Game = {
     if (! game.state.legalMoves.contains(move)) {
       println("That move is illegal, try again")
@@ -68,7 +84,8 @@ case class Play(move: Move, mcts: MCTS) extends Command {
       System.exit(0)
     }
 
-    findMove(gameAfterPlayerMove)
+    findRecommended(gameAfterPlayerMove)
+    //findMcts(gameAfterPlayerMove)
   }
 }
 

@@ -1,7 +1,7 @@
 import scala.io.StdIn.readLine
 
 import com.typesafe.config.{ Config, ConfigFactory }
-import minotaur.io.{ BoardReader, Coordinates, GameStatePrinter }
+import minotaur.io.{ BoardReader, Coordinates, GameStatePrinter, Recommender }
 import minotaur.mcts.MCTS
 import minotaur.model._
 
@@ -66,7 +66,8 @@ object Client {
       config.getInt("minotaur.moveGenerator.seekShortestRouteProbability")
     )
     val mcts = new MCTS(playouts, moveGenerator, config.getInt("minotaur.threads"))
-    Play(move, mcts)
+    val recommender = new Recommender(config.getString("minotaur.recommenderUri"))
+    Play(move, mcts, recommender)
   }
 
   private def getCommand(game: Game, playouts: Int): Command = {

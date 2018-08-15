@@ -6,13 +6,15 @@ import io.circe.generic.auto._
 import io.circe.parser._
 import minotaur.model._
 
-object Recommender {
+class Recommender(
+  val recommenderUri: String
+) {
   case class RecommendedMove(move: String, prob: Int)
 
   def recommend(game: Game): Seq[Move] = {
     val gameStr = QuoridorStrats.exportGame(game)
     val body = sttp
-      .get(uri"http://localhost:8008?game=$gameStr")
+      .get(uri"$recommenderUri?game=$gameStr")
       .send()
       .unsafeBody
 
@@ -20,7 +22,10 @@ object Recommender {
     val legal = game.state.legalMoves.toSet
 
     recommended.map {
-      case RecommendedMove(mv, _) => QuoridorStrats.getMove(game.state, mv)
+      case RecommendedMove(mv, pb) =>
+        val move = QuoridorStrats.getMove(game.state, mv)
+        println(MovePrinter.print(move) + " " + pb.toString)
+        move
     } filter legal.contains
   }
 }
